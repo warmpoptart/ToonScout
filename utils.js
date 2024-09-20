@@ -1,6 +1,5 @@
 import 'dotenv/config';
 import { verifyKey } from 'discord-interactions';
-import { getFakeUsername } from './game.js';
 
 const DEFAULT_PORT = 1547;
 const MAX_PORT = 1552;
@@ -19,6 +18,30 @@ export function VerifyDiscordRequest(clientKey) {
     }
   };
 }
+
+export async function DiscordRequest(endpoint, options) {
+    const url = 'https://discord.com/api/v10/' + endpoint;
+  
+    if (options.body) options.body = JSON.stringify(options.body);
+  
+    const res = await fetch(url, {
+      headers: {
+        Authorization: `Bot ${process.env.DISCORD_TOKEN}`,
+        'Content-Type': 'application/json; charset=UTF-8',
+        'User-Agent': 'LocalToon (Erin Miller, version 1.0)', // Customize as needed
+      },
+      ...options,
+    });
+  
+    if (!res.ok) {
+      const data = await res.json();
+      console.log(res.status);
+      throw new Error(JSON.stringify(data));
+    }
+  
+    return res;
+  }
+  
 
 export async function LocalToonRequest() {
     let port = DEFAULT_PORT;
