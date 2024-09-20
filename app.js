@@ -27,22 +27,21 @@ app.post('/interactions', async function (req, res) {
         const { name } = data;
 
         try {
-            const toon = await LocalToonRequest();
-
             if (name === 'name') {
-                const name = toon.name;
+                const toon = await LocalToonRequest();
                 return res.send({
                     type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                     data: {
-                        content: `Toon Name: ${name}`,
+                        content: toon.toon.name,
                     },
                 });
             };
         } catch (error) {
+            console.error('Error fetching toon name:', error);
             return res.send({
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: {
-                    content: 'Error fetching name.',
+                    content: `Error fetching name.`,
                 },
             });
         }
