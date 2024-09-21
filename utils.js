@@ -106,8 +106,8 @@ export function simplifyLaff(toon) {
 export function simplifyLocation(toon) {
     const loc = toon.location;
     let msg = `${loc.district}, ${loc.zone}`;
-    if (!loc.zone !== loc.neighborhood) {
-        msg += loc.neighborhood
+    if (loc.zone !== loc.neighborhood) {
+        msg += `, ${loc.neighborhood}`
     }
     return msg;
 }
