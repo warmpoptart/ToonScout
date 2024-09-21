@@ -12,25 +12,24 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 // Parse request body and verifies incoming requests using discord-interactions package
 app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
-// create a unique token per session
-const token = Math.random().toString(36).substring(2);
 
 app.post('/interactions', async function (req, res) {
-    const { type, data } = req.body;
+    const { type, data, member } = req.body;
 
     // verification requests
     if (type === InteractionType.PING) {
         return res.send({ type: InteractionResponseType.PONG });
     }
     
-    console.log(req.body);
-
+    
     if (type === InteractionType.APPLICATION_COMMAND) {
         const { name } = data;
 
+        console.log(`USER [ ${member.user.username} ] RAN [ ${name} ]`);
+        
         try {
             if (name === 'name') {
-                const toon = await LocalToonRequest(token);
+                const toon = await LocalToonRequest();
                 return res.send({
                     type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                     data: {

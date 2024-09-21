@@ -4,13 +4,20 @@ import { verifyKey } from 'discord-interactions';
 const DEFAULT_PORT = 1547;
 const MAX_PORT = 1552;
 const ENDPOINT = "info.json"; 
+let authToken = null;
+initAuthToken();
+
+function initAuthToken() {
+    if (!authToken) {
+        authToken = Math.random().toString(36).substring(2);
+        console.log("New session token generated.");
+    }
+}
 
 export function VerifyDiscordRequest(clientKey) {
   return function (req, res, buf) {
     const signature = req.get('X-Signature-Ed25519');
     const timestamp = req.get('X-Signature-Timestamp');
-    console.log(signature, timestamp, clientKey);
-
     const isValidRequest = verifyKey(buf, signature, timestamp, clientKey);
     if (!isValidRequest) {
       res.status(401).send('Bad request signature');
@@ -55,8 +62,9 @@ export async function InstallGlobalCommands(appId, commands) {
     }
 }
 
-export async function LocalToonRequest(uniqueToken) {
+export async function LocalToonRequest() {
     let port = DEFAULT_PORT;
+    initAuthToken();
     
     while (port <= MAX_PORT) {
         const url = `http://localhost:${port}/${ENDPOINT}`;
@@ -67,7 +75,7 @@ export async function LocalToonRequest(uniqueToken) {
                 headers: {
                     Host: `localhost:${port}`,
                     'User-Agent': 'LocalToon (test)',
-                    Authorization: uniqueToken,
+                    Authorization: authToken,
                     'Connection': 'close',
                 },
             });
