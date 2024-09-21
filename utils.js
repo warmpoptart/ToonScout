@@ -74,7 +74,7 @@ export async function LocalToonRequest() {
                 method: "GET",
                 headers: {
                     Host: `localhost:${port}`,
-                    'User-Agent': 'LocalToon (test)',
+                    'User-Agent': 'ToonScout',
                     Authorization: authToken,
                     'Connection': 'close',
                 },
