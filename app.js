@@ -4,6 +4,7 @@ import { InteractionType, InteractionResponseType } from 'discord-interactions';
 import {
     VerifyDiscordRequest,
     LocalToonRequest,
+    SimplifyLaff,
 } from './utils.js';
 
 // Create an express app
@@ -15,25 +16,28 @@ app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
 
 app.post('/interactions', async function (req, res) {
     const { type, data, member } = req.body;
+    const user = member.user.username;
 
     // verification requests
     if (type === InteractionType.PING) {
         return res.send({ type: InteractionResponseType.PONG });
     }
     
-    
+    // checking for commands
     if (type === InteractionType.APPLICATION_COMMAND) {
-        const { name } = data;
+        const { name: command } = data;
 
-        console.log(`USER [ ${member.user.username} ] RAN [ ${name} ]`);
+        console.log(`USER [ ${user} ] RAN [ ${command} ]`);
         
         try {
-            if (name === 'name') {
-                const toon = await LocalToonRequest();
+            if (command === 'info') {
+                const LOCAL_TOON = await LocalToonRequest();
                 return res.send({
                     type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                     data: {
-                        content: JSON.stringify(toon.toon),
+                        content: `${user}'s ${LOCAL_TOON.toon.species}, **${LOCAL_TOON.toon.name}**, 
+                        has **${simplifyLaff(LOCAL_TOON)} laff** and is located in 
+                        ${simplifyLocation(LOCAL_TOON)}.`,
                     },
                 });
             };

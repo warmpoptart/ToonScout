@@ -98,3 +98,11 @@ export async function LocalToonRequest() {
 export function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+export function simplifyLaff(toon) {
+    return toon.laff.max;
+}
+
+export function simplifyLocation(toon) {
+    return toon.location.neighborhood;
+}

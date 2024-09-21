@@ -25,24 +25,18 @@ const GAGS = {
     contexts: [0, 1, 2],
 }
 
-const TASK_COMMAND = {
-    name: '',
-    type: 1, 
-    description: '',
-    integration_types: [1],
-    contexts: [0, 1, 2],
-}
-
-const TASK_COMMAND = {
-    name: '',
-    type: 1, 
-    description: '',
-    integration_types: [1],
-    contexts: [0, 1, 2],
-}
+// const BLANK = {
+//     name: '',
+//     type: 1, 
+//     description: '',
+//     integration_types: [1],
+//     contexts: [0, 1, 2],
+// }
 
 const ALL_COMMANDS = [
-  NAME_COMMAND,
+  INFO,
+  TASK,
+  GAGS
 ];
 
 InstallGlobalCommands(process.env.APP_ID, ALL_COMMANDS);
