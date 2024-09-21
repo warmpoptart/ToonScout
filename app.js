@@ -12,6 +12,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 // Parse request body and verifies incoming requests using discord-interactions package
 app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
+// create a unique token per session
+const token = Math.random().toString(36).substring(2);
 
 app.post('/interactions', async function (req, res) {
     const { type, data } = req.body;
@@ -28,11 +30,11 @@ app.post('/interactions', async function (req, res) {
 
         try {
             if (name === 'name') {
-                const toon = await LocalToonRequest();
+                const toon = await LocalToonRequest(token);
                 return res.send({
                     type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                     data: {
-                        content: toon.toon.name,
+                        content: JSON.stringify(toon.toon),
                     },
                 });
             };

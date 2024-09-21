@@ -55,12 +55,11 @@ export async function InstallGlobalCommands(appId, commands) {
     }
 }
 
-export async function LocalToonRequest() {
+export async function LocalToonRequest(uniqueToken) {
     let port = DEFAULT_PORT;
     
     while (port <= MAX_PORT) {
         const url = `http://localhost:${port}/${ENDPOINT}`;
-        const uniqueToken = Math.random().toString(36).substring(2);
 
         try {
             const response = await fetch(url, {
