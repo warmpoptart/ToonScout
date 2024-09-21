@@ -111,3 +111,7 @@ export function simplifyLocation(toon) {
     }
     return msg;
 }
+
+export function getGagInfo(track) {
+    return track;
+}

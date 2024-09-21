@@ -5,7 +5,8 @@ import {
     VerifyDiscordRequest,
     LocalToonRequest,
     simplifyLaff,
-    simplifyLocation
+    simplifyLocation,
+    getGagInfo,
 } from './utils.js';
 
 // Create an express app
@@ -31,8 +32,8 @@ app.post('/interactions', async function (req, res) {
         console.log(`USER [ ${user} ] RAN [ ${command} ]`);
         
         try {
+            const LOCAL_TOON = await LocalToonRequest();
             if (command === 'info') {
-                const LOCAL_TOON = await LocalToonRequest();
                 return res.send({
                     type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                     data: {
@@ -40,14 +41,22 @@ app.post('/interactions', async function (req, res) {
                     },
                 });
             };
+
+            if (command === 'task') {
+
+            }
+
+            if (command === 'gags') {
+                return res.send({
+                    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                    data: {
+                        content: getGagInfo(data.options[0].value),
+                    }
+                })
+            }
+
         } catch (error) {
-            console.error('Error fetching toon info:', error);
-            return res.send({
-                type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-                data: {
-                    content: `Error fetching info.`,
-                },
-            });
+            console.error(error);
         }
     }
 });

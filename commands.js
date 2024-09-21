@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { InstallGlobalCommands } from './utils.js';
+import { gagTracks } from './game.js';
 
 const INFO = {
     name: 'info',
@@ -12,7 +13,7 @@ const INFO = {
 const TASK = {
     name: 'tasks',
     type: 1, 
-    description: 'Show a basic overview of all your tasks.',
+    description: 'Show an overview of one or all your tasks.',
     integration_types: [1],
     contexts: [0, 1, 2],
 }
@@ -20,9 +21,18 @@ const TASK = {
 const GAGS = {
     name: 'gags',
     type: 1, 
-    description: 'Show a basic overview of your gags.',
+    description: 'Show an overview of one or all your gags.',
     integration_types: [1],
     contexts: [0, 1, 2],
+    options: [
+        {
+            type: 3,
+            name: 'track',
+            description: 'The gag track you want to show.',
+            required: false,
+            choices: gagTracks,
+        },
+    ],
 }
 
 // const BLANK = {
@@ -36,7 +46,7 @@ const GAGS = {
 const ALL_COMMANDS = [
   INFO,
   TASK,
-  GAGS
+  GAGS,
 ];
 
 InstallGlobalCommands(process.env.APP_ID, ALL_COMMANDS);
