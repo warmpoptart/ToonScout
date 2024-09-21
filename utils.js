@@ -100,9 +100,14 @@ export function capitalize(str) {
 }
 
 export function simplifyLaff(toon) {
-    return toon.laff.max;
+    return `${toon.laff.current}/${toon.laff.max}`;
 }
 
 export function simplifyLocation(toon) {
-    return toon.location.neighborhood;
+    const loc = toon.location;
+    let msg = `${loc.district}, ${loc.zone}`;
+    if (!loc.zone !== loc.neighborhood) {
+        msg += loc.neighborhood
+    }
+    return msg;
 }

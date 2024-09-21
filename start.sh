@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# register all commands
+npm run register
 # Start the Node.js application and redirect output
 node /c/Users/erin/workspaces/toonlocalapi/app.js > /c/Users/erin/workspaces/toonlocalapi/logs/app.log 2>&1 &
 

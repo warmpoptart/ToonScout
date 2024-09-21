@@ -4,7 +4,8 @@ import { InteractionType, InteractionResponseType } from 'discord-interactions';
 import {
     VerifyDiscordRequest,
     LocalToonRequest,
-    SimplifyLaff,
+    simplifyLaff,
+    simplifyLocation
 } from './utils.js';
 
 // Create an express app
@@ -35,18 +36,16 @@ app.post('/interactions', async function (req, res) {
                 return res.send({
                     type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                     data: {
-                        content: `${user}'s ${LOCAL_TOON.toon.species}, **${LOCAL_TOON.toon.name}**, 
-                        has **${simplifyLaff(LOCAL_TOON)} laff** and is located in 
-                        ${simplifyLocation(LOCAL_TOON)}.`,
+                        content: `${user}'s toon, **${LOCAL_TOON.toon.name}**, has ${simplifyLaff(LOCAL_TOON)} laff and is located in ${simplifyLocation(LOCAL_TOON)}.`,
                     },
                 });
             };
         } catch (error) {
-            console.error('Error fetching toon name:', error);
+            console.error('Error fetching toon info:', error);
             return res.send({
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: {
-                    content: `Error fetching name.`,
+                    content: `Error fetching info.`,
                 },
             });
         }
