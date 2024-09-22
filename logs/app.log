@@ -1,10 +1,5 @@
 New session token generated.
 Listening on port 3000
 USER [ c.smic ] RAN [ tasks ]
-true
 USER [ c.smic ] RAN [ tasks ]
-USER [ c.smic ] RAN [ tasks ]
-USER [ c.smic ] RAN [ gags ]
-USER [ c.smic ] RAN [ gags ]
-USER [ c.smic ] RAN [ gags ]
-USER [ c.smic ] RAN [ info ]
+{"objective":{"text":"Recover 3 Rods from Bean Counters","where":"Anywhere","progress":{"text":"Complete","current":3,"target":3}},"from":{"name":null,"building":"","zone":"","neighborhood":""},"to":{"name":"Lawful Linda","building":"Wynken, Blynken & Nod, Attorneys at Law","zone":"Pajama Place","neighborhood":"Donald's Dreamland"},"reward":"2 point Laff boost","deletable":false}
