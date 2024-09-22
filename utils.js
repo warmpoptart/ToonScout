@@ -8,7 +8,6 @@ const ENDPOINT = "info.json";
 const HIGHEST_GAG = 7;
 const INDENT = `        `;
 let authToken = null;
-initAuthToken();
 
 function initAuthToken() {
     if (!authToken) {
