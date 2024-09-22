@@ -181,7 +181,8 @@ export function getTaskInfo(toon, index) {
 
 export function getTaskTypeDetailed(taskInfo) {
     console.log(JSON.stringify(taskInfo));
-    if (taskInfo.objective.progress.text !== 'Complete') { // not a visit task, don't display npc values
+    const progress = taskInfo.objective.progress.text;
+    if (progress !== 'Complete' && progress !== '') { // not a visit task, don't display npc values
         return `**Objective:** ${taskInfo.objective.text}
         **Progress:** ${taskInfo.objective.progress.text}
         **Reward:** ${taskInfo.reward}`;
@@ -193,9 +194,10 @@ export function getTaskTypeDetailed(taskInfo) {
 }
 
 export function getTaskTypeSimple(taskInfo) {
-    if (taskInfo.objective.progress.text !== 'Complete') { // not a visit task, don't display npc values
+    const progress = taskInfo.objective.progress.text;
+    if (progress !== 'Complete' && progress !== '') { // not a visit task, don't display npc values
         return `${taskInfo.objective.text} (${taskInfo.objective.progress.text})`;
     } else { // display npc values for a visit task
-        return `Visit ${taskInfo.to.building} in ${taskInfo.to.zone}, ${taskInfo.to.neighborhood}`;
+        return `Visit ${taskInfo.to.building} on ${taskInfo.to.zone}, ${taskInfo.to.neighborhood}`;
     }
 }
