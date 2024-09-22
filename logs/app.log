@@ -1,6 +1,4 @@
 New session token generated.
 Listening on port 3000
 USER [ c.smic ] RAN [ tasks ]
-USER [ c.smic ] RAN [ tasks ]
-USER [ c.smic ] RAN [ tasks ]
 {"objective":{"text":"Visit","where":null,"progress":{"text":"","current":0,"target":-1}},"from":{"name":"Banker Bob","building":"Toontown Bank","zone":"Playground","neighborhood":"Toontown Central"},"to":{"name":"Daffy Don","building":"Daffy Taffy","zone":"Silly Street","neighborhood":"Toontown Central"},"reward":"5 '25 tokens' Unite Phrases","deletable":true}
