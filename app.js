@@ -7,6 +7,7 @@ import {
     simplifyLaff,
     simplifyLocation,
     getGagInfo,
+    getTaskInfo,
 } from './utils.js';
 
 // Create an express app
@@ -42,12 +43,12 @@ app.post('/interactions', async function (req, res) {
                 });
             };
 
-            if (command === 'task') {
-                const amount = data.options && data.options.length > 0 ? data.options[0].value : null;
+            if (command === 'tasks') {
+                const index = data.options && data.options.length > 0 ? data.options[0].value : null;
                 return res.send({
                     type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                     data: {
-                        content: getTaskInfo(LOCAL_TOON, amount),
+                        content: getTaskInfo(LOCAL_TOON, index),
                     }
                 });
             }

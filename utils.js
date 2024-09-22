@@ -6,7 +6,7 @@ const DEFAULT_PORT = 1547;
 const MAX_PORT = 1552;
 const ENDPOINT = "info.json"; 
 const HIGHEST_GAG = 7;
-const INDENT = `    `;
+const INDENT = `        `;
 let authToken = null;
 initAuthToken();
 
@@ -117,26 +117,29 @@ export function simplifyLocation(toon) {
 
 export function getGagInfo(toon, userTrack) {
     const toonName = toon.toon.name;
-    if (userTrack) { // track has been selected
-        const gagInfo = toon.gags[userTrack];
-        if (!gagInfo) { // check if toon doesn't have the track
+    let gagInfo;
+    if (userTrack) {
+        gagInfo = toon.gags[userTrack];
+        if (!gagInfo) {
             return `${toonName} does not have the ${userTrack} track.`;
-        } else if (gagInfo.gag.level === HIGHEST_GAG) { // check if toon is maxed or not
+        } else if (gagInfo.gag.level === HIGHEST_GAG) {
             return `${toonName} has **maxed** the ${userTrack} track.`;
-        } else { // not maxed
+        } else {
             return `${toonName} has **${gagInfo.experience.current}/${gagInfo.experience.next}** left to earn ${gagInfo.gag.name}, the next ${userTrack} gag.`;
         }
     } else { // no track selected, print overview of all tracks
+        gagInfo = toon.gags;
         let allGags = ``;
         let hasOrg = false;
         let organic = `${INDENT}No organic track.\n${INDENT}`;
 
         // locate all tracks 
         for (let track of gagTracks) {
-            if (toon.gags[track.value]) { // track exists, add info to allGags
-                allGags += `${toon.gags[track.value].gag.name}, `;
+            if (gagInfo[track.value]) { // track exists, add info to allGags
+                allGags += `${gagInfo[track.value].gag.name}, `;
 
-                if (!hasOrg && toon.gags[track.value].organic) {
+                // find organic if there is one
+                if (!hasOrg && gagInfo[track.value].organic) {
                     hasOrg = true;
                     organic = `${INDENT}Organic ${track.value}\n${INDENT}`;
                 }
@@ -146,5 +149,50 @@ export function getGagInfo(toon, userTrack) {
         // remove extra ', '
         allGags = allGags.slice(0, -2);
         return `**${toonName}**'s gags with ${toon.laff.max} laff:\n` + organic + allGags;
+    }
+}
+
+export function getTaskInfo(toon, index) {
+    // index is not 0-index based; it is in [1,2,...,tasks.length-1]
+    const toonName = toon.toon.name;
+    let deletable; 
+    let taskInfo;
+    index = index ? Number(index) : null;
+    if (index) { // selected a specific task
+        if (index > toon.tasks.length) {
+            return `${toonName} has no task in slot ${index}.`
+        }
+        taskInfo = toon.tasks[index-1];
+        deletable = taskInfo.deletable ? `Just for Fun` : ``; 
+        return `**${toonName}'s** ${deletable} task ${index}:\n${INDENT}${getTaskTypeDetailed(taskInfo)}`
+    } else {
+        let allTasks = ``;
+        for (let i = 0; i < toon.tasks.length; i++) {
+            taskInfo = toon.tasks[i];
+            deletable = taskInfo.deletable ? ` _Just for Fun_` : ``; 
+            allTasks += `${INDENT}Task **${i+1}:** ${getTaskTypeSimple(taskInfo)}${deletable}\n`
+        }
+        return `**${toonName}** is working on:\n` + allTasks;
+    }
+}
+
+export function getTaskTypeDetailed(taskInfo) {
+    console.log('progress: ' + taskInfo.objective.progress != 'Complete')
+    if (taskInfo.objective.where || (taskInfo.objective.progress != 'Complete')) { // not a visit task, don't display npc values
+        return `**Objective:** ${taskInfo.objective.text}
+        **Progress:** ${taskInfo.objective.progress.text}
+        **Reward:** ${taskInfo.reward}`;
+    } else { // display npc values for a visit task
+        return `**Objective:** Visit ${taskInfo.to.name} in ${taskInfo.to.building}
+        **Location:** ${taskInfo.to.zone}, ${taskInfo.to.neighorhood}
+        **Reward:** ${taskInfo.reward}`;
+    }
+}
+
+export function getTaskTypeSimple(taskInfo) {
+    if (taskInfo.objective.where || (taskInfo.objective.progress != 'Complete')) { // not a visit task, don't display npc values
+        return `${taskInfo.objective.text} (${taskInfo.objective.progress.text})`;
+    } else { // display npc values for a visit task
+        return `Visit ${taskInfo.to.building} in ${taskInfo.to.zone}, ${taskInfo.to.neighorhood}`;
     }
 }

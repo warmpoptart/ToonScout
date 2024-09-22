@@ -16,6 +16,20 @@ const TASK = {
     description: 'Show an overview of one or all your tasks.',
     integration_types: [1],
     contexts: [0, 1, 2],
+    options: [
+        {
+            type: 3,
+            name: 'task_number',
+            description: 'Show detailed information about a specific task.',
+            required: false,
+            choices: [
+                { name: 'Task 1', value: '1' },
+                { name: 'Task 2', value: '2' },
+                { name: 'Task 3', value: '3' },
+                { name: 'Task 4', value: '4' },
+            ],
+        }
+    ]
 }
 
 const GAGS = {
