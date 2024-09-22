@@ -166,6 +166,9 @@ export function getTaskInfo(toon, index) {
         deletable = taskInfo.deletable ? `Just for Fun` : ``; 
         return `**${toonName}'s** ${deletable} task ${index}:\n${INDENT}${getTaskTypeDetailed(taskInfo)}`
     } else {
+        if (toon.tasks.length === 0) {
+            return `**${toonName}** has no tasks.`
+        }
         let allTasks = ``;
         for (let i = 0; i < toon.tasks.length; i++) {
             taskInfo = toon.tasks[i];
