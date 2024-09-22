@@ -43,7 +43,13 @@ app.post('/interactions', async function (req, res) {
             };
 
             if (command === 'task') {
-
+                const amount = data.options && data.options.length > 0 ? data.options[0].value : null;
+                return res.send({
+                    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                    data: {
+                        content: getTaskInfo(LOCAL_TOON, amount),
+                    }
+                });
             }
 
             if (command === 'gags') {
