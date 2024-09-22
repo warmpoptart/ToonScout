@@ -1,9 +1,12 @@
 import 'dotenv/config';
 import { verifyKey } from 'discord-interactions';
+import { gagTracks } from './game.js';
 
 const DEFAULT_PORT = 1547;
 const MAX_PORT = 1552;
 const ENDPOINT = "info.json"; 
+const HIGHEST_GAG = 7;
+const INDENT = `    `;
 let authToken = null;
 initAuthToken();
 
@@ -112,6 +115,36 @@ export function simplifyLocation(toon) {
     return msg;
 }
 
-export function getGagInfo(track) {
-    return track;
+export function getGagInfo(toon, userTrack) {
+    const toonName = toon.toon.name;
+    if (userTrack) { // track has been selected
+        const gagInfo = toon.gags[userTrack];
+        if (!gagInfo) { // check if toon doesn't have the track
+            return `${toonName} does not have the ${userTrack} track.`;
+        } else if (gagInfo.gag.level === HIGHEST_GAG) { // check if toon is maxed or not
+            return `${toonName} has **maxed** the ${userTrack} track.`;
+        } else { // not maxed
+            return `${toonName} has **${gagInfo.experience.current}/${gagInfo.experience.next}** left to earn ${gagInfo.gag.name}, the next ${userTrack} gag.`;
+        }
+    } else { // no track selected, print overview of all tracks
+        let allGags = ``;
+        let hasOrg = false;
+        let organic = `${INDENT}No organic track.\n${INDENT}`;
+
+        // locate all tracks 
+        for (let track of gagTracks) {
+            if (toon.gags[track.value]) { // track exists, add info to allGags
+                allGags += `${toon.gags[track.value].gag.name}, `;
+
+                if (!hasOrg && toon.gags[track.value].organic) {
+                    hasOrg = true;
+                    organic = `${INDENT}Organic ${track.value}\n${INDENT}`;
+                }
+            }
+        }
+
+        // remove extra ', '
+        allGags = allGags.slice(0, -2);
+        return `**${toonName}**'s gags with ${toon.laff.max} laff:\n` + organic + allGags;
+    }
 }

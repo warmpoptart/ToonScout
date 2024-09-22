@@ -47,10 +47,12 @@ app.post('/interactions', async function (req, res) {
             }
 
             if (command === 'gags') {
+                // default to null if no option provided
+                const track = data.options && data.options.length > 0 ? data.options[0].value : null;
                 return res.send({
                     type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                     data: {
-                        content: getGagInfo(data.options[0].value),
+                        content: getGagInfo(LOCAL_TOON, track),
                     }
                 })
             }
