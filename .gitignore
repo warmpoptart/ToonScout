@@ -10,6 +10,7 @@ logs/*.log
 # Build files
 dist/
 build/
+wrapper/
 
 # Ignore package-lock.json if you want to allow for flexibility
 # This is usually included, but if you're working with a team, you might want it.
