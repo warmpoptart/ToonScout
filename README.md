@@ -9,7 +9,7 @@
 
 ### Step 2: Install the Latest Release
 
-1. Visit the [Releases Page](https://github.com/YOUR_REPO/releases) and download the latest version.
+1. Visit the [Releases Page](https://github.com/erin-miller/toonScout/releases) and download the latest version.
    - Select **Source code (zip)** under **Assets**.
    - Extract the folder in your download location.
 
