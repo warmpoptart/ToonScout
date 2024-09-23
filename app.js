@@ -30,6 +30,7 @@ app.post('/interactions', async function (req, res) {
     if (type === InteractionType.APPLICATION_COMMAND) {
         const { name: command } = data;
         const user = member.user.username;
+        const globalUser = member.user.global_name;
 
         console.log(`USER [ ${user} ] RAN [ ${command} ]`);
         
@@ -39,7 +40,7 @@ app.post('/interactions', async function (req, res) {
                 return res.send({
                     type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                     data: {
-                        content: `${user}'s toon, **${LOCAL_TOON.toon.name}**, has ${simplifyLaff(LOCAL_TOON)} laff and is located in ${simplifyLocation(LOCAL_TOON)}.`,
+                        content: `${globalUser}'s toon, **${LOCAL_TOON.toon.name}**, has ${simplifyLaff(LOCAL_TOON)} laff and is located in ${simplifyLocation(LOCAL_TOON)}.`,
                     },
                 });
             };
