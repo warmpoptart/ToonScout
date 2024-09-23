@@ -1,5 +1,5 @@
 {
-    "name": "ToonScout",
+    "name": "toonscout",
     "version": "1.0.0",
     "description": "Display information about your current toon.",
     "main": "js/app.js",
