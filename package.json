@@ -1,18 +1,18 @@
 {
-    "name": "getting-started",
+    "name": "ToonScout",
     "version": "1.0.0",
-    "description": "Discord example app",
-    "main": "app.js",
+    "description": "Display information about your current toon.",
+    "main": "js/app.js",
     "type": "module",
     "engines": {
       "node": ">=20.x"
     },
     "scripts": {
-      "start": "node app.js",
-      "register": "node commands.js",
-      "dev": "nodemon app.js"
+      "start": "node js/app.js",
+      "register": "node js/commands.js",
+      "dev": "nodemon js/app.js"
     },
-    "author": "Shay DeWael",
+    "author": "Erin Miller",
     "license": "MIT",
     "dependencies": {
       "discord-interactions": "^3.2.0",
