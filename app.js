@@ -25,7 +25,7 @@ app.post('/interactions', async function (req, res) {
     if (type === InteractionType.PING) {
         return res.send({ type: InteractionResponseType.PONG });
     }
-    console.log(req.body);
+
     // checking for commands
     if (type === InteractionType.APPLICATION_COMMAND) {
         const { name: command } = data;
