@@ -361,3 +361,33 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Node modules
+node_modules/
+
+# Log files
+logs/*.log
+
+# Environment variables
+.env
+
+# Build files
+dist/
+build/
+wrapper/
+
+# Ignore package-lock.json if you want to allow for flexibility
+# This is usually included, but if you're working with a team, you might want it.
+# package-lock.json
+
+# Ignore temporary or sensitive files
+*.tgz
+*.swp
+
+# Ignore any IDE specific files
+.vscode/
+.idea/
+
+# other
+*.sh
+.vs
