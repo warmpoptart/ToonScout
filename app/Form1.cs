@@ -61,7 +61,7 @@ namespace scout
             ProcessStartInfo processInfo = new ProcessStartInfo
             {
                 FileName = "cmd.exe",
-                Arguments = $"/c \"{scriptPath} {txtSubdomain.Text}\"",
+                Arguments = $"/c \"\"{scriptPath}\" {txtSubdomain.Text}\"",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
