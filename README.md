@@ -1,4 +1,17 @@
-# ToonScout Setup and Installation Guide
+# ToonScout Setup and Installation Guide (Windows)
+
+## Prerequisites
+
+### Node.js
+
+In order for ToonScout to function, **Node.js** needs to be installed. You can download it by running
+[this file](https://nodejs.org/dist/v20.17.0/node-v20.17.0-x64.msi).
+
+Windows Defender Firewall might block the app. If so, just hit **Allow Access** as seen below.
+
+During installation, it will present you with the option to install other software. Do **NOT** select the box.
+
+![Windows Defender Firewall Alert](/assets/firewall.png)
 
 ## Initial Setup
 
@@ -26,7 +39,7 @@
   3. **Public Key**: This is located under "Application ID" in the General Information section.
   4. **Subdomain**: Enter a unique name for your subdomain. Letters, numbers, and hyphens can be used.
      - Examples: `toon1239812389`, `scout-92834290`
-    
+
 **NOTE**: Your App ID, Discord Token, and Public Key are all sensitive information. The values for these fields are stored locally on your computer and should not be shared anywhere else.
 
 ### Step 5: Set the Interactions Endpoint URL
