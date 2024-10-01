@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { InstallGlobalCommands } from './utils.js';
-import { gagTracks } from './game.js';
+import { gagTracks, suitTypes, fishTypes } from './game.js';
 
 const INFO = {
     name: 'info',
@@ -49,6 +49,40 @@ const GAGS = {
     ],
 }
 
+const SUIT = {
+    name: 'suit',
+    type: 1, 
+    description: 'Find information about your cog suits.',
+    integration_types: [1],
+    contexts: [0, 1, 2],
+    options: [
+        {
+            type: 3,
+            name: 'cog_type',
+            description: 'The cog type you want to see.',
+            required: true,
+            choices: suitTypes,
+        },
+    ],
+}
+
+const FISH = {
+    name: 'fish',
+    type: 1, 
+    description: 'Get advising on catching new fish.',
+    integration_types: [1],
+    contexts: [0, 1, 2],
+    options: [
+        {
+            type: 3,
+            name: 'advising',
+            description: 'What fish or where should I go?',
+            required: true,
+            choices: fishTypes,
+        },
+    ],
+}
+
 // const BLANK = {
 //     name: '',
 //     type: 1, 
@@ -61,6 +95,8 @@ const ALL_COMMANDS = [
   INFO,
   TASK,
   GAGS,
+  SUIT,
+  FISH
 ];
 
 InstallGlobalCommands(process.env.APP_ID, ALL_COMMANDS);

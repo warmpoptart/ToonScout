@@ -1,14 +1,23 @@
 import 'dotenv/config';
 import express from 'express';
-import { InteractionType, InteractionResponseType } from 'discord-interactions';
+import { InteractionType, InteractionResponseType, verifyKeyMiddleware } from 'discord-interactions';
 import {
-    VerifyDiscordRequest,
     LocalToonRequest,
     simplifyLaff,
     simplifyLocation,
     getGagInfo,
     getTaskInfo,
+    getSuitInfo,
+    getFishInfo,
 } from './utils.js';
+
+// set request types
+const info = "info.json";
+const fish = "fish.json";
+const flowers = "flowers.json";
+const suits = "cogsuits.json";
+const golf = "golf.json";
+const racing = "racing.json";
 
 // Create an express app
 const app = express();
@@ -16,9 +25,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 // Parse request body and verifies incoming requests using discord-interactions package
 
-app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
-
-app.post('/interactions', async function (req, res) {
+app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async function (req, res) {
     const { type, data, member, user: direct } = req.body;
     
     // verification requests
@@ -45,8 +52,9 @@ app.post('/interactions', async function (req, res) {
         console.log(`USER [ ${user} ] RAN [ ${command} ]`);
         
         try {
-            const LOCAL_TOON = await LocalToonRequest();
+            let LOCAL_TOON;
             if (command === 'info') {
+                LOCAL_TOON = await LocalToonRequest(info);
                 return res.send({
                     type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                     data: {
@@ -56,6 +64,7 @@ app.post('/interactions', async function (req, res) {
             };
 
             if (command === 'tasks') {
+                LOCAL_TOON = await LocalToonRequest(info);
                 const index = data.options && data.options.length > 0 ? data.options[0].value : null;
                 return res.send({
                     type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
@@ -66,6 +75,7 @@ app.post('/interactions', async function (req, res) {
             }
 
             if (command === 'gags') {
+                LOCAL_TOON = await LocalToonRequest(info);
                 // default to null if no option provided
                 const track = data.options && data.options.length > 0 ? data.options[0].value : null;
                 return res.send({
@@ -73,7 +83,30 @@ app.post('/interactions', async function (req, res) {
                     data: {
                         content: getGagInfo(LOCAL_TOON, track),
                     }
-                })
+                });
+            }
+
+            if (command === 'suit') {
+                LOCAL_TOON = await LocalToonRequest(suits);
+                const cogsuit = data.options && data.options.length > 0 ? data.options[0].value : null;
+                return res.send({
+                    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                    data: {
+                        content: getSuitInfo(JSON.stringify(LOCAL_TOON), cogsuit),
+                    }
+                });
+            }
+            
+            if (command === 'fish') {
+                LOCAL_TOON = await LocalToonRequest(fish);
+                const type = data.options && data.options.length > 0 ? data.options[0].value : null;
+                const fishInfo = getFishInfo(JSON.stringify(LOCAL_TOON), type);
+                return res.send({
+                    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                    data: {
+                        content: fishInfo,
+                    }
+                });
             }
 
         } catch (error) {

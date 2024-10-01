@@ -1,69 +1,59 @@
 import 'dotenv/config';
 import { verifyKey } from 'discord-interactions';
-import { gagTracks } from './game.js';
+import { 
+    gagTracks, 
+} from './game.js';
+import SuitCalculator from 'toonapi-calculator/js/suits.js';
+import FishCalculator from 'toonapi-calculator/js/fish.js';
 
 const DEFAULT_PORT = 1547;
 const MAX_PORT = 1552;
-const ENDPOINT = "info.json"; 
 const HIGHEST_GAG = 7;
 const INDENT = `        `;
 let authToken = null;
 
-export function VerifyDiscordRequest(clientKey) {
-    return function (req, res, buf) {
-      const signature = req.get('X-Signature-Ed25519');
-      const timestamp = req.get('X-Signature-Timestamp');
-      console.log(signature, timestamp, clientKey);
-  
-      const isValidRequest = verifyKey(buf, signature, timestamp, clientKey);
-      if (!isValidRequest) {
-        res.status(401).send('Bad request signature');
-        throw new Error('Bad request signature');
-      }
-    };
-  }
-
-  export async function DiscordRequest(endpoint, options) {
+export async function DiscordRequest(endpoint, options) {
     // append endpoint to root API URL
     const url = 'https://discord.com/api/v10/' + endpoint;
     // Stringify payloads
     if (options.body) options.body = JSON.stringify(options.body);
     const res = await fetch(url, {
-      headers: {
+        headers: {
         Authorization: `Bot ${process.env.DISCORD_TOKEN}`,
         'Content-Type': 'application/json; charset=UTF-8',
         'User-Agent':
-          'ToonScout (https://github.com/erin-miller/toonScout, 1.0.0)',
-      },
-      ...options,
+            'ToonScout (https://github.com/erin-miller/toonScout, 1.0.0)',
+        },
+        ...options,
     });
     // throw API errors
     if (!res.ok) {
-      const data = await res.json();
-      console.log(res.status);
-      throw new Error(JSON.stringify(data));
+        const data = await res.json();
+        console.log(res.status);
+        throw new Error(JSON.stringify(data));
     }
     // return original response
     return res;
-  }
+}
 
-  export async function InstallGlobalCommands(appId, commands) {
+export async function InstallGlobalCommands(appId, commands) {
     // API endpoint to overwrite global commands
     const endpoint = `applications/${appId}/commands`;
-  
-    try {
-      // This is calling the bulk overwrite endpoint: https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands
-      await DiscordRequest(endpoint, { method: 'PUT', body: commands });
-    } catch (err) {
-      console.error(err);
-    }
-  }
 
-export async function LocalToonRequest() {
+    try {
+        // This is calling the bulk overwrite endpoint: https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands
+        await DiscordRequest(endpoint, { method: 'PUT', body: commands });
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+export async function LocalToonRequest(request) {
     let port = DEFAULT_PORT;
     initAuthToken();
+    const endpoint = request;
 
-    const url = `http://localhost:${port}/${ENDPOINT}`;
+    const url = `http://localhost:${port}/${endpoint}`;
 
     try {
         const response = await fetch(url, {
@@ -191,6 +181,28 @@ export function getTaskTypeSimple(taskInfo) {
         return `${taskInfo.objective.text} (${taskInfo.objective.progress.text})`;
     } else { // display npc values for a visit task
         return `Visit ${taskInfo.to.building} on ${taskInfo.to.zone}, ${taskInfo.to.neighborhood}`;
+    }
+}
+
+export function getSuitInfo(toon, type) {
+    const suitcalc = new SuitCalculator(toon);
+    return JSON.stringify(suitcalc.getBestPath(type));
+}
+
+export function getFishInfo(toon, type) {
+    const fishcalc = new FishCalculator(toon);
+    const footer = '\n-# The % rate reflects your chance of catching a new fish.'
+    if (type === 'location') {
+        const intro = 'Here\'s your top 5 locations!\n';
+        let topFive = fishcalc.sortBestLocation().slice(0,5);
+        topFive = topFive.map((place, index) => `${index+1}. ${place[0]}, **${Math.round(place[1] * 100)}%**`).join('\n');
+        return `${intro}${topFive}${footer}`;
+    } else if (type === 'rarity') {
+        const intro = 'Here\'s your top 5 easiest new fish!\n';
+        console.log(fishcalc.sortBestRarity());
+        let topFive = fishcalc.sortBestRarity().slice(0,5);
+        topFive = topFive.map((fish, index) => `${index+1}. ${fish.name} in ${fish.location}, **${Math.round(fish.probability*100)}%**`).join('\n');
+        return `${intro}${topFive}${footer}`;
     }
 }
 
