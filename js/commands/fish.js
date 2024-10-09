@@ -201,7 +201,9 @@ function getFishInfo(toon, type) {
 
     if (type === 'where') {
         topFive = fishcalc.sortBestLocation().slice(0,5);
-        topFive = topFive.map((place, index) => `${index+1}. ${place[0]}:  **${(place[1] * 100).toFixed(2)}%**`).join('\n');
+        topFive = topFive.map(([loc, data], index) => {
+            return `${index + 1}. **${loc} (${(data.total * 100).toFixed(2)}%)**\nBuckets: ${data.buckets}\n`;
+        }).join('\n');
         return topFive;
     } else if (type === 'what') {
         topFive = fishcalc.sortBestRarity().slice(0,5);
