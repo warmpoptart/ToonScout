@@ -101,6 +101,7 @@ function getHomeEmbed(LOCAL_TOON) {
         .setColor('Blue')
         .setAuthor({ name: LOCAL_TOON.toon.name, iconURL: getToonRendition(LOCAL_TOON, 'laffmeter') })
         .setTitle('Welcome to the Fish Advisor!')
+        .setDescription(`You have caught **${getFishCount(LOCAL_TOON.fish)}**!`)
         .setImage(fisherman)
         .addFields(
             { name: 'What?', value: 'Find what new fish are easiest to catch!'},
@@ -115,7 +116,7 @@ function getWhereEmbed(LOCAL_TOON) {
         .setTitle('Where should I go?')
         .setThumbnail(teleport)
         .setDescription(getFishInfo(LOCAL_TOON.fish, 'where'))
-        .setFooter(getFooter())
+        .setFooter(getFooter(LOCAL_TOON))
 }
 
 function getWhatEmbed(LOCAL_TOON) {
@@ -125,11 +126,18 @@ function getWhatEmbed(LOCAL_TOON) {
         .setTitle('What should I catch?')
         .setThumbnail(getRandomFish())
         .setDescription(getFishInfo(LOCAL_TOON.fish, 'what'))
-        .setFooter(getFooter())
+        .setFooter(getFooter(LOCAL_TOON))
 }
 
-function getFooter() {
-    return { text: 'Number of buckets is an estimate and is not guaranteed.', iconURL: bucket }
+function getFooter(LOCAL_TOON) {
+    return { text: `Number of buckets is an estimate. | ${getFishCount(LOCAL_TOON.fish)}`, iconURL: bucket }
+}
+
+function getFishCount(toon) {
+    const fishcalc = new FishCalculator(JSON.stringify(toon));
+    const catchable = fishcalc.getCatchable().length;
+    const caught = fishcalc.getCaught().length;
+    return `${caught}/${catchable} fish`;
 }
 
 function getWhereButton() {
