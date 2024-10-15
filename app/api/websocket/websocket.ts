@@ -22,6 +22,7 @@ export const initWebSocket = (setIsConnected: React.Dispatch<React.SetStateActio
     socket.addEventListener("message", (event) => {
         const data = JSON.parse(event.data);
         toon = data;
+        setIsConnected(true);
     });
 
     socket.addEventListener("error", (error) => {
@@ -57,7 +58,7 @@ function startContinuousRequests() {
             await sendData(userId, toon);
             socket.send(JSON.stringify({ request: "all" }));
         }
-    }, 5000);
+    }, 10000);
 }
 
 async function sendData(userId: string, data: any) {

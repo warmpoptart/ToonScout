@@ -14,7 +14,7 @@
 
 @font-face {
     font-family: 'impress'; /* Name your second font */
-    src: url('../fonts/ImpressBT.TTF') format('truetype'); /* Path to your font file */
+    src: url('../fonts/ImpressBT.ttf') format('truetype'); /* Path to your font file */
     font-weight: normal; /* Adjust weight as needed */
     font-style: normal; /* Adjust style as needed */
 }
