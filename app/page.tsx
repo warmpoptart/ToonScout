@@ -1,13 +1,27 @@
 "use client";
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { handleOAuthToken } from './api/oauth/oauth';
 
 const HomePage: React.FC = () => {
+    const generateRandomString = (length = 16) => {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            result += characters[randomIndex];
+        }
+        return result;
+    };
+    
     const initiateOAuth = () => {
         const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
         const redirectUri = encodeURIComponent('https://scouttoon.info/');
         const scope = encodeURIComponent('identify');
-        const url = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUri}&scope=${scope}`;
+
+        const randomState = generateRandomString();
+        localStorage.setItem('oauth-state', randomState);
+
+        const url = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUri}&scope=${scope}&state=${btoa(randomState)}`;
         
         // Redirect to Discord authorization URL
         window.location.href = url;

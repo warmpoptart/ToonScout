@@ -6,6 +6,7 @@ let userId: string | null = null;
 let socket: WebSocket | null = null;
 
 export function initWebSocket() {
+    console.log("Starting WebSocket...");
     socket = new WebSocket(`ws://localhost:${DEFAULT_PORT}`);
 
     socket.addEventListener("open", (event) => {
@@ -33,7 +34,7 @@ export function initWebSocket() {
 }
 
 function waitForSocket() {
-    console.log("Attempting to connect to WebSocket...");
+    console.log("Attempting to reconnect to WebSocket...");
 
     socket = new WebSocket(`ws://localhost:${DEFAULT_PORT}`);
 

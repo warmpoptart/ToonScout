@@ -5,13 +5,10 @@ export async function handleOAuthToken(fragment: URLSearchParams) {
     const state = fragment.get('state');
 
     if (accessToken) {
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('sessionId', generateRandomString());
-
-        const userId = await getDiscordUserId(accessToken); // Your function to fetch user ID
-        setAuthToken(accessToken); // Set the auth token for WebSocket
+        const userId = await getDiscordUserId(accessToken);
+        setAuthToken(accessToken);
         setUserId(userId);
-        initWebSocket(); // Initialize WebSocket with the new token
+        initWebSocket();
     } else {
         console.error("Access token not found.");
     }
@@ -24,18 +21,6 @@ export async function handleOAuthToken(fragment: URLSearchParams) {
 
     // Clean the URL hash to remove the token from the address bar
     window.history.replaceState({}, document.title, window.location.pathname);
-}
-
-
-// Function to generate a random string for session IDs
-function generateRandomString() {
-    let randomString = '';
-    const randomNumber = Math.floor(Math.random() * 10);
-
-    for (let i = 0; i < 20 + randomNumber; i++) {
-        randomString += String.fromCharCode(33 + Math.floor(Math.random() * 94));
-    }
-    return randomString;
 }
 
 // Fetch Discord User ID
