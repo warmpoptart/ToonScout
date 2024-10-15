@@ -5,7 +5,7 @@ let toon: any = null;
 let userId: string | null = null;
 let socket: WebSocket | null = null;
 
-export function initWebSocket() {
+export const initWebSocket = (setIsConnected: React.Dispatch<React.SetStateAction<boolean>>) => {
     console.log("Starting WebSocket...");
     socket = new WebSocket(`ws://localhost:${DEFAULT_PORT}`);
 
@@ -15,6 +15,7 @@ export function initWebSocket() {
             socket.send(JSON.stringify({ authorization: authToken, name: "ToonScout" }));
             socket.send(JSON.stringify({ request: "all" }));
             startContinuousRequests();
+            setIsConnected(true);
         }
     });
 
@@ -29,6 +30,7 @@ export function initWebSocket() {
 
     socket.addEventListener("close", (event) => {
         console.log("WebSocket closed:", event);
+        setIsConnected(false);
         waitForSocket();
     });
 }
@@ -40,7 +42,7 @@ function waitForSocket() {
 
     socket.addEventListener("open", () => {
         console.log("WebSocket connection established!");
-        initWebSocket();
+        initWebSocket;
     });
 
     socket.addEventListener("error", () => {
@@ -90,3 +92,5 @@ export function setAuthToken(token: string) {
 export function setUserId(id: string) {
     userId = id;
 }
+
+export default initWebSocket;

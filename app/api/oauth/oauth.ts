@@ -1,4 +1,4 @@
-import { initWebSocket, setAuthToken, setUserId } from '../websocket/websocket';
+import { setAuthToken, setUserId } from '../websocket/websocket';
 
 export async function handleOAuthToken(fragment: URLSearchParams) {
     const accessToken = fragment.get('access_token');
@@ -8,7 +8,6 @@ export async function handleOAuthToken(fragment: URLSearchParams) {
         const userId = await getDiscordUserId(accessToken);
         setAuthToken(accessToken);
         setUserId(userId);
-        initWebSocket();
     } else {
         console.error("Access token not found.");
     }
