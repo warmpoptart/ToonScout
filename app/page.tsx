@@ -53,9 +53,14 @@ const HomePage: React.FC = () => {
         const accessToken = fragment.get('access_token');
         
         if (accessToken) {
-            handleOAuthToken(fragment);
-            setIsAuth(true);
-            initWebSocket(setIsConnected);
+            handleOAuthToken(fragment).then((id) => {
+                setIsAuth(true);
+                if (id) {
+                    initWebSocket(setIsConnected, id)
+                } else {
+                    console.log("ID error");
+                }
+            });
         }
     }, []);
 

@@ -1,21 +1,19 @@
-// websocket.ts
 const DEFAULT_PORT = 1547;
-let authToken: string | null = null;
 let toon: any = null;
-let userId: string | null = null;
 let socket: WebSocket | null = null;
+let userId: string | null = '';
 
-export const initWebSocket = (setIsConnected: React.Dispatch<React.SetStateAction<boolean>>) => {
-    console.log("Starting WebSocket...");
+export const initWebSocket = (setIsConnected: React.Dispatch<React.SetStateAction<boolean>>, id: string) => {
     socket = new WebSocket(`ws://localhost:${DEFAULT_PORT}`);
-
+    
     socket.addEventListener("open", (event) => {
+        userId = id;
+        console.log(userId);
         console.log("WebSocket opened");
-        if (authToken && socket) {
-            socket.send(JSON.stringify({ authorization: authToken, name: "ToonScout" }));
+        if (socket) {
+            socket.send(JSON.stringify({ authorization: initAuthToken(), name: "ToonScout" }));
             socket.send(JSON.stringify({ request: "all" }));
             startContinuousRequests();
-            setIsConnected(true);
         }
     });
 
@@ -27,6 +25,7 @@ export const initWebSocket = (setIsConnected: React.Dispatch<React.SetStateActio
 
     socket.addEventListener("error", (error) => {
         console.error("WebSocket error:", error);
+        setIsConnected(false);
     });
 
     socket.addEventListener("close", (event) => {
@@ -34,6 +33,19 @@ export const initWebSocket = (setIsConnected: React.Dispatch<React.SetStateActio
         setIsConnected(false);
         waitForSocket();
     });
+
+    function startContinuousRequests() {
+        setInterval(async () => {
+            if (userId && socket && socket.readyState === WebSocket.OPEN) {
+                setIsConnected(true);
+                await sendData(userId, toon);
+                socket.send(JSON.stringify({ request: "all" }));
+            } else {
+                console.log("Failed to get request... ", userId, socket?.readyState === WebSocket.OPEN);
+                setIsConnected(false);
+            }
+        }, 5000);
+    }
 }
 
 function waitForSocket() {
@@ -52,46 +64,36 @@ function waitForSocket() {
     });
 }
 
-function startContinuousRequests() {
-    setInterval(async () => {
-        if (userId && socket && socket.readyState === WebSocket.OPEN) {
-            await sendData(userId, toon);
-            socket.send(JSON.stringify({ request: "all" }));
-        }
-    }, 10000);
-}
-
 async function sendData(userId: string, data: any) {
     let attempt = 0;
-    while (attempt < 3) {
-        try {
-            const response = await fetch('https://api.scouttoon.info/toon', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ userId, data }),
-            });
+    try {
+        const response = await fetch('https://api.scouttoon.info/toon', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId, data }),
+        });
 
-            if (!response.ok) throw new Error('Failed to send data');
+        if (!response.ok) throw new Error('Failed to send data');
 
-            console.log("Data sent successfully.");
-            break;
-        } catch (error) {
-            console.error("Error sending data:", error);
-            attempt++;
-            const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
-            await new Promise(resolve => setTimeout(resolve, delay));
-        }
+        console.log("Data sent successfully.");
+    } catch (error) {
+        console.error("Error sending data:", error);
+        const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
+        await new Promise(resolve => setTimeout(resolve, delay));
     }
 }
 
-export function setAuthToken(token: string) {
-    authToken = token;
-}
-
-export function setUserId(id: string) {
-    userId = id;
-}
-
 export default initWebSocket;
+
+function initAuthToken() {
+    const length = 16;
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let token = '';
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        token += characters[randomIndex];
+    }
+    return token;
+}

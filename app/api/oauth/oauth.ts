@@ -1,18 +1,15 @@
-import { setAuthToken, setUserId } from '../websocket/websocket';
-
 export async function handleOAuthToken(fragment: URLSearchParams) {
     const accessToken = fragment.get('access_token');
     const state = fragment.get('state');
+    let userId: string;
 
     if (accessToken) {
-        const userId = await getDiscordUserId(accessToken);
-        setAuthToken(accessToken);
-        setUserId(userId);
+        userId = await getDiscordUserId(accessToken);
     } else {
+        userId = '';
         console.error("Access token not found.");
     }
 
-    // Check state validity
     if (state === null || localStorage.getItem('oauth-state') !== atob(decodeURIComponent(state))) {
         console.log('You may have been click-jacked!');
         return;
@@ -20,9 +17,9 @@ export async function handleOAuthToken(fragment: URLSearchParams) {
 
     // Clean the URL hash to remove the token from the address bar
     window.history.replaceState({}, document.title, window.location.pathname);
+    return userId;
 }
 
-// Fetch Discord User ID
 async function getDiscordUserId(accessToken: string) {
     try {
         const response = await fetch('https://discord.com/api/users/@me', {
@@ -36,7 +33,7 @@ async function getDiscordUserId(accessToken: string) {
         }
 
         const userData = await response.json();
-        return userData.id; // Return the user ID
+        return userData.id;
     } catch (error) {
         console.error("Error fetching Discord user ID:", error);
         return null;
