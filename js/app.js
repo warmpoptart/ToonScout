@@ -1,15 +1,35 @@
 import 'dotenv/config';
 import express from 'express';
 import { InteractionType, InteractionResponseType, verifyKeyMiddleware } from 'discord-interactions';
-import { getUser } from './utils.js';
+import { getUser, getUserId } from './utils.js';
 import { readdirSync } from 'fs';
 import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
+import cors from 'cors';
 
 // Create an express app
 const app = express();
+const allowedOrigins = ['https://scouttoon.info', 'https://api.scouttoon.info'];
+
+app.use(cors({
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Add any methods you expect to use
+    credentials: true, // Include cookies or authorization headers
+}));
+
+// parse req as JSON
+app.use(express.json())
+
 // Get port, or default to 3000
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 // Parse request body and verifies incoming requests using discord-interactions package
 app.commands = new Map();
 
@@ -32,20 +52,21 @@ for (const file of commandFiles) {
 
 app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async function (req, res) {
     const { type, data } = req.body;
-    const user = getUser(req);
     
     // verification requests
     if (type === InteractionType.PING) {
         return res.send({ type: InteractionResponseType.PONG });
     }
-    
+
+    const toon = await getToken(getUserId(req));
+
     // checking for commands
     if (type === InteractionType.APPLICATION_COMMAND) {
         const { name } = data;
-        console.log(`USER [ ${user} ] RAN [ ${name} ]`);
+
         const cmd = app.commands.get(name); 
         try {
-            return await cmd.execute(req, res)
+            return await cmd.execute(req, res, toon)
         } catch (error) {
             console.error(error);
             return res.send({
@@ -59,14 +80,11 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
     if (type == InteractionType.MESSAGE_COMPONENT) {
         const customId = data.custom_id;
 
-        console.log(`USER [ ${user} ] CLICKED [ ${customId} ]`);
-
         const cmd = app.commands.get(customId.split(/[-:]/)[0]);
 
         if (cmd && cmd.handleButton) {
             try {
-                console.log(`Running ${customId} button...`);
-                const result = await cmd.handleButton(customId);
+                const result = await cmd.handleButton(customId, toon);
 
                 return res.send({
                     type: InteractionResponseType.UPDATE_MESSAGE,
@@ -86,6 +104,67 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
         }
     }
 });
+
+app.post('/toon', async (req, res) => {
+    const { userId, data } = req.body;
+
+    if (!userId || !data) {
+        return res.status(400).json({ error: 'User ID and data are required.' });
+    }
+
+    try {
+        await storeToken(userId, JSON.stringify(data))
+        res.status(201).json({ message: 'Data saved successfully.' });
+    } catch (error) {
+        console.error('Error saving data:', error);
+        res.status(500).json({ error: 'Internal server error.' });
+    }
+});
+
+import { MongoClient } from 'mongodb';
+
+const uri = 'mongodb://localhost:27017';
+const client = new MongoClient(uri);
+const dbName = 'scoutData';
+const collectionName = 'users';
+
+async function connectToDatabase() {
+    try {
+        await client.connect();
+        const database = client.db(dbName);
+        return database.collection(collectionName);
+    } catch (error) {
+        console.error('Error connecting to MongoDB:', error.message);
+    }
+}
+
+export async function storeToken(userId, data) {
+    const jsonData = JSON.stringify(data);
+    const collection = await connectToDatabase();
+
+    try {
+        const result = await collection.updateOne(
+            { userId: userId },
+            { $set: { data: jsonData } },
+            { upsert: true }
+        );
+        return result.modifiedCount;
+    } catch (error) {
+        console.error('Error storing token:', error.message);
+    }
+}
+
+export async function getToken(userId) {
+    const collection = await connectToDatabase();
+
+    try {
+        const user = await collection.findOne({ userId: userId });
+        return user ? JSON.parse(JSON.parse(user.data)).data : null;
+    } catch (error) {
+        console.error('Error retrieving token:', error.message);
+    }
+}
+
 
 app.listen(PORT, () => {
   console.log('Listening on port', PORT);
