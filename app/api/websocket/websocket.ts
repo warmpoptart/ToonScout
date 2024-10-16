@@ -1,89 +1,123 @@
 const DEFAULT_PORT = 1547;
 let toon: any = null;
 let socket: WebSocket | null = null;
+let scout: WebSocket | null = null;
 let userId: string | null = '';
+let contReqInterval: NodeJS.Timeout | null = null;
+let scoutAttempts = 0;
+const MAX_SCOUT_ATTEMPTS = 10;
+const RECONNECT_DELAY = 5000;
 
 export const initWebSocket = (setIsConnected: React.Dispatch<React.SetStateAction<boolean>>, id: string) => {
-    socket = new WebSocket(`ws://localhost:${DEFAULT_PORT}`);
+    userId = id;
+
+    const connectWebSocket = () => {
+        socket = new WebSocket(`ws://localhost:${DEFAULT_PORT}`);
+
+        socket.addEventListener("open", (event) => {
+            console.log("WebSocket opened");
+            if (socket) {
+                socket.send(JSON.stringify({ authorization: initAuthToken(), name: "ToonScout" }));
+                socket.send(JSON.stringify({ request: "all" }));
+                startContinuousRequests();
+            }
+        });
+        
+        socket.addEventListener("message", (event) => {
+            const data = JSON.parse(event.data);
+            toon = data;
+            setIsConnected(true);
+        });
     
-    socket.addEventListener("open", (event) => {
-        userId = id;
-        console.log(userId);
-        console.log("WebSocket opened");
-        if (socket) {
-            socket.send(JSON.stringify({ authorization: initAuthToken(), name: "ToonScout" }));
-            socket.send(JSON.stringify({ request: "all" }));
-            startContinuousRequests();
-        }
-    });
+        socket.addEventListener("error", (error) => {
+            console.error("WebSocket error:", error);
+            setIsConnected(false);
+        });
+    
+        socket.addEventListener("close", (event) => {
+            console.log("WebSocket closed:", event);
+            setIsConnected(false);
+            stopContinuousRequests()
+            setTimeout(connectWebSocket, 5000);
+        });
+    }
 
-    socket.addEventListener("message", (event) => {
-        const data = JSON.parse(event.data);
-        toon = data;
-        setIsConnected(true);
-    });
-
-    socket.addEventListener("error", (error) => {
-        console.error("WebSocket error:", error);
-        setIsConnected(false);
-    });
-
-    socket.addEventListener("close", (event) => {
-        console.log("WebSocket closed:", event);
-        setIsConnected(false);
-        waitForSocket();
-    });
+    connectWebSocket();
 
     function startContinuousRequests() {
-        setInterval(async () => {
-            if (userId && socket && socket.readyState === WebSocket.OPEN) {
-                setIsConnected(true);
-                await sendData(userId, toon);
-                socket.send(JSON.stringify({ request: "all" }));
+        if (contReqInterval) {
+            clearInterval(contReqInterval);
+        }
+
+        contReqInterval = setInterval(async () => {
+            if (userId && socket && socket.readyState === WebSocket.OPEN && toon) {
+                try {
+                    await sendData(userId, toon);
+                    socket.send(JSON.stringify({ request: "all" }));
+                    setIsConnected(true);
+                } catch (error) {
+                    console.error("Error in continuous request:", error);
+                }
             } else {
-                console.log("Failed to get request... ", userId, socket?.readyState === WebSocket.OPEN);
-                setIsConnected(false);
+                console.log(`Failed to get request... id: ${userId} socketopen: ${socket?.readyState === WebSocket.OPEN}`);
             }
-        }, 5000);
+        }, RECONNECT_DELAY);
+    }
+
+    function stopContinuousRequests() {
+        if (contReqInterval) {
+            clearInterval(contReqInterval);
+            contReqInterval = null;
+        }
     }
 }
 
-function waitForSocket() {
-    console.log("Attempting to reconnect to WebSocket...");
+function connectScoutWebSocket() {
+    scout = new WebSocket('wss://api.scouttoon.info');
 
-    socket = new WebSocket(`ws://localhost:${DEFAULT_PORT}`);
+    scout.onopen = () => {
+        console.log('Scout WebSocket connection established');
+        scoutAttempts = 0;
+    };
 
-    socket.addEventListener("open", () => {
-        console.log("WebSocket connection established!");
-        initWebSocket;
-    });
+    scout.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log('Message from scout WebSocket:', data);
+    };
 
-    socket.addEventListener("error", () => {
-        console.log("WebSocket connection failed. Retrying in 5 seconds...");
-        setTimeout(waitForSocket, 5000); // Retry after a delay
-    });
+    scout.onerror = (error) => {
+        console.error('Scout WebSocket error:', error);
+    };
+
+    scout.onclose = (event) => {
+        console.log('Scout WebSocket connection closed:', event);
+        handleScoutReconnection();
+    };
+}
+
+function handleScoutReconnection() {
+    if (scoutAttempts < MAX_SCOUT_ATTEMPTS) {
+        scoutAttempts++;
+        console.log(`Attempting to reconnect to scout WebSocket in ${RECONNECT_DELAY} ms...`);
+
+        setTimeout(() => {
+            connectScoutWebSocket();
+        }, RECONNECT_DELAY);
+    } else {
+        console.log('Max reconnection attempts for scout WebSocket reached. Stopping attempts.');
+    }
 }
 
 async function sendData(userId: string, data: any) {
-    let attempt = 0;
-    try {
-        const response = await fetch('https://api.scouttoon.info/toon', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ userId, data }),
-        });
-
-        if (!response.ok) throw new Error('Failed to send data');
-
-        console.log("Data sent successfully.");
-    } catch (error) {
-        console.error("Error sending data:", error);
-        const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
-        await new Promise(resolve => setTimeout(resolve, delay));
+    if (scout && scout.readyState === WebSocket.OPEN) {
+        scout.send(JSON.stringify({ userId, data }));
+    } else {
+        console.error('WebSocket connection is not open.');
+        handleScoutReconnection();
     }
 }
+
+connectScoutWebSocket();
 
 export default initWebSocket;
 
