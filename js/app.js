@@ -7,8 +7,8 @@ import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import cors from 'cors';
 import WebSocket from 'ws';
+import { getToken, storeToken } from './db/token.js';
 
-// Create an express app
 const app = express();
 const allowedOrigins = ['https://scouttoon.info', 'https://api.scouttoon.info'];
 
@@ -136,50 +136,6 @@ wss.on('connection', (ws) => {
         console.log('Client disconnected');
     });
 })
-
-import { MongoClient } from 'mongodb';
-
-const uri = 'mongodb://localhost:27017';
-const client = new MongoClient(uri);
-const dbName = 'scoutData';
-const collectionName = 'users';
-
-async function connectToDatabase() {
-    try {
-        await client.connect();
-        const database = client.db(dbName);
-        return database.collection(collectionName);
-    } catch (error) {
-        console.error('Error connecting to MongoDB:', error.message);
-    }
-}
-
-export async function storeToken(userId, data) {
-    const jsonData = JSON.stringify(data);
-    const collection = await connectToDatabase();
-
-    try {
-        const result = await collection.updateOne(
-            { userId: userId },
-            { $set: { data: jsonData } },
-            { upsert: true }
-        );
-        return result.modifiedCount;
-    } catch (error) {
-        console.error('Error storing token:', error.message);
-    }
-}
-
-export async function getToken(userId) {
-    const collection = await connectToDatabase();
-
-    try {
-        const user = await collection.findOne({ userId: userId });
-        return user ? JSON.parse(JSON.parse(user.data)).data : null;
-    } catch (error) {
-        console.error('Error retrieving token:', error.message);
-    }
-}
 
 process.on('SIGINT', () => {
     console.log("Shutting down...");

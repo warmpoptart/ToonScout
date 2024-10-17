@@ -41,7 +41,7 @@ export const data = new SlashCommandBuilder()
         )
 
 export async function execute(req, res, toon) {
-    const targetUser = req.body.data.options?.find(option => option.name === 'target')?.user;
+    const targetUser = req.body.data.options?.find(option => option.name === 'user')?.value;
     const targetToon = await validateUser(targetUser, res);
     if (!targetToon) return;
 

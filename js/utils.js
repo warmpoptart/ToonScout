@@ -1,4 +1,6 @@
 import 'dotenv/config';
+import { getToken } from './db/token.js';
+import { InteractionResponseType } from 'discord-interactions';
 
 export async function DiscordRequest(endpoint, options) {
     // append endpoint to root API URL
@@ -58,13 +60,13 @@ export function getToonRendition(local_toon, pose) {
 
 export async function validateUser(targetUser, res) {
     if (targetUser) {
-        const targetToon = await getToken(targetUser.id);
+        const targetToon = await getToken(targetUser);
 
         if (!targetToon) {
             await res.send({
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: {
-                    content: `${targetUser.username} has not connected to ToonScout.`,
+                    content: `${targetUser} has not connected to ToonScout.`,
                     flags: 64
                 }
             });
@@ -76,3 +78,4 @@ export async function validateUser(targetUser, res) {
 
     return null;
 }
+
