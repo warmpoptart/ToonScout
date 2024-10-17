@@ -37,6 +37,7 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(req, res) {
     const LOCAL_TOON = await LocalToonRequest('all.json');
+    console.log(JSON.stringify(LOCAL_TOON.fish));
     
     const row = new ActionRowBuilder()
         .addComponents(
