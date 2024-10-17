@@ -1,6 +1,4 @@
 import 'dotenv/config';
-const DEFAULT_PORT = 1547;
-const MAX_PORT = 1552;
 
 export async function DiscordRequest(endpoint, options) {
     // append endpoint to root API URL
@@ -56,4 +54,25 @@ export function getUserId(req) {
 export function getToonRendition(local_toon, pose) {
     const dna = local_toon.toon.style;
     return `https://rendition.toontownrewritten.com/render/${dna}/${pose}/1024x1024.png`
+}
+
+export async function validateUser(targetUser, res) {
+    if (targetUser) {
+        const targetToon = await getToken(targetUser.id);
+
+        if (!targetToon) {
+            await res.send({
+                type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                data: {
+                    content: `${targetUser.username} has not connected to ToonScout.`,
+                    flags: 64
+                }
+            });
+            return null;
+        }
+
+        return targetToon;
+    }
+
+    return null;
 }
