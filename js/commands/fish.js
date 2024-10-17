@@ -6,7 +6,7 @@ import {
 } from 'discord.js';
 import { InteractionResponseType } from 'discord-interactions';
 import FishCalculator from 'toonapi-calculator/js/fish.js';
-import { LocalToonRequest, getToonRendition } from '../utils.js';
+import { getToonRendition } from '../utils.js';
 
 const fisherman = 'https://static.toontownrewritten.wiki/uploads/e/eb/Crocodile_fishing.png';
 const bucket = 'https://i.imgur.com/jpy0keb.png';
@@ -37,7 +37,6 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(req, res) {
     const LOCAL_TOON = await LocalToonRequest('all.json');
-    console.log(JSON.stringify(LOCAL_TOON.fish));
     
     const row = new ActionRowBuilder()
         .addComponents(
@@ -48,14 +47,13 @@ export async function execute(req, res) {
     return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
-            embeds: [getHomeEmbed(LOCAL_TOON)],
+            embeds: [getHomeEmbed(toon)],
             components: [row]
         }
     });
 }
 
-export async function handleButton(customId) {
-    const LOCAL_TOON = await LocalToonRequest('all.json');
+export async function handleButton(customId, toon) {
     let embed;
     let row;
 
@@ -65,11 +63,11 @@ export async function handleButton(customId) {
     if (action === 'refresh') {
         switch (state) {
             case 'where':
-                embed = getWhereEmbed(LOCAL_TOON);
+                embed = getWhereEmbed(toon);
                 row = getWhereRow();
                 break;
             case 'what':
-                embed = getWhatEmbed(LOCAL_TOON);
+                embed = getWhatEmbed(toon);
                 row = getWhatRow();
                 break;
             default:
@@ -78,15 +76,15 @@ export async function handleButton(customId) {
     } else {
         switch (customId) {
             case 'fish-home':
-                embed = getHomeEmbed(LOCAL_TOON);
+                embed = getHomeEmbed(toon);
                 row = getHomeRow();
                 break;
             case 'fish-where':
-                embed = getWhereEmbed(LOCAL_TOON);
+                embed = getWhereEmbed(toon);
                 row = getWhereRow();
                 break;
             case 'fish-what':
-                embed = getWhatEmbed(LOCAL_TOON);
+                embed = getWhatEmbed(toon);
                 row = getWhatRow();
                 break;
             default:
@@ -206,17 +204,15 @@ function getFishInfo(toon, type) {
 
     if (fishcalc.getNew().length == 0) {
         return `You have maxed fishing. Congratulations!`;
-    }
+	}    
 
     if (type === 'where') {
         topFive = fishcalc.sortBestLocation().slice(0,5);
-        topFive = topFive.map(([loc, data], index) => {
-            return `${index + 1}. **${loc} (${(data.total * 100).toFixed(2)}%)**\nBuckets: ${data.buckets}\n`;
-        }).join('\n');
+        topFive = topFive.map((place, index) => `${index+1}. ${place[0]}:  **${(place[1] * 100).toFixed(2)}%**`).join('\n');
         return topFive;
     } else if (type === 'what') {
         topFive = fishcalc.sortBestRarity().slice(0,5);
         topFive = topFive.map((fish, index) => `**${index+1}. ${fish.name} (${(fish.probability*100).toFixed(2)}%)**Location: ${fish.location}\nBuckets: ${fish.buckets}\n`).join('\n');
-        return topFive;
+  	return topFive;
     }
 }
