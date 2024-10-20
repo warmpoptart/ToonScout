@@ -6,7 +6,7 @@ import {
 } from 'discord.js';
 import { InteractionResponseType } from 'discord-interactions';
 import FishCalculator from 'toonapi-calculator/js/fish.js';
-import { getToonRendition, validateUser } from '../utils.js';
+import { getToonRendition } from '../utils.js';
 
 const fisherman = 'https://static.toontownrewritten.wiki/uploads/e/eb/Crocodile_fishing.png';
 const bucket = 'https://i.imgur.com/jpy0keb.png';
@@ -41,10 +41,6 @@ export const data = new SlashCommandBuilder()
         )
 
 export async function execute(req, res, toon) {
-    const targetUser = req.body.data.options?.find(option => option.name === 'user')?.value;
-    const targetToon = await validateUser(targetUser, res);
-    if (!targetToon) return;
-
     const row = new ActionRowBuilder()
         .addComponents(
             getWhatButton(),
@@ -54,13 +50,13 @@ export async function execute(req, res, toon) {
     return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
-            embeds: [getHomeEmbed(targetToon || toon)],
+            embeds: [getHomeEmbed(toon)],
             components: [row]
         }
     });
 }
 
-export async function handleButton(customId, toon) {
+export async function handleButton(req, customId, toon) {
     let embed;
     let row;
 

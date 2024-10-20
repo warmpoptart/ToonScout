@@ -66,7 +66,7 @@ export async function validateUser(targetUser, res) {
             await res.send({
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: {
-                    content: `${targetUser} has not connected to ToonScout.`,
+                    content: `That user has not connected to ToonScout.`,
                     flags: 64
                 }
             });

@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import { InteractionType, InteractionResponseType, verifyKeyMiddleware } from 'discord-interactions';
-import { getUserId } from './utils.js';
+import { getUserId, validateUser } from './utils.js';
 import { readdirSync } from 'fs';
 import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
@@ -59,7 +59,11 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
         return res.send({ type: InteractionResponseType.PONG });
     }
 
-    const toon = await getToken(getUserId(req));
+    const user = await getToken(getUserId(req));
+    const targetUser = req.body.data.options?.find(option => option.name === 'user')?.value;
+    const targetToon = await validateUser(targetUser, res);
+    const toon = targetToon || user;
+    const id = targetUser || getUserId(req); 
 
     // checking for commands
     if (type === InteractionType.APPLICATION_COMMAND) {
@@ -67,7 +71,7 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
 
         const cmd = app.commands.get(name); 
         try {
-            return await cmd.execute(req, res, toon)
+            return await cmd.execute(req, res, toon, id)
         } catch (error) {
             console.error(error);
             return res.send({
@@ -85,7 +89,7 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
 
         if (cmd && cmd.handleButton) {
             try {
-                const result = await cmd.handleButton(customId, toon);
+                const result = await cmd.handleButton(req, customId, toon, );
 
                 return res.send({
                     type: InteractionResponseType.UPDATE_MESSAGE,

@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { InteractionResponseType } from 'discord-interactions';
 
 export const data = new SlashCommandBuilder()
@@ -9,11 +9,16 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(req, res, toon) {
     const invite = 'https://discord.gg/Qb929SrdRP';
-    
+
+    const embed = new EmbedBuilder()
+        .setColor('LuminousVividPink')
+        .setTitle('Support Server')
+        .setDescription(`Need help or have feedback? Come speak with us on our [support server](${invite})!`)
+
     return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
-            embeds: `Need help or have feedback? Come speak with at us on our [support server](${invite})!`,
+            embeds: [embed],
         }
     });
 }

@@ -6,7 +6,12 @@ export const data = new SlashCommandBuilder()
         .setName('info')
         .setDescription('Show your toon\'s name, laff, and location.')
         .setIntegrationTypes(1)
-        .setContexts([0, 1, 2]);
+        .setContexts([0, 1, 2])
+        .addUserOption(option => 
+            option.setName('user')
+            .setDescription('(Optional) Get the specified user\'s toon info.')
+            .setRequired(false)
+        )
 
 export async function execute(req, res, toon) {
     const embed = new EmbedBuilder()
@@ -17,6 +22,7 @@ export async function execute(req, res, toon) {
             { name: 'Laff', value: simplifyLaff(toon) },
             { name: 'Location', value: simplifyLocation(toon) }
         )
+        
 
     return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,

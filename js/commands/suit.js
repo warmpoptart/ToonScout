@@ -19,9 +19,13 @@ export const data = new SlashCommandBuilder()
         .setDescription('Find information about your cog suits.')
         .setIntegrationTypes(1)
         .setContexts([0, 1, 2])
+        .addUserOption(option => 
+            option.setName('user')
+            .setDescription('(Optional) Get the specified user\'s toon info.')
+            .setRequired(false)
+        )
 
 export async function execute(req, res, toon) {
-
     const row = new ActionRowBuilder()
         .addComponents(
             getSellButton(),
@@ -39,7 +43,7 @@ export async function execute(req, res, toon) {
     });
 }
 
-export async function handleButton(customId, toon) {
+export async function handleButton(req, customId, toon) {
     let embed;
     let row;
 
