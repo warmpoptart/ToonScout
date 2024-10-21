@@ -1,6 +1,7 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { InteractionResponseType } from 'discord-interactions';
-import { getToonRendition, getModified } from '../utils.js';
+import { getToonRendition } from '../utils.js';
+import { getToken } from '../db/token.js';
 
 const HIGHEST_LVL = 7;
 const organic = '<:organic:1292659435717787791>';
@@ -82,7 +83,8 @@ export const data = new SlashCommandBuilder()
             .setRequired(false)
         )
 
-export async function execute(req, res, item) {
+export async function execute(req, res, target) {
+    const item = getToken(target);
     const toon = item.data;
 
     const gagTracks = getGagInfo(toon);
