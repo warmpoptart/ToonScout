@@ -64,7 +64,6 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
     const targetToon = await validateUser(targetUser, res);
     const toon = targetToon || user;
     const id = targetUser || getUserId(req); 
-
     // checking for commands
     if (type === InteractionType.APPLICATION_COMMAND) {
         const { name } = data;

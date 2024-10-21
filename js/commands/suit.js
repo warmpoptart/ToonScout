@@ -28,8 +28,6 @@ export const data = new SlashCommandBuilder()
         )
 
 export async function execute(req, res, item) {
-    const toon = item.data;
-
     const row = new ActionRowBuilder()
         .addComponents(
             getSellButton(),
@@ -41,7 +39,7 @@ export async function execute(req, res, item) {
     return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
-            embeds: [getHomeEmbed(toon)],
+            embeds: [getHomeEmbed(item)],
             components: [row]
         }
     });
@@ -213,7 +211,7 @@ function getSuitEmbed(item, title, type) {
             .addFields( 
                 { name: 'Recommended Activities', value: getSuitPath(suit, type) },
             )
-            .setFooter({ text: `The recommended activites are optional!`, iconURL: gear })
+            .setFooter({ text: `Facility earnings are an estimate.`, iconURL: gear })
             .setTimestamp(item.modified)
     } else {
         return new EmbedBuilder()

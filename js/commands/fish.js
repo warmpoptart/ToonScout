@@ -42,7 +42,7 @@ export const data = new SlashCommandBuilder()
         )
 
 export async function execute(req, res, item) {
-    footer = getFooter(toon);
+    footer = getFooter(item.data);
     const row = new ActionRowBuilder()
         .addComponents(
             getWhatButton(),
@@ -141,7 +141,7 @@ function getWhatEmbed(item) {
 }
 
 function getFooter(toon) {
-    return { text: `Number of buckets is an estimate. | ${getFishCount(toon.fish)}`, iconURL: bucket }
+    return { text: `Number of buckets is an estimate.\n${getFishCount(toon.fish)}`, iconURL: bucket }
 }
 
 function getFishCount(toon) {
