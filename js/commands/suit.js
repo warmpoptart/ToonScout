@@ -5,16 +5,15 @@ import {
     ButtonBuilder 
 } from 'discord.js';
 import { InteractionResponseType } from 'discord-interactions';
-import { getToonRendition, getModified } from '../utils.js';
+import { getToonRendition } from '../utils.js';
 import SuitCalculator from 'toonapi-calculator/js/suits.js';
+import { getToken } from '../db/token.js';
 
 const gear = 'https://i.imgur.com/ezVOZkx.png';
 const sellIcon = 'https://i.imgur.com/gGr9Mqp.png';
 const cashIcon = 'https://i.imgur.com/Wo4aeDt.png';
 const lawIcon = 'https://i.imgur.com/mYUrd1D.png';
 const bossIcon = 'https://i.imgur.com/QrV9Zrx.png';
-
-let footer = '';
 
 export const data = new SlashCommandBuilder()
         .setName('suit')
@@ -27,13 +26,15 @@ export const data = new SlashCommandBuilder()
             .setRequired(false)
         )
 
-export async function execute(req, res, item) {
+export async function execute(req, res, target) {
+    const item = getToken(target);
+
     const row = new ActionRowBuilder()
         .addComponents(
-            getSellButton(),
-            getCashButton(),
-            getLawButton(),
-            getBossButton()
+            getSellButton(target),
+            getCashButton(target),
+            getLawButton(target),
+            getBossButton(target)
         )
 
     return res.send({
@@ -45,120 +46,131 @@ export async function execute(req, res, item) {
     });
 }
 
-export async function handleButton(req, customId, item) {
+export async function handleButton(req, customId) {
     let embed;
     let row;
+    let target;
+    let state;
 
-    const [, actionWithState] = customId.split('-');
-    const [action, state] = actionWithState.split(':');
+    const parts = customId.split(':');
+    const action = parts[0];
 
-    if (action === 'refresh') {
-        switch (state) {
-            case 'home':
-                embed = getHomeEmbed(item);
-                row = getHomeRow();
-                break;
-            case 'sell':
-                embed = getSellEmbed(item);
-                row = getSellRow();
-                break;
-            case 'cash':
-                embed = getCashEmbed(item);
-                row = getCashRow();
-                break;
-            case 'law':
-                embed = getLawEmbed(item);
-                row = getLawRow();
-                break;
-            case 'boss':
-                embed = getBossEmbed(item);
-                row = getBossRow();
-                break;
-            default:
-                return;
-        }
+    if (parts.length === 3) {
+        state = parts[1];
+        target = parts[2];
     } else {
-        switch (customId) {
-            case 'suit-home':
-                embed = getHomeEmbed(item)
-                row = getHomeRow()
-                break;
-            case 'suit-sell':
-                embed = getSellEmbed(item)
-                row = getSellRow()
-                break;
-            case 'suit-cash':
-                embed = getCashEmbed(item)
-                row = getCashRow()
-                break;
-            case 'suit-law':
-                embed = getLawEmbed(item)
-                row = getLawRow()
-                break;
-            case 'suit-boss':
-                embed = getBossEmbed(item)
-                row = getBossRow()
-                break;
-            default:
-                return;
-        }
+        state = null;
+        target = parts[1];
+    }
+
+    const item = getToken(target); 
+
+    switch (action) {
+        case 'suit-refresh':
+            switch (state) {
+                case 'home':
+                    embed = getHomeEmbed(item);
+                    row = getHomeRow(target);
+                    break;
+                case 'sell':
+                    embed = getSellEmbed(item);
+                    row = getSellRow(target);
+                    break;
+                case 'cash':
+                    embed = getCashEmbed(item);
+                    row = getCashRow(target);
+                    break;
+                case 'law':
+                    embed = getLawEmbed(item);
+                    row = getLawRow(target);
+                    break;
+                case 'boss':
+                    embed = getBossEmbed(item);
+                    row = getBossRow(target);
+                    break;
+                default:
+                    return;
+            }
+            break;
+        case 'suit-home':
+            embed = getHomeEmbed(item)
+            row = getHomeRow(target)
+            break;
+        case 'suit-sell':
+            embed = getSellEmbed(item)
+            row = getSellRow(target)
+            break;
+        case 'suit-cash':
+            embed = getCashEmbed(item)
+            row = getCashRow(target)
+            break;
+        case 'suit-law':
+            embed = getLawEmbed(item)
+            row = getLawRow(target)
+            break;
+        case 'suit-boss':
+            embed = getBossEmbed(item)
+            row = getBossRow(target)
+            break;
+        default:
+            return;
     }
 
     return { embed, row };
 }
 
-function getBossRow() {
+function getBossRow(target) {
     return new ActionRowBuilder()
         .addComponents(
-            getRefreshButton('boss'),
-            getHomeButton(),
-            getSellButton(),
-            getCashButton(),
-            getLawButton()
+            getRefreshButton('boss', target),
+            getHomeButton(target),
+            getSellButton(target),
+            getCashButton(target),
+            getLawButton(target)
         );
 }
 
-function getLawRow() {
+function getLawRow(target) {
     return new ActionRowBuilder()
         .addComponents(
-            getRefreshButton('law'),
-            getHomeButton(),
-            getSellButton(),
-            getCashButton(),
-            getBossButton()
+            getRefreshButton('law', target),
+            getHomeButton(target),
+            getSellButton(target),
+            getCashButton(target),
+            getBossButton(target)
         );
 }
 
-function getCashRow() {
+function getCashRow(target) {
     return new ActionRowBuilder()
         .addComponents(
-            getRefreshButton('cash'),
-            getHomeButton(),
-            getSellButton(),
-            getLawButton(),
-            getBossButton()
+            getRefreshButton('cash', target),
+            getHomeButton(target),
+            getSellButton(target),
+            getLawButton(target),
+            getBossButton(target)
         );
 }
 
-function getSellRow() {
+function getSellRow(target) {
     return new ActionRowBuilder()
         .addComponents(
             getRefreshButton('sell'),
-            getHomeButton(),
-            getCashButton(),
-            getLawButton(),
-            getBossButton()
+            getHomeButton(target),
+            getCashButton(target),
+            getLawButton(target),
+            getBossButton(target)
         );
 }
 
-function getHomeRow() {
+function getHomeRow(target) {
     return new ActionRowBuilder()
         .addComponents(
-            getRefreshButton('home'),
-            getSellButton(),
-            getCashButton(),
-            getLawButton(),
-            getBossButton()
+            getRefreshButton('home', target),
+            getSellButton(target),
+            getCashButton(target),
+            getLawButton(target),
+            getBossButton(target)
         );
 }
 
@@ -223,44 +235,44 @@ function getSuitEmbed(item, title, type) {
     }
 }
 
-function getHomeButton() {
+function getHomeButton(target) {
     return new ButtonBuilder()
-        .setCustomId('suit-home')
+        .setCustomId(`suit-home:${target}`)
         .setLabel('Home')
         .setStyle('Primary')
 }
 
-function getRefreshButton(type) {
+function getRefreshButton(type, target) {
     return new ButtonBuilder()
-        .setCustomId(`suit-refresh:${type}`)
+        .setCustomId(`suit-refresh:${type}:${target}`)
         .setLabel('Refresh')
         .setStyle('Danger')
 }
 
-function getSellButton() {
+function getSellButton(target) {
     return new ButtonBuilder()
-        .setCustomId('suit-sell')
+        .setCustomId(`suit-sell:${target}`)
         .setLabel('Sellbot')
         .setStyle('Secondary')
 }
 
-function getCashButton() {
+function getCashButton(target) {
     return new ButtonBuilder()
-        .setCustomId('suit-cash')
+        .setCustomId(`suit-cash:${target}`)
         .setLabel('Cashbot')
         .setStyle('Secondary')
 }
 
-function getLawButton() {
+function getLawButton(target) {
     return new ButtonBuilder()
-        .setCustomId('suit-law')
+        .setCustomId(`suit-law:${target}`)
         .setLabel('Lawbot')
         .setStyle('Secondary')
 }
 
-function getBossButton() {
+function getBossButton(target) {
     return new ButtonBuilder()
-        .setCustomId('suit-boss')
+        .setCustomId(`suit-boss:${target}`)
         .setLabel('Bossbot')
         .setStyle('Secondary')
 }
