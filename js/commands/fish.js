@@ -6,7 +6,8 @@ import {
 } from 'discord.js';
 import { InteractionResponseType } from 'discord-interactions';
 import FishCalculator from 'toonapi-calculator/js/fish.js';
-import { getToonRendition, getModified } from '../utils.js';
+import { getToonRendition } from '../utils.js';
+import { getToken } from '../db/token.js';
 
 const fisherman = 'https://static.toontownrewritten.wiki/uploads/e/eb/Crocodile_fishing.png';
 const bucket = 'https://i.imgur.com/jpy0keb.png';
@@ -41,12 +42,13 @@ export const data = new SlashCommandBuilder()
             .setRequired(false)
         )
 
-export async function execute(req, res, item) {
+export async function execute(req, res, target) {
+    const item = getToken(target);
     footer = getFooter(item.data);
     const row = new ActionRowBuilder()
         .addComponents(
-            getWhatButton(),
-            getWhereButton()
+            getWhatButton(target),
+            getWhereButton(target)
         )
     
     return res.send({
@@ -58,43 +60,54 @@ export async function execute(req, res, item) {
     });
 }
 
-export async function handleButton(req, customId, item) {
+export async function handleButton(req, customId) {
     let embed;
     let row;
+    let target;
+    let state;
 
-    const [, actionWithState] = customId.split('-');
-    const [action, state] = actionWithState.split(':');
+    const parts = customId.split(':');
+    const action = parts[0];
 
-    if (action === 'refresh') {
-        switch (state) {
-            case 'where':
-                embed = getWhereEmbed(item);
-                row = getWhereRow();
-                break;
-            case 'what':
-                embed = getWhatEmbed(item);
-                row = getWhatRow();
-                break;
-            default:
-                return;
-        }
+    if (parts.length === 3) {
+        state = parts[1];
+        target = parts[2];
     } else {
-        switch (customId) {
-            case 'fish-home':
-                embed = getHomeEmbed(item);
-                row = getHomeRow();
-                break;
-            case 'fish-where':
-                embed = getWhereEmbed(item);
-                row = getWhereRow();
-                break;
-            case 'fish-what':
-                embed = getWhatEmbed(item);
-                row = getWhatRow();
-                break;
-            default:
-                return;
-        }
+        state = null;
+        target = parts[1];
+    }
+
+    const item = getToken(target); 
+
+    switch (action) {
+        case 'fish-refresh':
+            switch (state) {
+                case 'what':
+                    embed = getWhatEmbed(item);
+                    row = getWhatRow(target);
+                    break;
+                case 'where':
+                    embed = getWhereEmbed(item);
+                    row = getWhereRow(target);
+                    break;
+                default:
+                    return;
+            }
+            break;
+        case 'fish-where':
+            embed = getWhereEmbed(item);
+            row = getWhereRow(target);
+            break;
+        case 'fish-what':
+            embed = getWhatEmbed(item);
+            row = getWhatRow(target);
+            break;
+        case 'fish-home':
+            embed = getHomeEmbed(item);
+            row = getHomeRow(target);
+            break;
+        default:
+            return;
     }
 
     return { embed, row };
@@ -151,57 +164,57 @@ function getFishCount(toon) {
     return `${caught}/${catchable} fish`;
 }
 
-function getWhereButton() {
+function getWhereButton(target) {
     return new ButtonBuilder()
-        .setCustomId('fish-where')
+        .setCustomId(`fish-where:${target}`)
         .setLabel('Where?')
         .setStyle('Secondary')
 }
 
-function getWhatButton() {
+function getWhatButton(target) {
     return new ButtonBuilder()
-        .setCustomId('fish-what')
+        .setCustomId(`fish-what:${target}`)
         .setLabel('What?')
         .setStyle('Secondary')
 }
 
-function getHomeButton() {
+function getHomeButton(target) {
     return new ButtonBuilder()
-        .setCustomId('fish-home')
+        .setCustomId(`fish-home:${target}`)
         .setLabel('Home')
         .setStyle('Primary')
 }
 
-function getRefreshButton(type) {
+function getRefreshButton(type, target) {
     return new ButtonBuilder()
-        .setCustomId(`fish-refresh:${type}`)
+        .setCustomId(`fish-refresh:${type}:${target}`)
         .setLabel('Refresh')
         .setStyle('Danger')
 }
 
-function getHomeRow() {
+function getHomeRow(target) {
     return new ActionRowBuilder()
         .addComponents(
-            getWhatButton(), 
-            getWhereButton()
+            getWhatButton(target), 
+            getWhereButton(target)
         )
 }
 
-function getWhatRow() {
+function getWhatRow(target) {
     return new ActionRowBuilder()
         .addComponents(
-            getRefreshButton('what'),
-            getHomeButton(), 
-            getWhereButton()
+            getRefreshButton('what', target),
+            getHomeButton(target), 
+            getWhereButton(target)
         )
 }
 
-function getWhereRow() {
+function getWhereRow(target) {
     return new ActionRowBuilder()
         .addComponents(
-            getRefreshButton('where'),
-            getHomeButton(), 
-            getWhatButton()
+            getRefreshButton('where', target),
+            getHomeButton(target), 
+            getWhatButton(target)
         )
 }
 
@@ -220,7 +233,7 @@ function getFishInfo(toon, type) {
 
     if (type === 'where') {
         topFive = fishcalc.sortBestLocation().slice(0,5);
-	topFive = topFive.map(([location, { total, buckets }], index) =>`**${index + 1}. **${location} (${(total*100).toFixed(2)}%)**\nBuckets: ${buckets}\n`).join('\n');
+	    topFive = topFive.map(([location, { total, buckets }], index) =>`**${index + 1}. ${location} (${(total*100).toFixed(2)}%)**\nBuckets: ${buckets}\n`).join('\n');
         return topFive;
     } else if (type === 'what') {
         topFive = fishcalc.sortBestRarity().slice(0,5);
