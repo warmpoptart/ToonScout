@@ -23,7 +23,7 @@ export async function execute(req, res, item) {
             { name: 'Laff', value: simplifyLaff(toon) },
             { name: 'Location', value: simplifyLocation(toon) }
         )
-        .setFooter({ text: getModified(item.modified) });
+        .setTimestamp(item.modified)
 
     return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
