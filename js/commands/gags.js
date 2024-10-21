@@ -139,7 +139,6 @@ function getGagProgress(toon) {
             }
         }
     }
-    console.log(gagProgress);
     return gagProgress;
 }
 

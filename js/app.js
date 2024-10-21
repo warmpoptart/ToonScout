@@ -117,8 +117,6 @@ const server = app.listen(PORT, () => {
 const wss = new WebSocket.Server({ server });
 
 wss.on('connection', (ws) => {
-    console.log("Client connected.");
-
     ws.on('message', async (message) => {
         const { userId, data } = JSON.parse(message);
 
