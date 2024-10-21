@@ -42,8 +42,7 @@ export const data = new SlashCommandBuilder()
         )
 
 export async function execute(req, res, item) {
-    const toon = item.data;
-    footer = getFooter(toon, item.modified);
+    footer = getFooter(toon);
     const row = new ActionRowBuilder()
         .addComponents(
             getWhatButton(),
@@ -53,7 +52,7 @@ export async function execute(req, res, item) {
     return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
-            embeds: [getHomeEmbed(toon)],
+            embeds: [getHomeEmbed(item)],
             components: [row]
         }
     });
@@ -62,7 +61,6 @@ export async function execute(req, res, item) {
 export async function handleButton(req, customId, item) {
     let embed;
     let row;
-    const toon = item.data;
 
     const [, actionWithState] = customId.split('-');
     const [action, state] = actionWithState.split(':');
@@ -70,11 +68,11 @@ export async function handleButton(req, customId, item) {
     if (action === 'refresh') {
         switch (state) {
             case 'where':
-                embed = getWhereEmbed(toon);
+                embed = getWhereEmbed(item);
                 row = getWhereRow();
                 break;
             case 'what':
-                embed = getWhatEmbed(toon);
+                embed = getWhatEmbed(item);
                 row = getWhatRow();
                 break;
             default:
@@ -83,15 +81,15 @@ export async function handleButton(req, customId, item) {
     } else {
         switch (customId) {
             case 'fish-home':
-                embed = getHomeEmbed(toon);
+                embed = getHomeEmbed(item);
                 row = getHomeRow();
                 break;
             case 'fish-where':
-                embed = getWhereEmbed(toon);
+                embed = getWhereEmbed(item);
                 row = getWhereRow();
                 break;
             case 'fish-what':
-                embed = getWhatEmbed(toon);
+                embed = getWhatEmbed(item);
                 row = getWhatRow();
                 break;
             default:
@@ -102,7 +100,8 @@ export async function handleButton(req, customId, item) {
     return { embed, row };
 }
 
-function getHomeEmbed(toon) {
+function getHomeEmbed(item) {
+    const toon = item.data;
     return new EmbedBuilder()
         .setColor('Blue')
         .setAuthor({ name: toon.toon.name, iconURL: getToonRendition(toon, 'laffmeter') })
@@ -114,9 +113,11 @@ function getHomeEmbed(toon) {
             { name: 'Where?', value: 'Find what locations give you the best\nchance at catching a new fish!'},
         )
         .setFooter(footer)
+        .setTimestamp(item.modified)
 }
 
-function getWhereEmbed(toon) {
+function getWhereEmbed(item) {
+    const toon = item.data;
     return new EmbedBuilder()
         .setColor('Blue')
         .setAuthor({ name: toon.toon.name, iconURL: getToonRendition(toon, 'laffmeter') })
@@ -124,9 +125,11 @@ function getWhereEmbed(toon) {
         .setThumbnail(teleport)
         .setDescription(getFishInfo(toon.fish, 'where'))
         .setFooter(footer)
+        .setTimestamp(item.modified)
 }
 
-function getWhatEmbed(toon) {
+function getWhatEmbed(item) {
+    const toon = item.data;
     return new EmbedBuilder()
         .setColor('Blue')
         .setAuthor({ name: toon.toon.name, iconURL: getToonRendition(toon, 'laffmeter') })
@@ -134,10 +137,11 @@ function getWhatEmbed(toon) {
         .setThumbnail(getRandomFish())
         .setDescription(getFishInfo(toon.fish, 'what'))
         .setFooter(footer)
+        .setTimestamp(item.modified)
 }
 
-function getFooter(toon, modified) {
-    return { text: `Number of buckets is an estimate. | ${getFishCount(toon.fish)}\n${getModified(modified)}`, iconURL: bucket }
+function getFooter(toon) {
+    return { text: `Number of buckets is an estimate. | ${getFishCount(toon.fish)}`, iconURL: bucket }
 }
 
 function getFishCount(toon) {

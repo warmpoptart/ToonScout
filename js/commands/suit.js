@@ -29,7 +29,6 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(req, res, item) {
     const toon = item.data;
-    footer = getModified(item.modified);
 
     const row = new ActionRowBuilder()
         .addComponents(
@@ -52,31 +51,29 @@ export async function handleButton(req, customId, item) {
     let embed;
     let row;
 
-    const toon = item.data;
-
     const [, actionWithState] = customId.split('-');
     const [action, state] = actionWithState.split(':');
 
     if (action === 'refresh') {
         switch (state) {
             case 'home':
-                embed = getHomeEmbed(toon);
+                embed = getHomeEmbed(item);
                 row = getHomeRow();
                 break;
             case 'sell':
-                embed = getSellEmbed(toon);
+                embed = getSellEmbed(item);
                 row = getSellRow();
                 break;
             case 'cash':
-                embed = getCashEmbed(toon);
+                embed = getCashEmbed(item);
                 row = getCashRow();
                 break;
             case 'law':
-                embed = getLawEmbed(toon);
+                embed = getLawEmbed(item);
                 row = getLawRow();
                 break;
             case 'boss':
-                embed = getBossEmbed(toon);
+                embed = getBossEmbed(item);
                 row = getBossRow();
                 break;
             default:
@@ -85,23 +82,23 @@ export async function handleButton(req, customId, item) {
     } else {
         switch (customId) {
             case 'suit-home':
-                embed = getHomeEmbed(toon)
+                embed = getHomeEmbed(item)
                 row = getHomeRow()
                 break;
             case 'suit-sell':
-                embed = getSellEmbed(toon)
+                embed = getSellEmbed(item)
                 row = getSellRow()
                 break;
             case 'suit-cash':
-                embed = getCashEmbed(toon)
+                embed = getCashEmbed(item)
                 row = getCashRow()
                 break;
             case 'suit-law':
-                embed = getLawEmbed(toon)
+                embed = getLawEmbed(item)
                 row = getLawRow()
                 break;
             case 'suit-boss':
-                embed = getBossEmbed(toon)
+                embed = getBossEmbed(item)
                 row = getBossRow()
                 break;
             default:
@@ -167,60 +164,64 @@ function getHomeRow() {
         );
 }
 
-function getHomeEmbed(LOCAL_TOON) {
+function getHomeEmbed(item) {
+    const toon = item.data;
     return new EmbedBuilder()
         .setColor('Red')
-        .setAuthor({ name: LOCAL_TOON.toon.name, iconURL: getToonRendition(LOCAL_TOON, 'laffmeter') })
+        .setAuthor({ name: toon.toon.name, iconURL: getToonRendition(toon, 'laffmeter') })
         .setTitle('Cog Suits')
         .setDescription('View your current suits or select department for more information.')
         .setThumbnail(gear)
         .addFields(
-            { name: 'Sellbot', value: getBasicSuitInfo(LOCAL_TOON.cogsuits, 's')},
-            { name: 'Cashbot', value: getBasicSuitInfo(LOCAL_TOON.cogsuits, 'm')},
-            { name: 'Lawbot', value: getBasicSuitInfo(LOCAL_TOON.cogsuits, 'l')},
-            { name: 'Bossbot', value: getBasicSuitInfo(LOCAL_TOON.cogsuits, 'c')},
+            { name: 'Sellbot', value: getBasicSuitInfo(toon.cogsuits, 's')},
+            { name: 'Cashbot', value: getBasicSuitInfo(toon.cogsuits, 'm')},
+            { name: 'Lawbot', value: getBasicSuitInfo(toon.cogsuits, 'l')},
+            { name: 'Bossbot', value: getBasicSuitInfo(toon.cogsuits, 'c')},
         )
-        .setFooter({ text: footer });
+        .setTimestamp(item.modified)
 }
 
-function getSellEmbed(LOCAL_TOON) {
-    const embed = getSuitEmbed(LOCAL_TOON, 'Sellbot', 's')
+function getSellEmbed(item) {
+    const embed = getSuitEmbed(item, 'Sellbot', 's')
     return embed.setThumbnail(sellIcon);
 }
 
-function getCashEmbed(LOCAL_TOON) {
-    const embed = getSuitEmbed(LOCAL_TOON, 'Cashbot', 'm');
+function getCashEmbed(item) {
+    const embed = getSuitEmbed(item, 'Cashbot', 'm');
     return embed.setThumbnail(cashIcon);
 }
 
-function getLawEmbed(LOCAL_TOON) {
-    const embed = getSuitEmbed(LOCAL_TOON, 'Lawbot', 'l');
+function getLawEmbed(item) {
+    const embed = getSuitEmbed(item, 'Lawbot', 'l');
     return embed.setThumbnail(lawIcon);
 }
 
-function getBossEmbed(LOCAL_TOON) {
-    const embed = getSuitEmbed(LOCAL_TOON, 'Bossbot', 'c');
+function getBossEmbed(item) {
+    const embed = getSuitEmbed(item, 'Bossbot', 'c');
     return embed.setThumbnail(bossIcon);
 }
 
-function getSuitEmbed(LOCAL_TOON, title, type) {
-    const suit = LOCAL_TOON.cogsuits;
+function getSuitEmbed(item, title, type) {
+    const toon = item.data;
+    const suit = toon.cogsuits;
     if (suit[type].hasDisguise) {
         return new EmbedBuilder()
             .setColor('Red')
-            .setAuthor({ name: LOCAL_TOON.toon.name, iconURL: getToonRendition(LOCAL_TOON, 'laffmeter') })
+            .setAuthor({ name: toon.toon.name, iconURL: getToonRendition(toon, 'laffmeter') })
             .setTitle(getBasicSuitInfo(suit, type))
             .setDescription(`${simplifyNeeded(suit, type)} to go!\nProgress: ${simplifyPromo(suit, type)}`)
             .addFields( 
                 { name: 'Recommended Activities', value: getSuitPath(suit, type) },
             )
-            .setFooter({ text: `The recommended activites are optional!\n${footer}`, iconURL: gear });
+            .setFooter({ text: `The recommended activites are optional!`, iconURL: gear })
+            .setTimestamp(item.modified)
     } else {
         return new EmbedBuilder()
             .setColor('Red')
-            .setAuthor({ name: LOCAL_TOON.toon.name, iconURL: getToonRendition(LOCAL_TOON, 'laffmeter') })
+            .setAuthor({ name: toon.toon.name, iconURL: getToonRendition(toon, 'laffmeter') })
             .setTitle(title)
             .setDescription(`This toon has no ${title} disguise.`)
+            .setTimestamp(item.modified)
     }
 }
 

@@ -27,7 +27,7 @@ export async function execute(req, res, item) {
         .setColor('Green')
         .setAuthor({ name: toon.toon.name, iconURL: getToonRendition(toon, 'laffmeter') })
         .setThumbnail(trooper)
-        .setFooter({ text: getModified(item.modified) })
+        .setTimestamp(item.modified)
 
     tasks.forEach(task => {
         embed.addFields(task);

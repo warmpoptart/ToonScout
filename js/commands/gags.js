@@ -93,7 +93,8 @@ export async function execute(req, res, item) {
         .setAuthor({ name: toon.toon.name, iconURL: getToonRendition(toon, 'laffmeter') })
         .setThumbnail(getToonRendition(toon, 'cake-topper'))
         .setDescription(`${gagTracks}`)
-        .setFooter({ text: `Leaf icon reflects an organic gag.\n${getModified(item.modified)}`, iconURL: organicLink })
+        .setFooter({ text: `Leaf icon reflects an organic gag.`, iconURL: organicLink })
+        .setTimestamp(item.modified)
 
     if (gagProgress.length > 0) {
         gagProgress.forEach(gag => {
