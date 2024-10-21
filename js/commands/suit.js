@@ -51,7 +51,7 @@ export async function handleButton(req, customId) {
     let row;
     let target;
     let state;
-
+    
     const parts = customId.split(':');
     const action = parts[0];
 
@@ -62,7 +62,7 @@ export async function handleButton(req, customId) {
         state = null;
         target = parts[1];
     }
-
+	
     const item = await getToken(target); 
 
     switch (action) {
@@ -155,7 +155,7 @@ function getCashRow(target) {
 function getSellRow(target) {
     return new ActionRowBuilder()
         .addComponents(
-            getRefreshButton('sell'),
+            getRefreshButton('sell', target),
             getHomeButton(target),
             getCashButton(target),
             getLawButton(target),
