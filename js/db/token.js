@@ -7,7 +7,7 @@ export async function storeToken(userId, data) {
     try {
         const result = await collection.updateOne(
             { userId: userId },
-            { $set: { data: jsonData } },
+            { $set: { data: jsonData, modified: new Date() } },
             { upsert: true }
         );
         return result.modifiedCount;
@@ -22,7 +22,11 @@ export async function getToken(userId) {
 
     try {
         const user = await collection.findOne({ userId: userId });
-        return user ? JSON.parse(JSON.parse(user.data)).data : null;
+        if (user) {
+            const data = JSON.parse(JSON.parse(user.data));
+            return { data: data, modified: user.dateModified }
+        }
+        return null;
     } catch (error) {
         console.error('Error retrieving token:', error.message);
         throw error;
