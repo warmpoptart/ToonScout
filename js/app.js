@@ -70,7 +70,7 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
 
         const cmd = app.commands.get(name); 
         try {
-            return await cmd.execute(req, res, toon, id)
+            return await cmd.execute(req, res, id)
         } catch (error) {
             console.error("App command error:", error);
             return res.send({
@@ -88,7 +88,7 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
 
         if (cmd && cmd.handleButton) {
             try {
-                const result = await cmd.handleButton(req, customId, toon, );
+                const result = await cmd.handleButton(req, customId);
 
                 return res.send({
                     type: InteractionResponseType.UPDATE_MESSAGE,
