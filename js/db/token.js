@@ -24,7 +24,7 @@ export async function getToken(userId) {
         const user = await collection.findOne({ userId: userId });
         if (user) {
             const data = JSON.parse(JSON.parse(user.data));
-	    const modified = new Date(user.modified);
+	        const modified = new Date(user.modified);
             return { data: data.data, modified: modified }
         }
         return null;
