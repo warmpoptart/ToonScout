@@ -38,7 +38,7 @@ export const initWebSocket = (setIsConnected: React.Dispatch<React.SetStateActio
             console.log("WebSocket closed:", event);
             setIsConnected(false);
             stopContinuousRequests()
-            setTimeout(connectWebSocket, 5000);
+            setTimeout(connectWebSocket, RECONNECT_DELAY);
         });
     }
 
