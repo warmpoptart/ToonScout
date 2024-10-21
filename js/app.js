@@ -73,7 +73,7 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
         try {
             return await cmd.execute(req, res, toon, id)
         } catch (error) {
-            console.error(error);
+            console.error("App command error:", error);
             return res.send({
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: { content: 'There was an error while executing this command!', flags: 64 }
