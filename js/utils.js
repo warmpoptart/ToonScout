@@ -79,3 +79,25 @@ export async function validateUser(targetUser, res) {
     return null;
 }
 
+function formatDate(date) {
+    const months = [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+
+    const month = months[date.getMonth()];
+    const day = date.getDate();
+    const year = date.getFullYear();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    // Pad minutes with leading zero if necessary
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+
+    // Create the final formatted string
+    return `${month} ${day}, ${year} ${hours}:${formattedMinutes}`;
+}
+
+export function getModified(date) {
+    return `Modified ${formatDate(date)}`;
+}

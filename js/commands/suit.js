@@ -5,7 +5,7 @@ import {
     ButtonBuilder 
 } from 'discord.js';
 import { InteractionResponseType } from 'discord-interactions';
-import { getToonRendition } from '../utils.js';
+import { getToonRendition, getModified } from '../utils.js';
 import SuitCalculator from 'toonapi-calculator/js/suits.js';
 
 const gear = 'https://i.imgur.com/ezVOZkx.png';
@@ -13,6 +13,8 @@ const sellIcon = 'https://i.imgur.com/gGr9Mqp.png';
 const cashIcon = 'https://i.imgur.com/Wo4aeDt.png';
 const lawIcon = 'https://i.imgur.com/mYUrd1D.png';
 const bossIcon = 'https://i.imgur.com/QrV9Zrx.png';
+
+const footer = '';
 
 export const data = new SlashCommandBuilder()
         .setName('suit')
@@ -25,7 +27,10 @@ export const data = new SlashCommandBuilder()
             .setRequired(false)
         )
 
-export async function execute(req, res, toon) {
+export async function execute(req, res, item) {
+    const toon = item.data;
+    footer = getModified(item.modified);
+
     const row = new ActionRowBuilder()
         .addComponents(
             getSellButton(),
@@ -43,9 +48,11 @@ export async function execute(req, res, toon) {
     });
 }
 
-export async function handleButton(req, customId, toon) {
+export async function handleButton(req, customId, item) {
     let embed;
     let row;
+
+    const toon = item.data;
 
     const [, actionWithState] = customId.split('-');
     const [action, state] = actionWithState.split(':');
@@ -173,6 +180,7 @@ function getHomeEmbed(LOCAL_TOON) {
             { name: 'Lawbot', value: getBasicSuitInfo(LOCAL_TOON.cogsuits, 'l')},
             { name: 'Bossbot', value: getBasicSuitInfo(LOCAL_TOON.cogsuits, 'c')},
         )
+        .setFooter(footer);
 }
 
 function getSellEmbed(LOCAL_TOON) {
@@ -206,7 +214,7 @@ function getSuitEmbed(LOCAL_TOON, title, type) {
             .addFields( 
                 { name: 'Recommended Activities', value: getSuitPath(suit, type) },
             )
-            .setFooter({ text: 'The recommended activites are optional!', iconURL: gear });
+            .setFooter({ text: `The recommended activites are optional!\n${footer}`, iconURL: gear });
     } else {
         return new EmbedBuilder()
             .setColor('Red')

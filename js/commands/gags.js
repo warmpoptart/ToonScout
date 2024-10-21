@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { InteractionResponseType } from 'discord-interactions';
-import { getToonRendition } from '../utils.js';
+import { getToonRendition, getModified } from '../utils.js';
 
 const HIGHEST_LVL = 7;
 const organic = '<:organic:1292659435717787791>';
@@ -82,7 +82,9 @@ export const data = new SlashCommandBuilder()
             .setRequired(false)
         )
 
-export async function execute(req, res, toon) {
+export async function execute(req, res, item) {
+    const toon = item.data;
+
     const gagTracks = getGagInfo(toon);
     const gagProgress = getGagProgress(toon);
 
@@ -91,7 +93,7 @@ export async function execute(req, res, toon) {
         .setAuthor({ name: toon.toon.name, iconURL: getToonRendition(toon, 'laffmeter') })
         .setThumbnail(getToonRendition(toon, 'cake-topper'))
         .setDescription(`${gagTracks}`)
-        .setFooter({ text: 'Leaf icon reflects an organic gag.', iconURL: organicLink })
+        .setFooter({ text: `Leaf icon reflects an organic gag.\n${getModified(item.modified)}`, iconURL: organicLink })
 
     if (gagProgress.length > 0) {
         gagProgress.forEach(gag => {

@@ -6,7 +6,7 @@ import {
 } from 'discord.js';
 import { InteractionResponseType } from 'discord-interactions';
 import FishCalculator from 'toonapi-calculator/js/fish.js';
-import { getToonRendition } from '../utils.js';
+import { getToonRendition, getModified } from '../utils.js';
 
 const fisherman = 'https://static.toontownrewritten.wiki/uploads/e/eb/Crocodile_fishing.png';
 const bucket = 'https://i.imgur.com/jpy0keb.png';
@@ -28,6 +28,7 @@ const fish = [
     'https://i.imgur.com/cMBgGLz.png',
     'https://i.imgur.com/ETCwwNU.png',
 ]
+let footer = '';
 
 export const data = new SlashCommandBuilder()
         .setName('fish')
@@ -40,7 +41,9 @@ export const data = new SlashCommandBuilder()
             .setRequired(false)
         )
 
-export async function execute(req, res, toon) {
+export async function execute(req, res, item) {
+    const toon = item.data;
+    footer = getFooter(toon, item.modified);
     const row = new ActionRowBuilder()
         .addComponents(
             getWhatButton(),
@@ -56,7 +59,7 @@ export async function execute(req, res, toon) {
     });
 }
 
-export async function handleButton(req, customId, toon) {
+export async function handleButton(req, customId, item) {
     let embed;
     let row;
 
@@ -99,26 +102,28 @@ export async function handleButton(req, customId, toon) {
 }
 
 function getHomeEmbed(LOCAL_TOON) {
+    const toon = LOCAL_TOON.data;
     return new EmbedBuilder()
         .setColor('Blue')
-        .setAuthor({ name: LOCAL_TOON.toon.name, iconURL: getToonRendition(LOCAL_TOON, 'laffmeter') })
+        .setAuthor({ name: toon.toon.name, iconURL: getToonRendition(toon, 'laffmeter') })
         .setTitle('Welcome to the Fish Advisor!')
-        .setDescription(`You have caught **${getFishCount(LOCAL_TOON.fish)}**!`)
+        .setDescription(`You have caught **${getFishCount(toon.fish)}**!`)
         .setImage(fisherman)
         .addFields(
             { name: 'What?', value: 'Find what new fish are easiest to catch!'},
             { name: 'Where?', value: 'Find what locations give you the best\nchance at catching a new fish!'},
         )
+        .setFooter(footer)
 }
 
-function getWhereEmbed(LOCAL_TOON) {
+function getWhereEmbed(toon) {
     return new EmbedBuilder()
         .setColor('Blue')
-        .setAuthor({ name: LOCAL_TOON.toon.name, iconURL: getToonRendition(LOCAL_TOON, 'laffmeter') })
+        .setAuthor({ name: toon.toon.name, iconURL: getToonRendition(LOCAL_TOON, 'laffmeter') })
         .setTitle('Where should I go?')
         .setThumbnail(teleport)
         .setDescription(getFishInfo(LOCAL_TOON.fish, 'where'))
-        .setFooter(getFooter(LOCAL_TOON))
+        .setFooter(footer)
 }
 
 function getWhatEmbed(LOCAL_TOON) {
@@ -128,11 +133,11 @@ function getWhatEmbed(LOCAL_TOON) {
         .setTitle('What should I catch?')
         .setThumbnail(getRandomFish())
         .setDescription(getFishInfo(LOCAL_TOON.fish, 'what'))
-        .setFooter(getFooter(LOCAL_TOON))
+        .setFooter(footer)
 }
 
-function getFooter(LOCAL_TOON) {
-    return { text: `Number of buckets is an estimate. | ${getFishCount(LOCAL_TOON.fish)}`, iconURL: bucket }
+function getFooter(toon, modified) {
+    return { text: `Number of buckets is an estimate. | ${getFishCount(toon.fish)}\n${getModified(modified)}}`, iconURL: bucket }
 }
 
 function getFishCount(toon) {

@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { InteractionResponseType } from 'discord-interactions';
-import { getToonRendition } from '../utils.js';
+import { getToonRendition, getModified } from '../utils.js';
 
 export const data = new SlashCommandBuilder()
         .setName('info')
@@ -13,7 +13,9 @@ export const data = new SlashCommandBuilder()
             .setRequired(false)
         )
 
-export async function execute(req, res, toon) {
+export async function execute(req, res, item) {
+    const toon = item.data;
+
     const embed = new EmbedBuilder()
         .setColor('Greyple')
         .setAuthor({ name: toon.toon.name, iconURL: getToonRendition(toon, 'laffmeter') })
@@ -22,7 +24,7 @@ export async function execute(req, res, toon) {
             { name: 'Laff', value: simplifyLaff(toon) },
             { name: 'Location', value: simplifyLocation(toon) }
         )
-        
+        .setFooter(getModified(item.modified));
 
     return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
