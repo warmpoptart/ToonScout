@@ -35,17 +35,19 @@ const HomePage: React.FC = () => {
     };
     
     const initiateOAuth = () => {
-        const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
-        const redirectUri = encodeURIComponent('https://scouttoon.info/');
-        const scope = encodeURIComponent('identify');
+        // const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
+        // const redirectUri = encodeURIComponent('https://scouttoon.info/');
+        // const scope = encodeURIComponent('identify');
 
-        const randomState = generateRandomString();
-        localStorage.setItem('oauth-state', randomState);
+        // const randomState = generateRandomString();
+        // localStorage.setItem('oauth-state', randomState);
 
-        const url = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUri}&scope=${scope}&state=${btoa(randomState)}`;
+        // const url = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUri}&scope=${scope}&state=${btoa(randomState)}`;
         
-        // Redirect to Discord authorization URL
-        window.location.href = url;
+        // // Redirect to Discord authorization URL
+        // window.location.href = url;
+        setIsAuth(true);
+        setIsConnected(true);
     };
 
     useEffect(() => {
@@ -111,6 +113,7 @@ const HomePage: React.FC = () => {
                                 <img src='/images/prompt.png' alt='Prompt' className="mx-auto" />
                             </div>
                         </div>
+                        <h2 className="text-3xl font-semibold font-minnie text-gray-800 mb-4">Finally, select a toon to continue!</h2>
                     </div>
                 </div>
             )}
@@ -118,10 +121,15 @@ const HomePage: React.FC = () => {
             {/* If user is authenticated and connected, show home screen */}
             {isAuth && isConnected && (
                 <div className="relative h-screen overflow-hidden">
-                    <div className="bg-white p-6 md:p-10 rounded-lg shadow-lg text-center border border-gray-300 w-full max-w-6xl mx-auto space-y-6 md:space-y-8 mt-10 overflow-y-auto">
-                        <h2 className="text-3xl font-semibold font-minnie text-gray-800 mb-4">Welcome to ToonScout!</h2>
-                        <p className="text-xl text-gray-600 font-impress mb-6">Run these commands anywhere in Discord to get real-time information regarding your toon!</p>
-
+                    <div className="bg-white p-6 md:p-10 rounded-lg shadow-lg text-center border border-gray-300 w-full max-w-6xl mx-auto space-y-6 md:space-y-5 mt-10 overflow-y-auto">
+                        <h2 className="text-3xl font-semibold font-minnie text-gray-800">Welcome to ToonScout!</h2>
+                        <p className="text-xl text-gray-600 font-impress">
+                            This page needs to stay in the background to continue receiving real-time information.
+                            <br />If you close it, you can still access your last saved data any time.
+                            <br />
+                            <br />Run the commands below <strong>anywhere</strong> in Discord!
+                        </p>
+                        
                         {/* Commands Container */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                             {/* /info command */}
