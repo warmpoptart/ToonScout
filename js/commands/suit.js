@@ -14,7 +14,7 @@ const cashIcon = 'https://i.imgur.com/Wo4aeDt.png';
 const lawIcon = 'https://i.imgur.com/mYUrd1D.png';
 const bossIcon = 'https://i.imgur.com/QrV9Zrx.png';
 
-const footer = '';
+let footer = '';
 
 export const data = new SlashCommandBuilder()
         .setName('suit')
@@ -180,7 +180,7 @@ function getHomeEmbed(LOCAL_TOON) {
             { name: 'Lawbot', value: getBasicSuitInfo(LOCAL_TOON.cogsuits, 'l')},
             { name: 'Bossbot', value: getBasicSuitInfo(LOCAL_TOON.cogsuits, 'c')},
         )
-        .setFooter(footer);
+        .setFooter({ text: footer });
 }
 
 function getSellEmbed(LOCAL_TOON) {

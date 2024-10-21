@@ -99,5 +99,6 @@ function formatDate(date) {
 }
 
 export function getModified(date) {
-    return `Modified ${formatDate(date)}`;
+    const timestamp = Math.floor(date.getTime() / 1000);
+    return `Updated <t:${timestamp}:R>`;
 }

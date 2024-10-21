@@ -62,6 +62,7 @@ export async function execute(req, res, item) {
 export async function handleButton(req, customId, item) {
     let embed;
     let row;
+    const toon = item.data;
 
     const [, actionWithState] = customId.split('-');
     const [action, state] = actionWithState.split(':');
@@ -101,8 +102,7 @@ export async function handleButton(req, customId, item) {
     return { embed, row };
 }
 
-function getHomeEmbed(LOCAL_TOON) {
-    const toon = LOCAL_TOON.data;
+function getHomeEmbed(toon) {
     return new EmbedBuilder()
         .setColor('Blue')
         .setAuthor({ name: toon.toon.name, iconURL: getToonRendition(toon, 'laffmeter') })
@@ -119,25 +119,25 @@ function getHomeEmbed(LOCAL_TOON) {
 function getWhereEmbed(toon) {
     return new EmbedBuilder()
         .setColor('Blue')
-        .setAuthor({ name: toon.toon.name, iconURL: getToonRendition(LOCAL_TOON, 'laffmeter') })
+        .setAuthor({ name: toon.toon.name, iconURL: getToonRendition(toon, 'laffmeter') })
         .setTitle('Where should I go?')
         .setThumbnail(teleport)
-        .setDescription(getFishInfo(LOCAL_TOON.fish, 'where'))
+        .setDescription(getFishInfo(toon.fish, 'where'))
         .setFooter(footer)
 }
 
-function getWhatEmbed(LOCAL_TOON) {
+function getWhatEmbed(toon) {
     return new EmbedBuilder()
         .setColor('Blue')
-        .setAuthor({ name: LOCAL_TOON.toon.name, iconURL: getToonRendition(LOCAL_TOON, 'laffmeter') })
+        .setAuthor({ name: toon.toon.name, iconURL: getToonRendition(toon, 'laffmeter') })
         .setTitle('What should I catch?')
         .setThumbnail(getRandomFish())
-        .setDescription(getFishInfo(LOCAL_TOON.fish, 'what'))
+        .setDescription(getFishInfo(toon.fish, 'what'))
         .setFooter(footer)
 }
 
 function getFooter(toon, modified) {
-    return { text: `Number of buckets is an estimate. | ${getFishCount(toon.fish)}\n${getModified(modified)}}`, iconURL: bucket }
+    return { text: `Number of buckets is an estimate. | ${getFishCount(toon.fish)}\n${getModified(modified)}`, iconURL: bucket }
 }
 
 function getFishCount(toon) {
@@ -216,7 +216,7 @@ function getFishInfo(toon, type) {
 
     if (type === 'where') {
         topFive = fishcalc.sortBestLocation().slice(0,5);
-        topFive = topFive.map((place, index) => `${index+1}. ${place[0]}:  **${(place[1] * 100).toFixed(2)}%**`).join('\n');
+	topFive = topFive.map(([location, { total, buckets }], index) =>`**${index + 1}. **${location} (${(total*100).toFixed(2)}%)**\nBuckets: ${buckets}\n`).join('\n');
         return topFive;
     } else if (type === 'what') {
         topFive = fishcalc.sortBestRarity().slice(0,5);

@@ -15,7 +15,6 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(req, res, item) {
     const toon = item.data;
-
     const embed = new EmbedBuilder()
         .setColor('Greyple')
         .setAuthor({ name: toon.toon.name, iconURL: getToonRendition(toon, 'laffmeter') })
@@ -24,7 +23,7 @@ export async function execute(req, res, item) {
             { name: 'Laff', value: simplifyLaff(toon) },
             { name: 'Location', value: simplifyLocation(toon) }
         )
-        .setFooter(getModified(item.modified));
+        .setFooter({ text: getModified(item.modified) });
 
     return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
