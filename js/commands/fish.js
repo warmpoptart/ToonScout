@@ -43,7 +43,7 @@ export const data = new SlashCommandBuilder()
         )
 
 export async function execute(req, res, target) {
-    const item = getToken(target);
+    const item = await getToken(target);
     footer = getFooter(item.data);
     const row = new ActionRowBuilder()
         .addComponents(
@@ -77,7 +77,7 @@ export async function handleButton(req, customId) {
         target = parts[1];
     }
 
-    const item = getToken(target); 
+    const item = await getToken(target); 
 
     switch (action) {
         case 'fish-refresh':

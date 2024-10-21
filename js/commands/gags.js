@@ -84,7 +84,7 @@ export const data = new SlashCommandBuilder()
         )
 
 export async function execute(req, res, target) {
-    const item = getToken(target);
+    const item = await getToken(target);
     const toon = item.data;
 
     const gagTracks = getGagInfo(toon);
