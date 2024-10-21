@@ -3,7 +3,8 @@ import {
     EmbedBuilder,
 } from 'discord.js';
 import { InteractionResponseType } from 'discord-interactions';
-import { getToonRendition, getModified } from '../utils.js';
+import { getToonRendition } from '../utils.js';
+import { getToken } from '../db/token.js';
 
 const trooper = 'https://i.imgur.com/eYjdODE.png';
 
@@ -18,7 +19,8 @@ export const data = new SlashCommandBuilder()
             .setRequired(false)
         )
 
-export async function execute(req, res, item) {
+export async function execute(req, res, target) {
+    const item = getToken(target);
     const toon = item.data;
 
     const tasks = getTasks(toon);
@@ -41,8 +43,8 @@ export async function execute(req, res, item) {
     });
 }
 
-function getTasks(LOCAL_TOON) {
-    const toontasks = LOCAL_TOON.tasks;
+function getTasks(toon) {
+    const toontasks = toon.tasks;
     if (toontasks.length == 0) {
         return { name: '', value: 'This toon has no tasks right now!'};
     }    
