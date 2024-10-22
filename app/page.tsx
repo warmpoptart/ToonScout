@@ -122,7 +122,9 @@ const HomePage: React.FC = () => {
                     <div className="bg-white p-6 md:p-10 rounded-lg shadow-lg text-center border border-gray-300 w-full max-w-6xl mx-auto space-y-6 md:space-y-5 mt-10 overflow-y-auto">
                         <h2 className="text-3xl font-semibold font-minnie text-gray-800">Welcome to ToonScout!</h2>
                         <p className="text-xl text-gray-600 font-impress">
-                            This page needs to stay in the background to continue receiving real-time information.
+                            <a href="https://discord.com/oauth2/authorize?client_id=1286517155315322950">Add ToonScout</a> as an App to your Discord to begin!
+                            <br />
+                            <br />This page needs to stay in the background to continue receiving real-time information.
                             <br />If you close it, you can still access your last saved data any time.
                             <br />
                             <br />Run the commands below <strong>anywhere</strong> in Discord!
