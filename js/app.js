@@ -118,9 +118,14 @@ const wss = new WebSocket.Server({ server });
 wss.on('connection', (ws) => {
     ws.on('message', async (message) => {
         const { userId, data } = JSON.parse(message);
-
-        if (!userId || !data) {
+        
+	if (!userId || !data) {
             ws.send(JSON.stringify({ error: 'User ID and data are required.' }));
+            return;
+        }
+	
+	if (data.event !== 'all') {
+            ws.send(JSON.stringify({ message: 'Event is not "all", skipping data entry.' }));
             return;
         }
 
