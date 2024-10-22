@@ -3,6 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { handleOAuthToken } from './api/oauth/oauth';
 import { initWebSocket } from './api/websocket/websocket';
 import './styles/fonts.css';
+import AuthModal from './components/AuthModal';
+import GameSteps from './components/GameSteps';
+import CommandBox from './components/CommandBox';
+import Disclaimer from './components/Disclaimer';
 
 const HomePage: React.FC = () => {
     const [isAuth, setIsAuth] = useState(false);
@@ -35,17 +39,19 @@ const HomePage: React.FC = () => {
     };
     
     const initiateOAuth = () => {
-        const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
-        const redirectUri = encodeURIComponent('https://scouttoon.info/');
-        const scope = encodeURIComponent('identify');
+        // const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
+        // const redirectUri = encodeURIComponent('https://scouttoon.info/');
+        // const scope = encodeURIComponent('identify');
 
-        const randomState = generateRandomString();
-        localStorage.setItem('oauth-state', randomState);
+        // const randomState = generateRandomString();
+        // localStorage.setItem('oauth-state', randomState);
 
-        const url = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUri}&scope=${scope}&state=${btoa(randomState)}`;
+        // const url = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUri}&scope=${scope}&state=${btoa(randomState)}`;
         
-        // Redirect to Discord authorization URL
-        window.location.href = url;
+        // // Redirect to Discord authorization URL
+        // window.location.href = url;
+        setIsAuth(true);
+        setIsConnected(true);
     };
 
     useEffect(() => {
@@ -64,116 +70,55 @@ const HomePage: React.FC = () => {
         }
     }, []);
 
+    const commands = [
+        { title: '/info', description: 'Displays your toon photo, laff, and location.', color: '#4A90E2' },
+        { title: '/fish', description: 'Provides advising on where to fish or what to catch.', color: '#504ae2' },
+        { title: '/suit', description: 'Get your suit progress and promotion recommendations.', color: '#9c4ae2' },
+        { title: '/gags', description: 'Displays current gags and progress.', color: '#e24adc' },
+        { title: '/tasks', description: 'Lists your active toontasks and progress.', color: '#e24a90' },
+        { title: '/support', description: 'Get a Discord link to our support server.', color: '#e2504a' }, 
+      ];
+
     return (
         <div className="h-screen flex justify-center items-center bg-gags-pattern bg-repeat overflow-y-auto">
-            {/* If user is not authenticated, show the authentication modal */}
-            {!isAuth && (
-                <div className="fixed inset-0 flex justify-center items-center z-50">
-                    <div className="bg-white p-10 rounded-lg shadow-lg text-center border border-gray-300">
-                        <h2 className="text-3xl font-semibold font-minnie text-gray-800 mb-6">Connect to Discord</h2>
-                        <p className="text-xl text-gray-600 font-impress">ToonScout needs a Discord connection to function.</p>
-                        <p className="text-xl text-gray-600 font-impress">Click the button below to begin!</p>
-                        <br />
-                        <button
-                            id="login"
-                            onMouseDown={handleMouseDown}
-                            onMouseUp={handleMouseUp}
-                            onMouseLeave={handleMouseLeave}
-                            onClick={initiateOAuth}
-                            className="relative flex justify-center items-center w-16 h-16 mx-auto"
-                            style={{
-                                backgroundImage: `url(${isPressed ? clickedImg : unclickedImg})`,
-                                backgroundSize: 'contain',
-                                backgroundPosition: 'center',
-                                cursor: 'pointer',
-                            }}
-                        >
-                        </button>
-                    </div>
+          {/* Authentication Modal */}
+          {!isAuth && <AuthModal initiateOAuth={initiateOAuth} handleMouseDown={handleMouseDown} handleMouseUp={handleMouseUp} handleMouseLeave={handleMouseLeave} isPressed={isPressed} />}
+    
+          {/* Connecting Steps */}
+          {isAuth && !isConnected && <GameSteps />}
+    
+          {/* Home Screen */}
+          {isAuth && isConnected && (
+            <div className="relative h-screen overflow-hidden">
+              <div className="bg-white p-6 md:p-10 rounded-lg shadow-lg text-center border border-gray-300 w-full max-w-6xl mx-auto space-y-6 md:space-y-5 mt-10 overflow-y-auto">
+                <h2 className="text-3xl font-semibold font-minnie text-gray-800">Welcome to ToonScout!</h2>
+                <p className="text-xl text-gray-600 font-impress">
+                  <a href="https://discord.com/oauth2/authorize?client_id=1286517155315322950" target="_blank" rel="noopener noreferrer">
+                    <button style={{ padding: '5px 20px', backgroundColor: '#7289DA', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                      Add ToonScout on Discord
+                    </button>
+                  </a>
+                  <br /><br />
+                  This page needs to stay in the background to continue receiving real-time information.
+                  <br />If you close it, you can still access your last saved data any time.
+                  <br /><br />
+                  Run the commands below <strong>anywhere</strong> in Discord after adding with the button above!
+                </p>
+    
+                {/* Commands Container */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                    {commands.map((command) => (
+                        <CommandBox key={command.title} command={command} />
+                    ))}
                 </div>
-            )}
-
-            {/* If user is authenticated, show the second box */}
-            {isAuth && !isConnected && (
-                <div className="fixed inset-0 flex justify-center items-center bg-gags-pattern bg-repeat">
-                    <div className="bg-white p-10 rounded-lg shadow-lg text-center space-y-6 border border-gray-300">
-                        <h2 className="text-3xl font-semibold font-minnie text-gray-800 mb-4">Connecting to Toontown Rewritten...</h2>
-                        <div className="flex justify-center space-x-8">
-                            {/* Step 1 */}
-                            <div className="bg-gray-100 p-6 rounded-lg shadow-md border border-gray-300">
-                                <h2 className="text-2xl font-semibold font-minnie text-gray-800 mb-4">1. Enable Companion App Support</h2>
-                                <img src='/images/gameplay-menu.png' alt='Gameplay menu' className="mx-auto" />
-                            </div>
-
-                            {/* Step 2 */}
-                            <div className="bg-gray-100 p-6 rounded-lg shadow-md border border-gray-300">
-                                <h2 className="text-2xl font-semibold font-minnie text-gray-800 mb-12">2. Click "OK" on in-game popup</h2>
-                                <img src='/images/prompt.png' alt='Prompt' className="mx-auto" />
-                            </div>
-                        </div>
-                        <h2 className="text-3xl font-semibold font-minnie text-gray-800 mb-4">Finally, select a toon to continue!</h2>
-                    </div>
-                </div>
-            )}
-
-            {/* If user is authenticated and connected, show home screen */}
-            {isAuth && isConnected && (
-                <div className="relative h-screen overflow-hidden">
-                    <div className="bg-white p-6 md:p-10 rounded-lg shadow-lg text-center border border-gray-300 w-full max-w-6xl mx-auto space-y-6 md:space-y-5 mt-10 overflow-y-auto">
-                        <h2 className="text-3xl font-semibold font-minnie text-gray-800">Welcome to ToonScout!</h2>
-                        <p className="text-xl text-gray-600 font-impress">
-                            <a href="https://discord.com/oauth2/authorize?client_id=1286517155315322950">Add ToonScout</a> as an App to your Discord to begin!
-                            <br />
-                            <br />This page needs to stay in the background to continue receiving real-time information.
-                            <br />If you close it, you can still access your last saved data any time.
-                            <br />
-                            <br />Run the commands below <strong>anywhere</strong> in Discord!
-                        </p>
-                        
-                        {/* Commands Container */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                            {/* /info command */}
-                            <div className="bg-gray-100 p-4 md:p-6 rounded-lg shadow-md border border-gray-300">
-                                <h3 className="text-xl font-semibold font-minnie text-gray-800 mb-2 md:mb-4">/info</h3>
-                                <p className="text-lg text-gray-600 font-impress mb-2">Displays your toon photo, laff, and location.</p>
-                            </div>
-
-                            {/* /fish command */}
-                            <div className="bg-blue-100 p-4 md:p-6 rounded-lg shadow-md border border-gray-300">
-                                <h3 className="text-xl font-semibold font-minnie text-gray-800 mb-2 md:mb-4">/fish</h3>
-                                <p className="text-lg text-gray-600 font-impress mb-2">Provides advising on where to fish or what to catch.</p>
-                            </div>
-
-                            {/* /suit command */}
-                            <div className="bg-red-100 p-4 md:p-6 rounded-lg shadow-md border border-gray-300">
-                                <h3 className="text-xl font-semibold font-minnie text-gray-800 mb-2 md:mb-4">/suit</h3>
-                                <p className="text-lg text-gray-600 font-impress mb-2">Get your suit progress and promotion recommendations.</p>
-                            </div>
-
-                            {/* /gags command */}
-                            <div className="bg-purple-100 p-4 md:p-6 rounded-lg shadow-md border border-gray-300">
-                                <h3 className="text-xl font-semibold font-minnie text-gray-800 mb-2 md:mb-4">/gags</h3>
-                                <p className="text-lg text-gray-600 font-impress mb-2">Displays current gags and progress.</p>
-                            </div>
-
-                            {/* /tasks command */}
-                            <div className="bg-green-100 p-4 md:p-6 rounded-lg shadow-md border border-gray-300">
-                                <h3 className="text-xl font-semibold font-minnie text-gray-800 mb-2 md:mb-4">/tasks</h3>
-                                <p className="text-lg text-gray-600 font-impress mb-2">Lists your active toontasks and progress.</p>
-                            </div>
-
-                            {/* /support command */}
-                            <div className="bg-pink-100 p-4 md:p-6 rounded-lg shadow-md border border-gray-300">
-                                <h3 className="text-xl font-semibold font-minnie text-gray-800 mb-2 md:mb-4">/support</h3>
-                                <p className="text-lg text-gray-600 font-impress mb-2">Get a Discord link to our support server.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+    
+                {/* Disclaimer */}
+                <Disclaimer />
+              </div>
+            </div>
+          )}
         </div>
-    );
-};
-
+      );
+    };
 
 export default HomePage;
