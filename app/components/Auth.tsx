@@ -12,7 +12,8 @@ const generateRandomString = (length = 16) => {
 
 const initiateOAuth = () => {
     const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
-    const redirectUri = encodeURIComponent('https://scouttoon.info/');
+    const uri = 'https://thirty-tools-beam.loca.lt';
+    const redirectUri = encodeURIComponent(uri);
     const scope = encodeURIComponent('identify');
 
     const randomState = generateRandomString();

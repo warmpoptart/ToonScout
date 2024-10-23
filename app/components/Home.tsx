@@ -15,7 +15,7 @@ const Home = () => {
     return (
         <div className="flex-1 w-full max-w-6xl mx-auto">
             <div className="bg-white p-6 md:p-6 rounded-xl shadow-lg text-center border border-gray-300 space-y-6 md:space-y-5 mt-10">
-                <h2 className="text-3xl font-semibold font-minnie text-gray-800">
+                <h2 className="text-4xl font-semibold font-minnie text-gray-800">
                     Welcome to ToonScout!
                 </h2>
                 <p className="text-xl text-gray-600 font-impress">
