@@ -12,7 +12,7 @@ const generateRandomString = (length = 16) => {
 
 export const initOAuth = () => {
     const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
-    const uri = 'https://bumpy-bananas-arrive.loca.lt';
+    const uri = 'https://scouttoon.info/';
     const redirectUri = encodeURIComponent(uri);
     const scope = encodeURIComponent('identify');
 

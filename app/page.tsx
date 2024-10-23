@@ -14,7 +14,7 @@ const HomePage: React.FC = () => {
 
     useEffect(() => {
         const checkAccessToken = async () => {
-            const response = await fetch('https://bumpy-bananas-arrive.loca.lt/get-token', {
+            const response = await fetch('https://api.scouttoon.info/get-token', {
                 method: 'GET',
                 credentials: 'include', // Cookies will be sent automatically
             });

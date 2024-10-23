@@ -28,7 +28,7 @@ export async function handleOAuthToken(fragment: URLSearchParams) {
 
 async function storeToken(userId: string, accessToken: string) {
     try {
-        const response = await fetch('https://bumpy-bananas-arrive.loca.lt/store-token', {
+        const response = await fetch('https://api.scouttoon.info/store-token', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
