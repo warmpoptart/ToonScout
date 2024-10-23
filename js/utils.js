@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { getToken } from './db/scoutData/scoutService.js';
+import { getScoutToken } from './db/scoutData/scoutService.js';
 import { InteractionResponseType } from 'discord-interactions';
 
 export async function DiscordRequest(endpoint, options) {

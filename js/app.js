@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import path from 'path';
+import cookieparser from 'cookie-parser';
 import cors from 'cors';
 import WebSocket from 'ws';
 import { InteractionType, InteractionResponseType, verifyKeyMiddleware } from 'discord-interactions';
@@ -115,26 +116,30 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
  */
 app.post('/store-token', async (req, res) => {
     const { userId, accessToken, expiresAt } = req.body;
-
+    console.log(userId)
+	console.log(accessToken)
+	console.log(expiresAt)
     try {
         const modifiedCount = await storeCookieToken(userId, accessToken, expiresAt);
-
+	console.log(modifiedCount)
         // Set HttpOnly cookie with the access token, secure, and expiry settings
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
             secure: true,
-            expires: new Date(expiresAt),
+            expires: new Date(Date.now()+(expiresAt*1000)),
             sameSite: 'Strict',
         });
-
+	
         res.status(200).json({ message: 'Token stored successfully', modifiedCount });
     } catch (error) {
+	console.error(error);
         res.status(500).json({ message: 'Failed to store token', error: error.message });
     }
 });
 
 app.get('/get-token', async (req, res) => {
     // Access token will be in the cookies
+    console.log(req.cookies);
     const accessToken = req.cookies.accessToken;
 
     if (!accessToken) {
@@ -149,6 +154,7 @@ app.get('/get-token', async (req, res) => {
             res.status(404).json({ message: 'Token not found' });
         }
     } catch (error) {
+	console.error(error);
         res.status(500).json({ message: 'Failed to retrieve token', error: error.message });
     }
 });
