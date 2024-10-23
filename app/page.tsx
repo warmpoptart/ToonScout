@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { handleOAuthToken } from './api/oauth/oauth';
 import { initWebSocket } from './api/websocket/websocket';
 import './styles/fonts.css';
-import AuthModal from './components/AuthModal';
+import Auth from './components/Auth';
 import GameSteps from './components/GameSteps';
 import CommandBox from './components/CommandBox';
 import Disclaimer from './components/Disclaimer';
@@ -80,45 +80,71 @@ const HomePage: React.FC = () => {
       ];
 
     return (
-        <div className="h-screen flex justify-center items-center bg-gags-pattern bg-repeat overflow-y-auto">
-          {/* Authentication Modal */}
-          {!isAuth && <AuthModal initiateOAuth={initiateOAuth} handleMouseDown={handleMouseDown} handleMouseUp={handleMouseUp} handleMouseLeave={handleMouseLeave} isPressed={isPressed} />}
+    <div className="flex flex-col h-screen bg-gags-pattern bg-repeat overflow-y-auto">
+        {/* Authentication Modal */}
+        {!isAuth && (
+        <Auth
+            initiateOAuth={initiateOAuth}
+            handleMouseDown={handleMouseDown}
+            handleMouseUp={handleMouseUp}
+            handleMouseLeave={handleMouseLeave}
+            isPressed={isPressed}
+        />
+        )}
     
-          {/* Connecting Steps */}
-          {isAuth && !isConnected && <GameSteps />}
+        {/* Connecting Steps */}
+        {isAuth && !isConnected && <GameSteps />}
     
-          {/* Home Screen */}
-          {isAuth && isConnected && (
-            <div className="relative h-screen overflow-hidden">
-              <div className="bg-white p-6 md:p-10 rounded-lg shadow-lg text-center border border-gray-300 w-full max-w-6xl mx-auto space-y-6 md:space-y-5 mt-10 overflow-y-auto">
-                <h2 className="text-3xl font-semibold font-minnie text-gray-800">Welcome to ToonScout!</h2>
-                <p className="text-xl text-gray-600 font-impress">
-                  <a href="https://discord.com/oauth2/authorize?client_id=1286517155315322950" target="_blank" rel="noopener noreferrer">
-                    <button style={{ padding: '5px 20px', backgroundColor: '#7289DA', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-                      Add ToonScout on Discord
-                    </button>
-                  </a>
-                  <br /><br />
-                  This page needs to stay in the background to continue receiving real-time information.
-                  <br />If you close it, you can still access your last saved data any time.
-                  <br /><br />
-                  Run the commands below <strong>anywhere</strong> in Discord after adding with the button above!
-                </p>
+        {/* Home Screen */}
+        {isAuth && isConnected && (
+        <div className="flex-1 w-full max-w-6xl mx-auto">
+            <div className="bg-white p-6 md:p-10 rounded-lg shadow-lg text-center border border-gray-300 space-y-6 md:space-y-5 mt-10">
+            <h2 className="text-3xl font-semibold font-minnie text-gray-800">
+                Welcome to ToonScout!
+            </h2>
+            <p className="text-xl text-gray-600 font-impress">
+                <a
+                href="https://discord.com/oauth2/authorize?client_id=1286517155315322950"
+                target="_blank"
+                rel="noopener noreferrer"
+                >
+                <button
+                    style={{
+                    padding: "5px 20px",
+                    backgroundColor: "#7289DA",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    }}
+                >
+                    Add ToonScout on Discord
+                </button>
+                </a>
+                <br />
+                <br />
+                This page needs to stay in the background to continue receiving real-time information.
+                <br />
+                If you close it, you can still access your last saved data any time.
+                <br />
+                <br />
+                Run the commands below <strong>anywhere</strong> in Discord after adding with the button above!
+            </p>
     
-                {/* Commands Container */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                    {commands.map((command) => (
-                        <CommandBox key={command.title} command={command} />
-                    ))}
-                </div>
-    
-                {/* Disclaimer */}
-                <Disclaimer />
-              </div>
+            {/* Commands Container */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                {commands.map((command) => (
+                <CommandBox key={command.title} command={command} />
+                ))}
             </div>
-          )}
+    
+            {/* Disclaimer */}
+            <Disclaimer />
+            </div>
         </div>
-      );
-    };
+        )}
+    </div>
+    );
+};      
 
 export default HomePage;
