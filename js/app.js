@@ -11,7 +11,7 @@ import { getToken, storeToken } from './db/scoutData/scoutService.js';
 import { storeToken, getToken } from './db/tokenData/tokenService.js';
 
 const app = express();
-const allowedOrigins = ['https://scouttoon.info', 'https://api.scouttoon.info', 'https://bumpy-bananas-arrive.loca.lt'];
+const allowedOrigins = ['https://scouttoon.info', 'https://api.scouttoon.info'];
 
 app.use(cors({
     origin: (origin, callback) => {
