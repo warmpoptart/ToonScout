@@ -1,13 +1,14 @@
 export async function handleOAuthToken(fragment: URLSearchParams) {
     const accessToken = fragment.get('access_token');
     const state = fragment.get('state');
+    const expiresAt = fragment.get('expiresAt')
     let userId: string;
 
     if (accessToken) {
         userId = await getDiscordUserId(accessToken);
 
         if (userId) {
-            await storeToken(userId, accessToken); // Sends token to backend to store in cookie
+            await storeToken(userId, accessToken, expiresAt); // Sends token to backend to store in cookie
         } else {
             console.error("Failed to get user ID.");
             return null;
@@ -26,14 +27,14 @@ export async function handleOAuthToken(fragment: URLSearchParams) {
     return userId;
 }
 
-async function storeToken(userId: string, accessToken: string) {
+async function storeToken(userId: string, accessToken: string, expiresAt: string) {
     try {
         const response = await fetch('https://api.scouttoon.info/store-token', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ userId, accessToken }),
+            body: JSON.stringify({ userId, accessToken, expiresAt }),
             credentials: 'include', // Include cookies in the request
         });
 
