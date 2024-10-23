@@ -1,16 +1,17 @@
 import 'dotenv/config';
 import express from 'express';
-import { InteractionType, InteractionResponseType, verifyKeyMiddleware } from 'discord-interactions';
-import { getUserId, validateUser } from './utils.js';
-import { readdirSync } from 'fs';
 import path from 'path';
-import { fileURLToPath, pathToFileURL } from 'url';
 import cors from 'cors';
 import WebSocket from 'ws';
-import { getToken, storeToken } from './db/token.js';
+import { InteractionType, InteractionResponseType, verifyKeyMiddleware } from 'discord-interactions';
+import { readdirSync } from 'fs';
+import { fileURLToPath, pathToFileURL } from 'url';
+import { getUserId, validateUser } from './utils.js';
+import { getToken, storeToken } from './db/scoutData/scoutService.js';
+import { storeToken, getToken } from './db/tokenData/tokenService.js';
 
 const app = express();
-const allowedOrigins = ['https://scouttoon.info', 'https://api.scouttoon.info'];
+const allowedOrigins = ['https://scouttoon.info', 'https://api.scouttoon.info', 'https://bumpy-bananas-arrive.loca.lt'];
 
 app.use(cors({
     origin: (origin, callback) => {
@@ -109,6 +110,52 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
     }
 });
 
+/**
+ * ------- TOKEN DATA -------
+ */
+app.post('/store-token', async (req, res) => {
+    const { userId, accessToken, expiresAt } = req.body;
+
+    try {
+        const modifiedCount = await storeToken(userId, accessToken, expiresAt);
+
+        // Set HttpOnly cookie with the access token, secure, and expiry settings
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            secure: true,
+            expires: new Date(expiresAt),
+            sameSite: 'Strict',
+        });
+
+        res.status(200).json({ message: 'Token stored successfully', modifiedCount });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to store token', error: error.message });
+    }
+});
+
+app.get('/get-token', async (req, res) => {
+    // Access token will be in the cookies
+    const accessToken = req.cookies.accessToken;
+
+    if (!accessToken) {
+        return res.status(401).json({ message: 'Access token not found in cookies' });
+    }
+
+    try {
+        const tokenData = await getToken(accessToken);
+        if (tokenData) {
+            res.status(200).json(tokenData);
+        } else {
+            res.status(404).json({ message: 'Token not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to retrieve token', error: error.message });
+    }
+});
+
+/**
+ * ------- SCOUT DATA -------
+ */
 const server = app.listen(PORT, () => {
     console.log('Listening on port', PORT);
   });

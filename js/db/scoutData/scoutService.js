@@ -1,4 +1,4 @@
-import { connectToDatabase } from './db.js';
+import { connectToDatabase } from './scoutDB.js';
 
 export async function storeToken(userId, data) {
     const jsonData = JSON.stringify(data);
