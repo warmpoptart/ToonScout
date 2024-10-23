@@ -6,6 +6,9 @@ const Disclaimer: React.FC = () => (
       ToonScout only stores your public Discord ID and latest toon data. If you wish for your data to be removed, please contact us at our 
       <a href="https://discord.gg/Qb929SrdRP" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline ml-1">support server</a>.
     </p>
+    <p>
+        This website is not affiliated with Toontown Rewritten. 
+    </p>
   </div>
 );
 
