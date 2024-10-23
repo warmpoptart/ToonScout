@@ -10,7 +10,7 @@ interface CommandBoxProps {
 
 const CommandBox: React.FC<CommandBoxProps> = ({ command }) => (
   <div
-    className="bg-gray-100 p-4 md:p-6 rounded-lg shadow-md border border-gray-300"
+    className="bg-gray-100 p-4 md:p-6 rounded-xl shadow-md border border-gray-300"
     style={{ borderColor: command.color }} 
   >
     <h3
