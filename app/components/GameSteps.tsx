@@ -1,14 +1,14 @@
 import React from 'react';
+import LoadingDots from './LoadingDots';
 
 const GameSteps: React.FC = () => (
     <div className="flex max-w-7xl mx-auto">
       <div className="bg-white p-6 md:p-10 rounded-lg shadow-lg text-center border border-gray-300 space-y-6 md:space-y-5 mt-10">
-      <h2 className="text-3xl font-semibold font-minnie text-gray-800 mb-4">Connecting to Toontown Rewritten...</h2>
+      <LoadingDots className="text-3xl font-semibold font-minnie text-gray-800 mb-4" text="Connecting to Toontown Rewritten" />
       <div className="flex justify-center space-x-8">
         <Step title="1. Enable Companion App Support" image="/images/gameplay-menu.png" />
         <Step title="2. Click 'OK' on in-game popup and select a toon" image="/images/prompt.png" />
       </div>
-      <h2 className="text-3xl font-semibold font-minnie text-gray-800 mb-4">Finally, select a toon to continue!</h2>
     </div>
   </div>
 );

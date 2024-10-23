@@ -1,14 +1,14 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { handleOAuthToken } from './api/oauth/oauth';
-import { initWebSocket } from './api/websocket/websocket';
+import { handleOAuthToken } from './api/oauth';
+import { initWebSocket } from './api/websocket';
 import './styles/fonts.css';
 import Auth from './components/Auth';
 import GameSteps from './components/GameSteps';
 import Home from './components/Home';
 
 const HomePage: React.FC = () => {
-    const [isAuth, setIsAuth] = useState(false);
+    const [isAuth, setIsAuth] = useState(true);
     const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
