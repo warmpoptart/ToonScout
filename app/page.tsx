@@ -12,20 +12,9 @@ const HomePage: React.FC = () => {
     const [isConnected, setIsConnected] = useState(false);
     const [isPressed, setIsPressed] = useState(false);
 
-    const handleMouseDown = () => {
-        setIsPressed(true);
-    };
-
-    const handleMouseUp = () => {
-        setIsPressed(false);
-    };
-
-    const handleMouseLeave = () => {
-        setIsPressed(false);
-    };
-
-    const clickedImg = '/images/button-clicked.png';
-    const unclickedImg = '/images/button-unclicked.png';
+    const handleMouseDown = () => setIsPressed(true);
+    const handleMouseUp = () => setIsPressed(false);
+    const handleMouseLeave = () => setIsPressed(false);
 
     const generateRandomString = (length = 16) => {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -71,7 +60,7 @@ const HomePage: React.FC = () => {
 
     return (
         <div className="flex flex-col h-screen bg-gags-pattern bg-repeat overflow-y-auto">
-            {/* Authentication Modal */}
+            {/* Authentication */}
             {!isAuth && (
             <Auth
                 initiateOAuth={initiateOAuth}
