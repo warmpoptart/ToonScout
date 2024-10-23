@@ -1,7 +1,7 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { InteractionResponseType } from 'discord-interactions';
 import { getToonRendition } from '../utils.js';
-import { getToken } from '../db/token.js';
+import { getScoutToken } from '../db/scoutData/scoutService.js';
 
 export const data = new SlashCommandBuilder()
         .setName('info')
@@ -15,7 +15,7 @@ export const data = new SlashCommandBuilder()
         )
 
 export async function execute(req, res, target) {
-    const item = await getToken(target);
+    const item = await getScoutToken(target);
     const toon = item.data;
     const embed = new EmbedBuilder()
         .setColor('Greyple')

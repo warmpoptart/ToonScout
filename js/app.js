@@ -7,8 +7,8 @@ import { InteractionType, InteractionResponseType, verifyKeyMiddleware } from 'd
 import { readdirSync } from 'fs';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { getUserId, validateUser } from './utils.js';
-import { getToken, storeToken } from './db/scoutData/scoutService.js';
-import { storeToken, getToken } from './db/tokenData/tokenService.js';
+import { getScoutToken, storeScoutToken } from './db/scoutData/scoutService.js';
+import { storeCookieToken, getCookieToken } from './db/tokenData/tokenService.js';
 
 const app = express();
 const allowedOrigins = ['https://scouttoon.info', 'https://api.scouttoon.info'];
@@ -60,7 +60,7 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
         return res.send({ type: InteractionResponseType.PONG });
     }
 
-    const user = await getToken(getUserId(req));
+    const user = await getScoutToken(getUserId(req));
     const targetUser = req.body.data.options?.find(option => option.name === 'user')?.value;
     const targetToon = await validateUser(targetUser, res);
     const toon = targetToon || user;
@@ -117,7 +117,7 @@ app.post('/store-token', async (req, res) => {
     const { userId, accessToken, expiresAt } = req.body;
 
     try {
-        const modifiedCount = await storeToken(userId, accessToken, expiresAt);
+        const modifiedCount = await storeCookieToken(userId, accessToken, expiresAt);
 
         // Set HttpOnly cookie with the access token, secure, and expiry settings
         res.cookie('accessToken', accessToken, {
@@ -142,7 +142,7 @@ app.get('/get-token', async (req, res) => {
     }
 
     try {
-        const tokenData = await getToken(accessToken);
+        const tokenData = await getCookieToken(accessToken);
         if (tokenData) {
             res.status(200).json(tokenData);
         } else {
@@ -177,7 +177,7 @@ wss.on('connection', (ws) => {
         }
 
         try {
-            await storeToken(userId, JSON.stringify(data));
+            await storeScoutToken(userId, JSON.stringify(data));
             ws.send(JSON.stringify({ message: 'Data saved successfully.' }));
         } catch (error) {
             console.error('Error saving data:', error);

@@ -1,8 +1,8 @@
-import { connectToDatabase } from './scoutDB.js';
+import { connecToScoutDB } from './scoutDB.js';
 
-export async function storeToken(userId, data) {
+export async function storeScoutToken(userId, data) {
     const jsonData = JSON.stringify(data);
-    const collection = await connectToDatabase();
+    const collection = await connecToScoutDB();
 
     try {
         const result = await collection.updateOne(
@@ -17,8 +17,8 @@ export async function storeToken(userId, data) {
     }
 }
 
-export async function getToken(userId) {
-    const collection = await connectToDatabase();
+export async function getScoutToken(userId) {
+    const collection = await connecToScoutDB();
 
     try {
         const user = await collection.findOne({ userId: userId });

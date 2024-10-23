@@ -4,7 +4,7 @@ import {
 } from 'discord.js';
 import { InteractionResponseType } from 'discord-interactions';
 import { getToonRendition } from '../utils.js';
-import { getToken } from '../db/token.js';
+import { getScoutToken } from '../db/scoutData/scoutService.js';
 
 const trooper = 'https://i.imgur.com/eYjdODE.png';
 
@@ -20,7 +20,7 @@ export const data = new SlashCommandBuilder()
         )
 
 export async function execute(req, res, target) {
-    const item = await getToken(target);
+    const item = await getScoutToken(target);
     const toon = item.data;
 
     const tasks = getTasks(toon);

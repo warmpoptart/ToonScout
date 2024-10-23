@@ -7,7 +7,7 @@ import {
 import { InteractionResponseType } from 'discord-interactions';
 import FishCalculator from 'toonapi-calculator/js/fish.js';
 import { getToonRendition } from '../utils.js';
-import { getToken } from '../db/token.js';
+import { getScoutToken } from '../db/scoutData/scoutService.js';
 
 const fisherman = 'https://static.toontownrewritten.wiki/uploads/e/eb/Crocodile_fishing.png';
 const bucket = 'https://i.imgur.com/jpy0keb.png';
@@ -43,7 +43,7 @@ export const data = new SlashCommandBuilder()
         )
 
 export async function execute(req, res, target) {
-    const item = await getToken(target);
+    const item = await getScoutToken(target);
     footer = getFooter(item.data);
     const row = new ActionRowBuilder()
         .addComponents(
@@ -77,7 +77,7 @@ export async function handleButton(req, customId) {
         target = parts[1];
     }
 
-    const item = await getToken(target); 
+    const item = await getScoutToken(target); 
 
     switch (action) {
         case 'fish-refresh':

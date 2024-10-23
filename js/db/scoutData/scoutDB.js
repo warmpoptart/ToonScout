@@ -5,7 +5,7 @@ const client = new MongoClient(uri);
 const dbName = 'scoutData';
 const collectionName = 'users';
 
-export async function connectToDatabase() {
+export async function connecToScoutDB() {
     try {
         await client.connect();
         const database = client.db(dbName);

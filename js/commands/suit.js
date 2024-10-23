@@ -7,7 +7,7 @@ import {
 import { InteractionResponseType } from 'discord-interactions';
 import { getToonRendition } from '../utils.js';
 import SuitCalculator from 'toonapi-calculator/js/suits.js';
-import { getToken } from '../db/token.js';
+import { getScoutToken } from '../db/scoutData/scoutService.js';
 
 const gear = 'https://i.imgur.com/ezVOZkx.png';
 const sellIcon = 'https://i.imgur.com/gGr9Mqp.png';
@@ -27,7 +27,7 @@ export const data = new SlashCommandBuilder()
         )
 
 export async function execute(req, res, target) {
-    const item = await getToken(target);
+    const item = await getScoutToken(target);
 
     const row = new ActionRowBuilder()
         .addComponents(
@@ -63,7 +63,7 @@ export async function handleButton(req, customId) {
         target = parts[1];
     }
 	
-    const item = await getToken(target); 
+    const item = await getScoutToken(target); 
 
     switch (action) {
         case 'suit-refresh':

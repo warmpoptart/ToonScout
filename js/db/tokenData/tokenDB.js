@@ -6,7 +6,7 @@ const client = new MongoClient(uri);
 const dbName = 'tokenData';
 const collectionName = 'users';
 
-export async function connectToDatabase() {
+export async function connectToCookieDB() {
     try {
         await client.connect();
         const database = client.db(dbName);

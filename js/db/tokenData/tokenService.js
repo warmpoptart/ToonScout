@@ -1,7 +1,7 @@
-import { connectToDatabase } from './tokenDB.js';
+import { connectToCookieDB } from './tokenDB.js';
 
-export async function storeToken(userId, accessToken, expiresAt) {
-    const collection = await connectToDatabase();
+export async function storeCookieToken(userId, accessToken, expiresAt) {
+    const collection = await connectToCookieDB();
 
     try {
         const result = await collection.updateOne(
@@ -22,8 +22,8 @@ export async function storeToken(userId, accessToken, expiresAt) {
 }
 
 // Get the token by the accessToken (which is in the cookie)
-export async function getToken(accessToken) {
-    const collection = await connectToDatabase();
+export async function getCookieToken(accessToken) {
+    const collection = await connectToCookieDB();
 
     try {
         const user = await collection.findOne({ accessToken: accessToken });
