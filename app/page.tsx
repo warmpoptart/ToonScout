@@ -18,12 +18,17 @@ const HomePage: React.FC = () => {
                 method: 'GET',
                 credentials: 'include', // Cookies will be sent automatically
             });
+
+            console.log(response.body);
+            console.log(response.json());
     
             if (response.ok) {
+                console.log("Token found.");
                 const { userId } = await response.json();
                 setIsAuth(true);
                 initWebSocket(setIsConnected, userId);
             } else {
+                console.log("No token found.");
                 initOAuth();
             }
         };
