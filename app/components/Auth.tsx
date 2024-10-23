@@ -1,23 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-interface AuthProps {
-  initiateOAuth: () => void;
-  handleMouseDown: () => void;
-  handleMouseUp: () => void;
-  handleMouseLeave: () => void;
-  isPressed: boolean;
-}
+const generateRandomString = (length = 16) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        result += characters[randomIndex];
+    }
+    return result;
+};
 
-const Auth: React.FC<AuthProps> = ({
-  initiateOAuth,
-  handleMouseDown,
-  handleMouseUp,
-  handleMouseLeave,
-  isPressed,
-}) => {
+const initiateOAuth = () => {
+    const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
+    const redirectUri = encodeURIComponent('https://scouttoon.info/');
+    const scope = encodeURIComponent('identify');
+
+    const randomState = generateRandomString();
+    localStorage.setItem('oauth-state', randomState);
+
+    const url = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUri}&scope=${scope}&state=${btoa(randomState)}`;
+    
+    // Redirect to Discord authorization URL
+    window.location.href = url;
+};
+
+const Auth = () => {
   const clickedImg = '/images/button-clicked.png';
   const unclickedImg = '/images/button-unclicked.png';
 
+  const [isPressed, setIsPressed] = useState(false);
+  const handleMouseDown = () => setIsPressed(true);
+  const handleMouseUp = () => setIsPressed(false);
+  const handleMouseLeave = () => setIsPressed(false);
+  
   return (
     <div className="flex w-full max-w-xl mx-auto">
       <div className="bg-white p-6 md:p-10 rounded-lg shadow-lg text-center border border-gray-300 space-y-6 md:space-y-5 mt-10">
