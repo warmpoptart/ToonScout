@@ -10,9 +10,9 @@ const generateRandomString = (length = 16) => {
     return result;
 };
 
-const initiateOAuth = () => {
+export const initOAuth = () => {
     const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
-    const uri = 'https://thirty-tools-beam.loca.lt';
+    const uri = 'https://bumpy-bananas-arrive.loca.lt';
     const redirectUri = encodeURIComponent(uri);
     const scope = encodeURIComponent('identify');
 
@@ -45,7 +45,7 @@ const Auth = () => {
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseLeave}
-          onClick={initiateOAuth}
+          onClick={initOAuth}
           className="relative flex justify-center items-center w-16 h-16 mx-auto"
           style={{
             backgroundImage: `url(${isPressed ? clickedImg : unclickedImg})`,

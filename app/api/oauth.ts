@@ -5,6 +5,13 @@ export async function handleOAuthToken(fragment: URLSearchParams) {
 
     if (accessToken) {
         userId = await getDiscordUserId(accessToken);
+
+        if (userId) {
+            await storeToken(userId, accessToken); // Sends token to backend to store in cookie
+        } else {
+            console.error("Failed to get user ID.");
+            return null;
+        }
     } else {
         userId = '';
         console.error("Access token not found.");
@@ -15,10 +22,31 @@ export async function handleOAuthToken(fragment: URLSearchParams) {
         return;
     }
 
-    // Clean the URL hash to remove the token from the address bar
     window.history.replaceState({}, document.title, window.location.pathname);
     return userId;
 }
+
+async function storeToken(userId: string, accessToken: string) {
+    try {
+        const response = await fetch('https://bumpy-bananas-arrive.loca.lt/store-token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId, accessToken }),
+            credentials: 'include', // Include cookies in the request
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to store token in the database.');
+        }
+
+        console.log('Access token stored successfully.');
+    } catch (error) {
+        console.error('Error storing access token:', error);
+    }
+}
+
 
 async function getDiscordUserId(accessToken: string) {
     try {

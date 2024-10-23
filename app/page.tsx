@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { handleOAuthToken } from './api/oauth';
 import { initWebSocket } from './api/websocket';
+import { initOAuth } from './components/Auth';
 import './styles/fonts.css';
 import Auth from './components/Auth';
 import GameSteps from './components/GameSteps';
@@ -12,20 +13,39 @@ const HomePage: React.FC = () => {
     const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
+        const checkAccessToken = async () => {
+            const response = await fetch('https://bumpy-bananas-arrive.loca.lt/get-token', {
+                method: 'GET',
+                credentials: 'include', // Cookies will be sent automatically
+            });
+    
+            if (response.ok) {
+                const { userId } = await response.json();
+                setIsAuth(true);
+                initWebSocket(setIsConnected, userId);
+            } else {
+                initOAuth();
+            }
+        };
+    
         const fragment = new URLSearchParams(window.location.hash.slice(1));
         const accessToken = fragment.get('access_token');
-        
+    
         if (accessToken) {
-            handleOAuthToken(fragment).then((id) => {
+            handleOAuthToken(fragment).then((userId) => {
                 setIsAuth(true);
-                if (id) {
-                    initWebSocket(setIsConnected, id)
+                if (userId) {
+                    initWebSocket(setIsConnected, userId);
                 } else {
                     console.log("ID error");
                 }
             });
+        } else {
+            checkAccessToken();
         }
     }, []);
+    
+    
 
     return (
         <div className="flex flex-col h-screen bg-gags-pattern bg-repeat overflow-y-auto">
