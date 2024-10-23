@@ -1,13 +1,13 @@
 export async function handleOAuthToken(fragment: URLSearchParams) {
     const accessToken = fragment.get('access_token');
     const state = fragment.get('state');
-    const expiresAt = fragment.get('expiresAt')
+    const expiresAt = fragment.get('expires_in')
     let userId: string;
 
     if (accessToken) {
         userId = await getDiscordUserId(accessToken);
 
-        if (userId) {
+        if (userId && expiresAt) {
             await storeToken(userId, accessToken, expiresAt); // Sends token to backend to store in cookie
         } else {
             console.error("Failed to get user ID.");
