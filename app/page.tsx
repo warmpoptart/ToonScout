@@ -26,7 +26,7 @@ const HomePage: React.FC = () => {
                 initWebSocket(setIsConnected, userId);
             } else {
                 console.log("No token found.");
-                initOAuth();
+		// wait for user to click button...
             }
         };
     
