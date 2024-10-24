@@ -19,9 +19,6 @@ const HomePage: React.FC = () => {
                 credentials: 'include', // Cookies will be sent automatically
             });
 
-            console.log(response.body);
-            console.log(response.json());
-    
             if (response.ok) {
                 console.log("Token found.");
                 const { userId } = await response.json();
