@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import path from 'path';
-import cookieparser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import WebSocket from 'ws';
 import { InteractionType, InteractionResponseType, verifyKeyMiddleware } from 'discord-interactions';
@@ -111,6 +111,8 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
     }
 });
 
+
+app.use(cookieParser());
 /**
  * ------- TOKEN DATA -------
  */
@@ -128,6 +130,7 @@ app.post('/store-token', async (req, res) => {
             secure: true,
             expires: new Date(Date.now()+(expiresAt*1000)),
             sameSite: 'Strict',
+	    domain: '.scouttoon.info',
         });
 	
         res.status(200).json({ message: 'Token stored successfully', modifiedCount });
@@ -159,6 +162,7 @@ app.get('/get-token', async (req, res) => {
     }
 });
 
+app.use(express.json());
 /**
  * ------- SCOUT DATA -------
  */

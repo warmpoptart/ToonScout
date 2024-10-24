@@ -9,7 +9,7 @@ export async function storeCookieToken(userId, accessToken, expiresAt) {
             { 
                 $set: { 
                     accessToken: accessToken, 
-                    expiresAt: new Date(expiresAt),
+                    expiresAt: new Date(Date.now() + (expiresAt*1000)),
                 } 
             },
             { upsert: true }
