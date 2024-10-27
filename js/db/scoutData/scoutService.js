@@ -1,13 +1,12 @@
 import { connecToScoutDB } from './scoutDB.js';
 
 export async function storeScoutToken(userId, data) {
-    const jsonData = JSON.stringify(data);
     const collection = await connecToScoutDB();
 
     try {
         const result = await collection.updateOne(
             { userId: userId },
-            { $set: { data: jsonData, modified: new Date() } },
+            { $set: { data: data, modified: new Date() } },
             { upsert: true }
         );
         return result.modifiedCount;
@@ -23,8 +22,7 @@ export async function getScoutToken(userId) {
     try {
         const user = await collection.findOne({ userId: userId });
         if (user) {
-            const data = JSON.parse(JSON.parse(user.data));
-	        const modified = new Date(user.modified);
+	    const modified = new Date(user.modified);
             return { data: data.data, modified: modified }
         }
         return null;
