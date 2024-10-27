@@ -60,7 +60,7 @@ export function getToonRendition(local_toon, pose) {
 
 export async function validateUser(targetUser, res) {
     if (targetUser) {
-        const targetToon = await getToken(targetUser);
+        const targetToon = await getScoutToken(targetUser);
 
         if (!targetToon) {
             await res.send({
