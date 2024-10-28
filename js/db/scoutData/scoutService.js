@@ -23,8 +23,8 @@ export async function getScoutToken(userId) {
         const user = await collection.findOne({ userId: userId });
         if (user) {
 	    const modified = new Date(user.modified);
-            return { data: data.data, modified: modified }
-        }
+            return { data: JSON.parse(user.data).data, modified: modified }
+	}
         return null;
     } catch (error) {
         console.error('Error retrieving token:', error.message);
