@@ -8,9 +8,10 @@
         "node": ">=20.x"
     },
     "scripts": {
-        "start": "node js/app.js",
-        "register": "node js/install_commands.js",
-        "dev": "nodemon js/app.js"
+        "start": "NODE_ENV=production node js/app.js",
+        "register": "NODE_ENV=production node js/install_commands.js",
+        "dev": "NODE_ENV=development nodemon js/app.js",
+        "dev-register": "NODE_ENV=development node js/install_commands.js"
     },
     "author": "Erin Miller",
     "license": "MIT",
@@ -24,6 +25,7 @@
         "mongodb": "^6.9.0",
         "mongoose": "^8.7.1",
         "toonapi-calculator": "^1.6.6",
+        "toonscout": "file:",
         "ws": "^8.18.0"
     },
     "devDependencies": {

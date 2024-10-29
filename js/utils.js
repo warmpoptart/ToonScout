@@ -3,6 +3,8 @@ import { getScoutToken } from './db/scoutData/scoutService.js';
 import { InteractionResponseType } from 'discord-interactions';
 
 export async function DiscordRequest(endpoint, options) {
+    const isProduction = process.env.NODE_ENV === 'production';
+    const DISCORD_TOKEN = isProduction ? process.env.DISCORD_TOKEN_PROD : process.env.DISCORD_TOKEN_DEV;
     // append endpoint to root API URL
     const url = 'https://discord.com/api/v10/' + endpoint;
     // Stringify payloads

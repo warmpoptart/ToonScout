@@ -22,4 +22,7 @@ for (const file of commandFiles) {
     }
 }
 
-InstallGlobalCommands(process.env.APP_ID, commands);
+const isProduction = process.env.NODE_ENV === 'production';
+const APP_ID = isProduction ? process.env.APP_ID_PROD : process.env.APP_ID_DEV;
+
+InstallGlobalCommands(APP_ID, commands);

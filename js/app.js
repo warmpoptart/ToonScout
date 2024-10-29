@@ -53,7 +53,10 @@ for (const file of commandFiles) {
     }
 }
 
-app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async function (req, res) {
+const isProduction = process.env.NODE_ENV === 'production';
+const PUBLIC_KEY = isProduction ? process.env.PUBLIC_KEY_PROD : process.env.PUBLIC_KEY_DEV;
+
+app.post('/interactions', verifyKeyMiddleware(PUBLIC_KEY), async function (req, res) {
     const { type, data } = req.body;
     
     // verification requests
