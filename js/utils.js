@@ -11,7 +11,7 @@ export async function DiscordRequest(endpoint, options) {
     if (options.body) options.body = JSON.stringify(options.body);
     const res = await fetch(url, {
         headers: {
-        Authorization: `Bot ${process.env.DISCORD_TOKEN}`,
+        Authorization: `Bot ${DISCORD_TOKEN}`,
         'Content-Type': 'application/json; charset=UTF-8',
         'User-Agent':
             'ToonScout (https://github.com/erin-miller/toonScout, 1.0.0)',
