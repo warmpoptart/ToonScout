@@ -4,11 +4,13 @@ import Disclaimer from './Disclaimer';
 
 const commands = [
     { title: '/info', description: 'Displays your toon photo, laff, and location.', color: '#4A90E2' },
-    { title: '/fish', description: 'Provides advising on where to fish or what to catch.', color: '#504ae2' },
-    { title: '/suit', description: 'Get your suit progress and promotion recommendations.', color: '#9c4ae2' },
-    { title: '/gags', description: 'Displays current gags and progress.', color: '#e24adc' },
-    { title: '/tasks', description: 'Lists your active toontasks and progress.', color: '#e24a90' },
-    { title: '/support', description: 'Get a Discord link to our support server.', color: '#e2504a' }, 
+    { title: '/fish', description: 'Provides advising on where to fish or what to catch.', color: '#4D6DE2' },
+    { title: '/suit', description: 'Get suit progress and recommendations.', color: '#504AE2' },
+    { title: '/gags', description: 'Displays current gags and progress.', color: '#764AE2' },
+    { title: '/tasks', description: 'Lists your active toontasks and progress.', color: '#9C4AE2' },
+    { title: '/race', description: 'Provides advising on racing trophies.', color: '#BF4ADF'},
+    { title: '/golf', description: 'Provides advising on golfing trophies.', color: '#E24ADC'},
+    { title: '/support', description: 'Get a Discord link to our support server.', color: '#E24AB6' }, 
   ];
 
 const Home = () => {
@@ -39,7 +41,7 @@ const Home = () => {
                 </p>
 
                 {/* Commands Container */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                     {commands.map((command) => (
                     <CommandBox key={command.title} command={command} />
                     ))}
