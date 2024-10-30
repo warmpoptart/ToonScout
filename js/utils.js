@@ -64,7 +64,7 @@ export async function validateUser(targetUser, res) {
     if (targetUser) {
         const targetToon = await getScoutToken(targetUser);
 
-        if (!targetToon) {
+        if (!targetToon || targetToon.hidden) {
             await res.send({
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: {
