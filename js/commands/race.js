@@ -21,7 +21,7 @@ export const data = new SlashCommandBuilder()
 export async function execute(req, res, target) {
     const item = await getScoutToken(target);
     const toon = item.data;
-    
+
     const embed = new EmbedBuilder()
         .setColor('Gold')
         .setAuthor({ name: toon.toon.name, iconURL: getToonRendition(toon, 'laffmeter') })
@@ -29,7 +29,7 @@ export async function execute(req, res, target) {
         .setThumbnail(car)
         .setDescription(getTrophies(toon.racing))
         .setFooter({ text: getLaff(toon.racing), iconURL: trophyIcon})
-        .setTimestamp(TEST_MOD)
+        .setTimestamp(item.modified)
 
     return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
@@ -46,15 +46,12 @@ function getLaff(toon) {
 }
 
 function getTrophies(toon) {
-    if (getTotalEarned(toon) === 30) {
-        return 'You have maxed racing! Congratulations!';
-    }
     const calc = new RacingCalculator(JSON.stringify(toon));
     let trophies = calc.getBestTrophy().slice(0,5);
     trophies = trophies.map((t, index) => 
         `**${index+1}. ${t.name}**Progress: ${t.progress.current}/${t.progress.required}\n${t.progress.difference} more to go!\n`
     ).join('\n');
-    return trophies;
+    return trophies !== '' ? trophies : 'You have maxed racing! Congratulations!';
 }
 
 function getTotalEarned(toon) {

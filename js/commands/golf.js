@@ -29,7 +29,7 @@ export async function execute(req, res, target) {
         .setThumbnail(pencil)
         .setDescription(getTrophies(toon.golf))
         .setFooter({ text: getLaff(toon.golf), iconURL: trophyIcon})
-        .setTimestamp(TEST_MOD)
+        .setTimestamp(item.modified)
 
     return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
