@@ -7,7 +7,7 @@ let contReqInterval: NodeJS.Timeout | null = null;
 let scoutAttempts = 0;
 const MAX_SCOUT_ATTEMPTS = 10;
 const RECONNECT_DELAY = 10000;
-const RECONNECT_INTERVAL = 10000;
+const RECONNECT_INTERVAL = 5000;
 
 export const initWebSocket = (setIsConnected: React.Dispatch<React.SetStateAction<boolean>>, id: string) => {
     userId = id;
