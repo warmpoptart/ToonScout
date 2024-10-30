@@ -64,11 +64,12 @@ app.post('/interactions', verifyKeyMiddleware(PUBLIC_KEY), async function (req, 
         return res.send({ type: InteractionResponseType.PONG });
     }
 
-    const user = await getScoutToken(getUserId(req));
     const targetUser = req.body.data.options?.find(option => option.name === 'user')?.value;
     const targetToon = await validateUser(targetUser, res);
-    const toon = targetToon || user;
-    const id = targetUser || getUserId(req); 
+    if (!targetToon && targetUser) {
+        return;
+    }
+    const id = targetToon ? targetUser : getUserId(req); 
     // checking for commands
     if (type === InteractionType.APPLICATION_COMMAND) {
         const { name } = data;
@@ -121,12 +122,8 @@ app.use(cookieParser());
  */
 app.post('/store-token', async (req, res) => {
     const { userId, accessToken, expiresAt } = req.body;
-    console.log(userId)
-	console.log(accessToken)
-	console.log(expiresAt)
     try {
         const modifiedCount = await storeCookieToken(userId, accessToken, expiresAt);
-	console.log(modifiedCount)
         // Set HttpOnly cookie with the access token, secure, and expiry settings
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
@@ -145,7 +142,6 @@ app.post('/store-token', async (req, res) => {
 
 app.get('/get-token', async (req, res) => {
     // Access token will be in the cookies
-    console.log(req.cookies);
     const accessToken = req.cookies.accessToken;
 
     if (!accessToken) {
