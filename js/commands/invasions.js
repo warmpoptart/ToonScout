@@ -33,7 +33,7 @@ export async function execute(req, res, target) {
             { name: 'Progress', value: progText, inline: true}
         );
     } else {
-        embed.addFields({ name: 'Invasions', value: 'No active invasions at this time.' });
+        embed.addFields({ name: 'Status', value: 'No active invasions at this time.' });
     }
 
     return res.send({
