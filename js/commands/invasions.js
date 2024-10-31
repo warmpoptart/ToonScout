@@ -1,8 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { InteractionResponseType } from 'discord-interactions';
 
-const gear = 'https://i.imgur.com/ezVOZkx.png';
-
 export const data = new SlashCommandBuilder()
         .setName('invasions')
         .setDescription('Show invasion status in all districts.')
