@@ -15,7 +15,7 @@ export async function execute(req, res, target) {
         .setTitle('Current Invasions')
         .setTimestamp(new Date(inv.lastUpdated*1000))
 
-    if (inv) {
+    if (!inv.error) {
         let districtText = '';
         let cogText = '';
         let progText = '';
@@ -24,7 +24,7 @@ export async function execute(req, res, target) {
             districtText += `${district}\n`;
             cogText += `${invasion.type}\n`;
             const [curr, req] = invasion.progress.split('/');
-            progText += `${curr} / ${req}\n`;
+            progText += `${(curr/req*100).toFixed(0)}%\n`;
         }
 
         embed.addFields(
