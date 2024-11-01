@@ -11,6 +11,19 @@ import { RacingCalculator } from 'toonapi-calculator';
 
 const car = 'https://i.imgur.com/oOEXNMv.png';
 const trophyIcon = 'https://i.imgur.com/Sl1ep8e.png';
+const order = [
+    "Speedway Wins",
+    "Speedway Qualify Count",
+    "Rural Wins",
+    "Rural Qualify Count",
+    "Urban Wins",
+    "Urban Qualify Count",
+    "Total Wins",
+    "Total Qualify Count",
+    "Tournament Race Wins",
+    "Tournament Race Qualify Count",
+    "Unique race tracks completed",
+]
 
 export const data = new SlashCommandBuilder()
         .setName('race')
@@ -189,7 +202,9 @@ function getTopTrophies(toon) {
 
 function getAllTrophies(toon) {
     const calc = new RacingCalculator(JSON.stringify(toon));
-    const trophies = calc.getBestTrophy();
+    const trophies = calc.getBestTrophy().sort((a, b) => {
+        return order.indexOf(a.name) - order.indexOf(b.name);
+    });
     return trophies !== '' ? trophies : null;
 }
 

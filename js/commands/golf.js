@@ -11,6 +11,18 @@ import { GolfCalculator } from 'toonapi-calculator';
 
 const pencil = 'https://i.imgur.com/MEUlLCS.png';
 const trophyIcon = 'https://i.imgur.com/Sl1ep8e.png';
+const order = [
+    "Walk In The Par Wins",
+    "Hole Some Fun Wins",
+    "The Hole Kit And Caboodle Wins",
+    "Birdie Or Better Shots",
+    "Par Or Better Shots",
+    "Courses Under Par",
+    "Eagle Or Better Shots",
+    "Hole In One Shots",
+    "Courses Completed",
+    "Multiplayer Courses Completed",
+];
 
 export const data = new SlashCommandBuilder()
         .setName('golf')
@@ -188,7 +200,9 @@ function getTopTrophies(toon) {
 
 function getAllTrophies(toon) {
     const calc = new GolfCalculator(JSON.stringify(toon));
-    const trophies = calc.getBestTrophy();
+    const trophies = calc.getBestTrophy().sort((a, b) => {
+        return order.indexOf(a.name) - order.indexOf(b.name);
+    });
     return trophies !== '' ? trophies : null;
 }
 
