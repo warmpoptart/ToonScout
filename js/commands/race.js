@@ -153,7 +153,7 @@ function getHomeEmbed(item) {
         .setFooter({ text: getLaff(toon.racing), iconURL: trophyIcon})
         .setTimestamp(item.modified)
 
-    if (trophies) {
+    if (getTotalEarned(toon.racing) !== 30 && trophies) {
         let trophyNames = ``;
         let progNames = ``;
         const earned = getSpecificEarned(toon.racing);
@@ -171,7 +171,7 @@ function getHomeEmbed(item) {
             { name: 'Progress', value: progNames, inline: true}
         );
     } else {
-        embed.addDescription('You have maxed racing! Congratulations!');
+        embed.setDescription('You have maxed racing! Congratulations!');
     }
 
     return embed;
