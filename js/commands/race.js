@@ -6,8 +6,10 @@ import {
 } from 'discord.js';
 import { InteractionResponseType } from 'discord-interactions';
 import { getToonRendition } from '../utils.js';
-import { getScoutToken } from '../db/scoutData/scoutService.js';
+import { getScoutToken, storeScoutToken  } from '../db/scoutData/scoutService.js';
 import { RacingCalculator } from 'toonapi-calculator';
+
+const trophyEmoji = "<:trophy:1301971567575699498>";
 
 const car = 'https://i.imgur.com/oOEXNMv.png';
 const trophyIcon = 'https://i.imgur.com/Sl1ep8e.png';
@@ -154,9 +156,12 @@ function getHomeEmbed(item) {
     if (trophies) {
         let trophyNames = ``;
         let progNames = ``;
+        const earned = getSpecificEarned(toon.racing);
 
         trophies.forEach(trophy => {
-            const progress = `${trophy.progress.current}/${trophy.progress.required}\n`;
+            const completed = earned.find(item => item[0] === trophy.name)[1];
+            
+            const progress = `${trophy.progress.current}/${trophy.progress.required} ${trophyEmoji.repeat(completed)}\n`;
             trophyNames += `${trophy.name}\n`;
             progNames += progress;
         });
@@ -211,4 +216,9 @@ function getAllTrophies(toon) {
 function getTotalEarned(toon) {
     const calc = new RacingCalculator(JSON.stringify(toon));
     return calc.getTotalEarned();
+}
+
+function getSpecificEarned(toon) {
+    const calc = new RacingCalculator(JSON.stringify(toon));
+    return calc.getCompletedTrophies();
 }
