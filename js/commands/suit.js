@@ -220,9 +220,7 @@ function getSuitEmbed(item, title, type) {
             .setAuthor({ name: toon.toon.name, iconURL: getToonRendition(toon, 'laffmeter') })
             .setTitle(getBasicSuitInfo(suit, type))
             .setDescription(`${simplifyNeeded(suit, type)} to go!\nProgress: ${simplifyPromo(suit, type)}`)
-            .addFields( 
-                { name: 'Recommended Activities', value: getSuitPath(suit, type) },
-            )
+            .addFields(getSuitPath(suit, type))
             .setFooter({ text: `Facility earnings are an estimate.`, iconURL: gear })
             .setTimestamp(item.modified)
     } else {
@@ -280,6 +278,11 @@ function getBossButton(target) {
 function getSuitPath(toon, type) {
     const calc = new SuitCalculator(JSON.stringify(toon));
     const { path, total } = calc.getBestPathWeighted(type);
+
+    if (total == -2) {
+        return { name: "Recommended Activities", value: "None.\n**You are ready for promotion!**"}
+    }
+
     let weighted = {};
     path.forEach(item => {
         weighted[item] = (weighted[item] || 0) + 1;
@@ -289,7 +292,7 @@ function getSuitPath(toon, type) {
     for (const [item, count] of Object.entries(weighted)) {
         result += `(${count}) ${item}\n`;
     }
-    return result + `**Estimated earnings:** ${total}`;
+    return { name: "Recommended Activities", value: result + `**Estimated earnings:** ${total}` };
 }
 
 function getBasicSuitInfo(toon, type) {
