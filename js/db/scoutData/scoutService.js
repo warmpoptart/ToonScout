@@ -2,12 +2,13 @@ import { connectToScoutDB } from './scoutDB.js';
 
 export async function storeScoutToken(userId, data) {
     const collection = await connectToScoutDB();
+    const cleaned = sanitize(data);
 
     try {
         const result = await collection.updateOne(
             { userId: userId },
             { $set: 
-                { data: data, modified: new Date() },
+                { data: cleaned, modified: new Date() },
                 $setOnInsert: { hidden: true } 
             },
             { upsert: true }
@@ -53,4 +54,11 @@ export async function updateHidden(userId) {
         console.error("Error updating hidden:", error.message);
         throw error;
     }
+}
+
+function sanitize(data) {
+    let obj = JSON.parse(data);
+    let cleaned = JSON.stringify(obj);
+    cleaned = cleaned.replace(/\\u[0-9a-fA-F]{4}/g, '');
+    return cleaned;
 }
