@@ -9,6 +9,50 @@ import { getToonRendition } from '../utils.js';
 import SuitCalculator from 'toonapi-calculator/js/suits.js';
 import { getScoutToken } from '../db/scoutData/scoutService.js';
 
+const levels = {
+    's': {
+        'Cold Caller': 5,
+        'Telemarketer': 6,
+        'Name Dropper': 7,
+        'Glad Hander': 8,
+        'Mover & Shaker': 9,
+        'Two-Face': 10,
+        'The Mingler': 11,
+        'Mr. Hollywood': 50,
+    },
+    'm': {
+        'Short Change': 5,
+        'Penny Pincher': 6,
+        'Tightwad': 7,
+        'Bean Counter': 8,
+        'Number Cruncher': 9,
+        'Money Bags': 10,
+        'Loan Shark': 11,
+        'Robber Baron': 50,
+    },
+    'l': {
+        'Bottom Feeder': 5,
+        'Bloodsucker': 6,
+        'Double Talker': 7,
+        'Ambulance Chaser': 8,
+        'Back Stabber': 9,
+        'Spin Doctor': 10,
+        'Legal Eagle': 11,
+        'Big Wig': 50,
+    },
+    'c': {
+        'Flunky': 5,
+        'Pencil Pusher': 6,
+        'Yesman': 7,
+        'Micromanager': 8,
+        'Downsizer': 9,
+        'Head Hunter': 10,
+        'Corporate Raider': 11,
+        'The Big Cheese': 50,
+    }
+};
+
+
 const gear = 'https://i.imgur.com/ezVOZkx.png';
 const sellIcon = 'https://i.imgur.com/gGr9Mqp.png';
 const cashIcon = 'https://i.imgur.com/Wo4aeDt.png';
@@ -299,7 +343,7 @@ function getBasicSuitInfo(toon, type) {
     const suitType = toon[type];
     if (suitType.hasDisguise) {
         const prestige = suitType.version == 2 ? ' v2.0' : '';
-        return `${suitType.suit.name}, Level ${suitType.level}${prestige}`
+        return `${suitType.suit.name}, Level ${suitType.level} / ${getLevel(toon, type)}${prestige}`
     }
     return 'No disguise!';
 }
@@ -312,4 +356,10 @@ function simplifyPromo(toon, type) {
 function simplifyNeeded(toon, type) {
     const calc = new SuitCalculator(JSON.stringify(toon));
     return calc.getNeeded(type);
+}
+
+function getLevel(toon, type) {
+    const { suit, version } = toon[type];
+    if (version == 2) return 50;
+    return levels[type][suit.name];
 }
