@@ -6,7 +6,7 @@ import {
 } from 'discord.js';
 import { InteractionResponseType } from 'discord-interactions';
 import { getToonRendition } from '../utils.js';
-import { getScoutToken, storeScoutToken  } from '../db/scoutData/scoutService.js';
+import { getScoutToken } from '../db/scoutData/scoutService.js';
 import { RacingCalculator } from 'toonapi-calculator';
 
 const trophyEmoji = "<:trophy:1301971567575699498>";
