@@ -10,8 +10,8 @@ const commands = [
     { title: '/tasks', description: 'Lists your active toontasks and progress.', color: '#764AE2' },
     { title: '/race', description: 'Provides advising on racing trophies.', color: '#9C4AE2'},
     { title: '/golf', description: 'Provides advising on golfing trophies.', color: '#BF4ADF'},
-    { title: '/support', description: 'Get a Discord link to our support server.', color: '#E24ADC' }, 
-    { title: '/hidden', description: 'Set if your info can be viewed by others.', color: '#E24AB6'}
+    { title: '/hidden', description: 'Set if your info can be viewed by others.', color: '#E24ADC' }, 
+    { title: '...and more!', description: 'You can see all other commands in Discord!', color: '#E24AB6'}
   ];
 
 const Home = () => {
