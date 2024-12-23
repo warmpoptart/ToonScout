@@ -38,7 +38,7 @@ const Auth = () => {
   const handleMouseLeave = () => setIsPressed(false);
 
   return (
-    <div className="discord-container">
+    <div className="card-container">
       <div className="discord-card">
         <h2 className="minnie-title text-3xl mb-6">Connect to Discord</h2>
         <p className="text-xl">

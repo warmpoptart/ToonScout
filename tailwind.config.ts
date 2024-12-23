@@ -8,18 +8,19 @@ const config: Config = {
   ],
   theme: {
     extend: {
-        backgroundImage: {
-            'gags-pattern': "url('https://cdn.toontownrewritten.com/static/images/base/gags_pattern.png')",
-        },
-        colors: {
-            background: "var(--background)",
-            foreground: "var(--foreground)",
-        },
-        fontFamily: {
-            mickey: ['mickey', 'serif'],
-            minnie: ['minnie', 'serif'], 
-            impress: ['impress', 'serif']
-        }
+      backgroundImage: {
+        "gags-pattern":
+          "url('https://cdn.toontownrewritten.com/static/images/base/gags_pattern.png')",
+      },
+      colors: {
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+      },
+      fontFamily: {
+        mickey: ["mickey", "serif"],
+        minnie: ["minnie", "serif"],
+        impress: ["impress", "serif"],
+      },
     },
   },
   plugins: [],

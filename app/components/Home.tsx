@@ -1,5 +1,4 @@
-import React, { useState, Suspense } from "react";
-import CommandBox from "./CommandBox";
+import React, { useState, Suspense, useEffect } from "react";
 import Disclaimer from "./Disclaimer";
 import { TabList } from "./tabs/TabList";
 
@@ -9,10 +8,10 @@ const Home = () => {
   const currTabComponent = TabList.find((tab) => tab.title === currTab);
 
   return (
-    <div className="flex w-full max-w-6xl mx-auto">
+    <div className="card-container">
       <div className="home-card">
         <h2 className="text-4xl minnie-title">Welcome to ToonScout!</h2>
-        <p className="text-xl text-gray-600">
+        <p>
           <a
             href="https://discord.com/oauth2/authorize?client_id=1286517155315322950"
             target="_blank"
@@ -25,19 +24,17 @@ const Home = () => {
             real-time information.
           </span>
           <span className="text-block">
-            If you close it, you can still access your last saved data any time.
+            If you close it, you can still access your last saved data any time
+            on Discord.
           </span>
-          {/* <span className="text-block">
-            Run the commands below <strong>anywhere</strong> in Discord after
-            adding with the button above!
-          </span> */}
         </p>
 
         <div className="tab-container">
           {TabList.map((tab) => (
             <button
               key={tab.title}
-              className={tab.title === currTab ? "curr-tab-btn" : "tab-btn"}
+              className="tab-btn"
+              aria-selected={currTab == tab.title ? true : false}
               onClick={() => setCurrTab(tab.title)}
             >
               {tab.title}
@@ -45,7 +42,7 @@ const Home = () => {
           ))}
         </div>
 
-        <div className="tab-content">
+        <div className="pb-2">
           <Suspense fallback={<div>Loading...</div>}>
             {currTabComponent ? (
               <currTabComponent.component />
@@ -54,12 +51,6 @@ const Home = () => {
             )}
           </Suspense>
         </div>
-
-        {/* <div className="cmd-container">
-          {commands.map((command) => (
-            <CommandBox key={command.title} command={command} />
-          ))}
-        </div> */}
 
         <Disclaimer />
       </div>

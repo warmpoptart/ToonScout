@@ -6,7 +6,12 @@ import TasksTab from "./TasksTab";
 import CommandTab from "./CommandTab";
 import ActivityTab from "./ActivityTab";
 
-export const TabList = [
+export type TabComponent = {
+  title: string;
+  component: React.FC<{}>;
+};
+
+export const TabList: TabComponent[] = [
   { title: "Commands", component: CommandTab },
   { title: "Overview", component: InfoTab },
   { title: "Fishing", component: FishTab },

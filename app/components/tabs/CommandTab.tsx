@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import CommandBox from "../CommandBox";
 
 const commands = [
   {
@@ -49,9 +50,28 @@ const commands = [
 ];
 
 const CommandTab: React.FC = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 10);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div>
-      <p>cmds</p>
+    <div
+      className={`tab-content ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+      }`}
+    >
+      <span className="text-block p-2">
+        Run the commands below <strong>anywhere</strong> in Discord after adding
+        with the button above!
+      </span>
+      <div className="cmd-container">
+        {commands.map((command) => (
+          <CommandBox key={command.title} command={command} />
+        ))}
+      </div>
     </div>
   );
 };
