@@ -30,8 +30,7 @@ export const initWebSocket = (
     });
 
     socket.addEventListener("message", (event) => {
-      const data = JSON.parse(event.data);
-      toon = data;
+      toon = JSON.parse(event.data);
       setIsConnected(true);
     });
 
