@@ -10,7 +10,8 @@ const RECONNECT_DELAY = 10000;
 const RECONNECT_INTERVAL = 5000;
 
 export const initWebSocket = (
-  setIsConnected: React.Dispatch<React.SetStateAction<boolean>>,
+  setIsConnected: (isConnected: boolean) => void,
+  setToonData: (data: any) => void,
   id: string
 ) => {
   userId = id;
@@ -31,6 +32,7 @@ export const initWebSocket = (
 
     socket.addEventListener("message", (event) => {
       toon = JSON.parse(event.data);
+      setToonData(toon);
       setIsConnected(true);
     });
 

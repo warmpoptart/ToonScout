@@ -1,6 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { handleOAuthToken } from "./api/oauth";
+import { useToonContext } from "./context/ToonContext";
+import { useConnectionContext } from "./context/ConnectionContext";
 import { initWebSocket } from "./api/websocket";
 import "./styles/fonts.css";
 import Auth from "./components/Auth";
@@ -9,7 +11,10 @@ import Home from "./components/Home";
 
 const HomePage: React.FC = () => {
   const [isAuth, setIsAuth] = useState(true);
-  const [isConnected, setIsConnected] = useState(true);
+  const { setIsConnected, isConnected } = useConnectionContext();
+  const { setToonData } = useToonContext();
+
+  setIsConnected(true);
 
   useEffect(() => {
     const checkAccessToken = async () => {
@@ -22,7 +27,7 @@ const HomePage: React.FC = () => {
         console.log("Token found.");
         const { userId } = await response.json();
         setIsAuth(true);
-        initWebSocket(setIsConnected, userId);
+        initWebSocket(setIsConnected, setToonData, userId);
       } else {
         console.log("No token found.");
         // wait for user to click button...
@@ -36,7 +41,7 @@ const HomePage: React.FC = () => {
       handleOAuthToken(fragment).then((userId) => {
         setIsAuth(true);
         if (userId) {
-          initWebSocket(setIsConnected, userId);
+          initWebSocket(setIsConnected, setToonData, userId);
         } else {
           console.log("ID error");
         }
