@@ -1,56 +1,13 @@
-import React from "react";
+import React, { useState, Suspense } from "react";
 import CommandBox from "./CommandBox";
 import Disclaimer from "./Disclaimer";
-
-const commands = [
-  {
-    title: "/info",
-    description: "Displays your toon photo, laff, and location.",
-    color: "#4A90E2",
-  },
-  {
-    title: "/fish",
-    description: "Provides advising on where to fish or what to catch.",
-    color: "#4c7fe2",
-  },
-  {
-    title: "/suit",
-    description: "Get suit progress and recommendations.",
-    color: "#4d6de2",
-  },
-  {
-    title: "/gags",
-    description: "Displays current gags and progress.",
-    color: "#504AE2",
-  },
-  {
-    title: "/tasks",
-    description: "Lists your active toontasks and progress.",
-    color: "#764AE2",
-  },
-  {
-    title: "/race",
-    description: "Provides advising on racing trophies.",
-    color: "#9C4AE2",
-  },
-  {
-    title: "/golf",
-    description: "Provides advising on golfing trophies.",
-    color: "#BF4ADF",
-  },
-  {
-    title: "/hidden",
-    description: "Set if your info can be viewed by others.",
-    color: "#E24ADC",
-  },
-  {
-    title: "...and more!",
-    description: "You can see all other commands in Discord!",
-    color: "#E24AB6",
-  },
-];
+import { TabList } from "./tabs/TabList";
 
 const Home = () => {
+  const [currTab, setCurrTab] = useState(TabList[0].title);
+
+  const currTabComponent = TabList.find((tab) => tab.title === currTab);
+
   return (
     <div className="flex w-full max-w-6xl mx-auto">
       <div className="home-card">
@@ -70,17 +27,39 @@ const Home = () => {
           <span className="text-block">
             If you close it, you can still access your last saved data any time.
           </span>
-          <span className="text-block">
+          {/* <span className="text-block">
             Run the commands below <strong>anywhere</strong> in Discord after
             adding with the button above!
-          </span>
+          </span> */}
         </p>
 
-        <div className="cmd-container">
+        <div className="tab-container">
+          {TabList.map((tab) => (
+            <button
+              key={tab.title}
+              className={tab.title === currTab ? "curr-tab-btn" : "tab-btn"}
+              onClick={() => setCurrTab(tab.title)}
+            >
+              {tab.title}
+            </button>
+          ))}
+        </div>
+
+        <div className="tab-content">
+          <Suspense fallback={<div>Loading...</div>}>
+            {currTabComponent ? (
+              <currTabComponent.component />
+            ) : (
+              <div>Select a tab to view the content.</div>
+            )}
+          </Suspense>
+        </div>
+
+        {/* <div className="cmd-container">
           {commands.map((command) => (
             <CommandBox key={command.title} command={command} />
           ))}
-        </div>
+        </div> */}
 
         <Disclaimer />
       </div>

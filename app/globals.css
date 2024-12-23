@@ -82,6 +82,26 @@ html, body {
     lg:grid-cols-3 gap-4 md:gap-6
 }
 
+.tab-container {
+    @apply container flex justify-center items-center w-full space-x-4
+}
+
+.tab-btn {
+    @apply tab-btn-base bg-gray-200 
+}
+
+.curr-tab-btn {
+    @apply tab-btn-base bg-indigo-500 text-white
+}
+
+.tab-btn-base {
+    @apply rounded-full px-2 text-2xl shadow-md
+}
+
+.tab-content {
+    @apply pb-2
+}
+
 .text-block {
     @apply block pb-2
 }
