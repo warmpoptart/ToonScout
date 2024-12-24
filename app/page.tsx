@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { handleOAuthToken } from "./api/oauth";
 import { useToonContext } from "./context/ToonContext";
-import { ToonData } from "./types";
 import { useConnectionContext } from "./context/ConnectionContext";
 import { initWebSocket } from "./api/websocket";
 import "./styles/fonts.css";

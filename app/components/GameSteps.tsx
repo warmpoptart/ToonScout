@@ -1,5 +1,5 @@
 import React from "react";
-import LoadingDots from "./LoadingDots";
+import LoadingDots from "./animations/LoadingDots";
 import "../styles/gamesteps.css";
 
 const GameSteps: React.FC = () => (

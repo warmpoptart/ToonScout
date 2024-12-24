@@ -1,12 +1,10 @@
 import React, { useState, Suspense, useEffect } from "react";
 import Disclaimer from "./Disclaimer";
-import { TabList } from "./tabs/TabList";
 import "../styles/home.css";
+import TabContainer from "./TabComponent";
 
 const Home = () => {
-  const [currTab, setCurrTab] = useState(TabList[0].title);
-
-  const currTabComponent = TabList.find((tab) => tab.title === currTab);
+  
 
   return (
     <div className="card-container">
@@ -30,28 +28,7 @@ const Home = () => {
           </span>
         </p>
 
-        <div className="tab-container">
-          {TabList.map((tab) => (
-            <button
-              key={tab.title}
-              className="tab-btn"
-              aria-selected={currTab == tab.title ? true : false}
-              onClick={() => setCurrTab(tab.title)}
-            >
-              {tab.title}
-            </button>
-          ))}
-        </div>
-
-        <div className="pb-2">
-          <Suspense fallback={<div>Loading...</div>}>
-            {currTabComponent ? (
-              <currTabComponent.component />
-            ) : (
-              <div>Select a tab to view the content.</div>
-            )}
-          </Suspense>
-        </div>
+        <TabContainer />
 
         <Disclaimer />
       </div>

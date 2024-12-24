@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CommandBox from "../CommandBox";
+import AnimatedTabContent from "../animations/AnimatedTab";
 import "../../styles/tabs.css";
 
 const commands = [
@@ -51,19 +52,8 @@ const commands = [
 ];
 
 const CommandTab: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 10);
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
-    <div
-      className={`tab-content ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-      }`}
-    >
+    <AnimatedTabContent>
       <span className="text-block p-2">
         Run the commands below <strong>anywhere</strong> in Discord after adding
         with the button above!
@@ -73,7 +63,7 @@ const CommandTab: React.FC = () => {
           <CommandBox key={command.title} command={command} />
         ))}
       </div>
-    </div>
+    </AnimatedTabContent>
   );
 };
 
