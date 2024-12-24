@@ -10,11 +10,9 @@ import GameSteps from "./components/GameSteps";
 import Home from "./components/Home";
 
 const HomePage: React.FC = () => {
-  const [isAuth, setIsAuth] = useState(true);
+  const [isAuth, setIsAuth] = useState(false);
   const { setIsConnected, isConnected } = useConnectionContext();
   const { setToonData } = useToonContext();
-
-  setIsConnected(true);
 
   useEffect(() => {
     const checkAccessToken = async () => {

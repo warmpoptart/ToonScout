@@ -49,7 +49,7 @@ export const initWebSocket = (
     });
   };
 
-  connectWebSocket();
+  console.log("attempting connect");
 
   function startContinuousRequests() {
     if (contReqInterval) {
