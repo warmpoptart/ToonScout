@@ -3,7 +3,7 @@ import React from "react";
 const SuitTab: React.FC = () => {
   return (
     <div>
-      <p>suit</p>
+      <p>Sorry, this page is under construction. Come back later!</p>
     </div>
   );
 };

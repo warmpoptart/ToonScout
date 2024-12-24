@@ -3,7 +3,7 @@ import React from "react";
 const FishTab: React.FC = () => {
   return (
     <div>
-      <p>fish</p>
+      <p>Sorry, this page is under construction. Come back later!</p>
     </div>
   );
 };

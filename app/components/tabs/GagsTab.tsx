@@ -3,7 +3,7 @@ import React from "react";
 const GagsTab: React.FC = () => {
   return (
     <div>
-      <p>gags</p>
+      <p>Sorry, this page is under construction. Come back later!</p>
     </div>
   );
 };
