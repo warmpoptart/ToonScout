@@ -74,7 +74,8 @@ const InfoTab: React.FC = () => {
   const sumGolf = () => {
     let count = 0;
     for (const trophy of golf_trophies) {
-      const earned = toonData.golf[trophy.description] || 0;
+      const earned =
+        toonData.golf.find((item) => item.name == trophy.description)?.num || 0;
       for (const val of trophy.values) {
         if (earned >= val) {
           count += 1;
@@ -87,7 +88,9 @@ const InfoTab: React.FC = () => {
   const sumRace = () => {
     let count = 0;
     for (const trophy of race_trophies) {
-      const earned = toonData.racing[trophy.description] || 0;
+      const earned =
+        toonData.racing.find((item) => item.name == trophy.description)?.num ||
+        0;
       for (const val of trophy.values) {
         if (earned >= val) {
           count += 1;
@@ -180,9 +183,9 @@ const InfoTab: React.FC = () => {
               >
                 <path
                   d="M12 13C8 13 7 9.66667 7 8V4L9.5 6L12 3L14.5 6L17 4V8C17 9.66667 16 13 12 13ZM12 13V21M13 21C18.6 21 20 16.3333 20 14C14.4 14 13 18.6667 13 21ZM13 21H12M11 21C5.4 21 4 16.3333 4 14C9.6 14 11 18.6667 11 21ZM11 21H12"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                 />
               </svg>
               <p>{sumFlowers()} / 40</p>

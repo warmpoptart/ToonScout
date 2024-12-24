@@ -1,9 +1,6 @@
 "use client";
 import React, { createContext, useContext, useMemo, useState } from "react";
-
-type ToonData = {
-  [key: string]: any;
-};
+import { ToonData } from "../types";
 
 type ToonContextType = {
   toonData: ToonData | null;

@@ -103,17 +103,17 @@ interface Cogsuit {
   };
 }
 
-interface GolfStat {
+interface Golf {
   name: string;
   num: number;
 }
 
-interface RacingStat {
+interface Racing {
   name: string;
   num: number;
 }
 
-interface ToonData {
+export interface ToonData {
   toon: Toon;
   laff: {
     current: number;
@@ -128,6 +128,6 @@ interface ToonData {
   fish: Fish;
   flowers: Flower;
   cogsuits: Record<string, Cogsuit>;
-  golf: GolfStat[];
-  racing: RacingStat[];
+  golf: Golf[];
+  racing: Racing[];
 }

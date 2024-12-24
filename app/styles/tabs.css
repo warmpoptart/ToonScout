@@ -5,7 +5,7 @@
 
 .info-container {
   @apply flex w-full items-stretch justify-center space-x-2 text-violet-800
-  bg-violet-100 rounded-xl border border-violet-400 border-4 p-2;
+  bg-violet-100 rounded-xl border border-violet-400 border-4 p-2 shadow-md shadow-violet-100;
 }
 
 .left-info-container {
