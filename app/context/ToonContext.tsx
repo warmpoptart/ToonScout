@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useMemo, useState } from "react";
 
 type ToonData = {
   [key: string]: any;
@@ -17,11 +17,9 @@ export const ToonProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [toonData, setToonData] = useState<ToonData | null>(null);
 
-  return (
-    <ToonContext.Provider value={{ toonData, setToonData }}>
-      {children}
-    </ToonContext.Provider>
-  );
+  const value = useMemo(() => ({ toonData, setToonData }), [toonData]);
+
+  return <ToonContext.Provider value={value}>{children}</ToonContext.Provider>;
 };
 
 export const useToonContext = () => {

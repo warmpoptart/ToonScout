@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CommandBox from "../CommandBox";
+import "../../styles/tabs.css";
 
 const commands = [
   {

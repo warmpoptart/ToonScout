@@ -2,3 +2,36 @@
   @apply grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 
       lg:grid-cols-3 gap-4 md:gap-6;
 }
+
+.info-container {
+  @apply flex w-full items-stretch justify-center space-x-2 text-violet-800
+  bg-violet-100 rounded-xl border border-violet-400 border-4 p-2;
+}
+
+.left-info-container {
+  @apply flex flex-col w-1/4 py-1;
+}
+
+.right-info-container {
+  @apply flex flex-col flex-grow;
+}
+
+.activity-info-container {
+  @apply flex justify-center text-3xl space-x-4 pb-2;
+}
+
+.suits-info-container {
+  @apply flex flex-col h-full;
+}
+
+.toon-photo {
+  @apply flex justify-center pt-4;
+}
+
+.suit-card {
+  @apply flex-1 w-full;
+}
+
+.activity-bubble {
+  @apply inline-flex items-center rounded-full px-2 space-x-2 bg-violet-200 text-violet-800;
+}
