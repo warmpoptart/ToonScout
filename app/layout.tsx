@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { ConnectionProvider } from "./context/ConnectionContext";
+import { ToonProvider } from "./context/ToonContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,7 +16,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="font-impress text-gray-600">{children}</body>
+      <body className="font-impress text-gray-600">
+        <ToonProvider>
+          <ConnectionProvider>{children}</ConnectionProvider>
+        </ToonProvider>
+      </body>
     </html>
   );
 }

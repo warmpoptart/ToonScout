@@ -1,61 +1,18 @@
-import React from "react";
-import CommandBox from "./CommandBox";
+import React, { useState, Suspense, useEffect } from "react";
 import Disclaimer from "./Disclaimer";
-
-const commands = [
-  {
-    title: "/info",
-    description: "Displays your toon photo, laff, and location.",
-    color: "#4A90E2",
-  },
-  {
-    title: "/fish",
-    description: "Provides advising on where to fish or what to catch.",
-    color: "#4c7fe2",
-  },
-  {
-    title: "/suit",
-    description: "Get suit progress and recommendations.",
-    color: "#4d6de2",
-  },
-  {
-    title: "/gags",
-    description: "Displays current gags and progress.",
-    color: "#504AE2",
-  },
-  {
-    title: "/tasks",
-    description: "Lists your active toontasks and progress.",
-    color: "#764AE2",
-  },
-  {
-    title: "/race",
-    description: "Provides advising on racing trophies.",
-    color: "#9C4AE2",
-  },
-  {
-    title: "/golf",
-    description: "Provides advising on golfing trophies.",
-    color: "#BF4ADF",
-  },
-  {
-    title: "/hidden",
-    description: "Set if your info can be viewed by others.",
-    color: "#E24ADC",
-  },
-  {
-    title: "...and more!",
-    description: "You can see all other commands in Discord!",
-    color: "#E24AB6",
-  },
-];
+import { TabList } from "./tabs/TabList";
+import "../styles/home.css";
 
 const Home = () => {
+  const [currTab, setCurrTab] = useState(TabList[0].title);
+
+  const currTabComponent = TabList.find((tab) => tab.title === currTab);
+
   return (
-    <div className="flex w-full max-w-6xl mx-auto">
+    <div className="card-container">
       <div className="home-card">
         <h2 className="text-4xl minnie-title">Welcome to ToonScout!</h2>
-        <p className="text-xl text-gray-600">
+        <p>
           <a
             href="https://discord.com/oauth2/authorize?client_id=1286517155315322950"
             target="_blank"
@@ -68,18 +25,32 @@ const Home = () => {
             real-time information.
           </span>
           <span className="text-block">
-            If you close it, you can still access your last saved data any time.
-          </span>
-          <span className="text-block">
-            Run the commands below <strong>anywhere</strong> in Discord after
-            adding with the button above!
+            If you close it, you can still access your last saved data any time
+            on Discord.
           </span>
         </p>
 
-        <div className="cmd-container">
-          {commands.map((command) => (
-            <CommandBox key={command.title} command={command} />
+        <div className="tab-container">
+          {TabList.map((tab) => (
+            <button
+              key={tab.title}
+              className="tab-btn"
+              aria-selected={currTab == tab.title ? true : false}
+              onClick={() => setCurrTab(tab.title)}
+            >
+              {tab.title}
+            </button>
           ))}
+        </div>
+
+        <div className="pb-2">
+          <Suspense fallback={<div>Loading...</div>}>
+            {currTabComponent ? (
+              <currTabComponent.component />
+            ) : (
+              <div>Select a tab to view the content.</div>
+            )}
+          </Suspense>
         </div>
 
         <Disclaimer />
