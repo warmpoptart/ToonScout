@@ -8,7 +8,7 @@ const AnimatedTabContent = ({ children }: AnimatedTabContentProps) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 50);
+    const timer = setTimeout(() => setIsVisible(true), 5);
     return () => clearTimeout(timer);
   }, [children]);
 

@@ -7,6 +7,7 @@ import CommandTab from "./tabs/CommandTab";
 import ActivityTab from "./tabs/ActivityTab";
 import { useEffect, useState } from "react";
 import { useToonContext } from "../context/ToonContext";
+import AnimatedTabContent from "./animations/AnimatedTab";
 import "../styles/tabs.css";
 
 export type TabComponent = {
@@ -27,16 +28,10 @@ export const TabList: TabComponent[] = [
 const TabContainer = () => {
   const [selectedTab, setSelectedTab] = useState<TabComponent>(TabList[1]); // Default to "Overview"
   const { toonData } = useToonContext();
-  const [isVisible, setIsVisible] = useState(false);
 
   if (!toonData) {
     return "No toon data found. Please try refreshing the page.";
   }
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 10);
-    return () => clearTimeout(timer);
-  }, []);
 
   const getImage = () => {
     const dna = toonData.toon.style;
@@ -63,12 +58,8 @@ const TabContainer = () => {
         ))}
       </div>
 
-      <div
-        className={`tab-content ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-        }`}
-      >
-        {selectedTab && selectedTab.title !== "Commands" ? (
+      {selectedTab && selectedTab.title !== "Commands" ? (
+        <AnimatedTabContent>
           <div className="info-container">
             <div className="left-info-container">
               <div>
@@ -95,10 +86,10 @@ const TabContainer = () => {
               <selectedTab.component />
             </div>
           </div>
-        ) : (
-          <selectedTab.component />
-        )}
-      </div>
+        </AnimatedTabContent>
+      ) : (
+        <selectedTab.component />
+      )}
     </>
   );
 };
