@@ -1,6 +1,7 @@
 import React, { useState, Suspense, useEffect } from "react";
 import Disclaimer from "./Disclaimer";
 import { TabList } from "./tabs/TabList";
+import "../styles/home.css";
 
 const Home = () => {
   const [currTab, setCurrTab] = useState(TabList[0].title);

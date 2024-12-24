@@ -1,5 +1,6 @@
 import React from "react";
 import LoadingDots from "./LoadingDots";
+import "../styles/gamesteps.css";
 
 const GameSteps: React.FC = () => (
   <div className="flex max-w-7xl mx-auto">

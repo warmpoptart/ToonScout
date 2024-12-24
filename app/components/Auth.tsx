@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../styles/auth.css";
 
 const generateRandomString = (length = 16) => {
   const characters =
