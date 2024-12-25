@@ -166,7 +166,7 @@ app.get('/get-token', async (req, res) => {
  * ------- UTILITY -------
  */
 
-app.get('/get-fish-info', async (req, res) => {
+app.get('/get-fish', async (req, res) => {
     const { toonData } = req.query;
     
     if (!toonData) {
