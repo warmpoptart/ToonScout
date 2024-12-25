@@ -10,6 +10,7 @@ import { fileURLToPath, pathToFileURL } from 'url';
 import { getUserId, validateUser } from './utils.js';
 import { getScoutToken, storeScoutToken } from './db/scoutData/scoutService.js';
 import { storeCookieToken, getCookieToken } from './db/tokenData/tokenService.js';
+import FishCalculator from 'toonapi-calculator/js/fish.js';
 
 const app = express();
 const allowedOrigins = ['https://scouttoon.info', 'https://api.scouttoon.info'];
@@ -160,6 +161,33 @@ app.get('/get-token', async (req, res) => {
         res.status(500).json({ message: 'Failed to retrieve token', error: error.message });
     }
 });
+
+/**
+ * ------- UTILITY -------
+ */
+
+app.get('/get-fish-info', async (req, res) => {
+    const { toonData } = req.query;
+    
+    if (!toonData) {
+        return res.status(400).json({ message: 'Toon data is required' });
+    }
+    const calc = new FishCalculator(JSON.stringify(toonData));
+
+    try {
+        const fishData = calc.sortBestRarity();
+        
+        if (fishData) {
+            return res.status(200).json(fishData);
+        } else {
+            return res.status(404).json({ message: 'Fish data not found for this toon' });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
 
 app.use(express.json());
 /**
