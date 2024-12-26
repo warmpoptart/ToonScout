@@ -1,5 +1,3 @@
-import { ToonData } from "../types";
-
 const DEFAULT_PORT = 1547;
 let toon: any = null;
 let socket: WebSocket | null = null;
@@ -10,6 +8,7 @@ let scoutAttempts = 0;
 const MAX_SCOUT_ATTEMPTS = 10;
 const RECONNECT_DELAY = 10000;
 const RECONNECT_INTERVAL = 5000;
+const SCOUT_LINK = "wss://api.scouttoon.info";
 
 export const initWebSocket = (
   setIsConnected: (isConnected: boolean) => void,
@@ -83,7 +82,7 @@ export const initWebSocket = (
 };
 
 function connectScoutWebSocket() {
-  scout = new WebSocket("wss://api.scouttoon.info");
+  scout = new WebSocket(SCOUT_LINK);
 
   scout.onopen = () => {
     console.log("Scout WebSocket connection established");

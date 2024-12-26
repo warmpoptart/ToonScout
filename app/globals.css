@@ -30,7 +30,9 @@ html,
 body {
   height: 100%;
   margin: 0;
+  padding: 0;
   overflow-y: auto; /* Allow vertical scrolling */
+  overflow-x: hidden;
 }
 
 .page-container {

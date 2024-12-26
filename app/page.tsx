@@ -7,7 +7,7 @@ import { initWebSocket } from "./api/websocket";
 import "./styles/fonts.css";
 import Auth from "./components/Auth";
 import GameSteps from "./components/GameSteps";
-import Home from "./components/Home";
+import Home from "./components/Home/Home";
 
 const HomePage: React.FC = () => {
   const [isAuth, setIsAuth] = useState(true);

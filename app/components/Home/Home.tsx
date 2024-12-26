@@ -1,11 +1,9 @@
-import React, { useState, Suspense, useEffect } from "react";
+import React from "react";
 import Disclaimer from "./Disclaimer";
-import "../styles/home.css";
-import TabContainer from "./TabComponent";
+import TabContainer from "../TabContainer/TabComponent";
+import "../../styles/home.css";
 
 const Home = () => {
-  
-
   return (
     <div className="card-container">
       <div className="home-card">

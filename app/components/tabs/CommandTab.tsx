@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import CommandBox from "../CommandBox";
+import CommandBox from "../TabContainer/CommandBox";
 import AnimatedTabContent from "../animations/AnimatedTab";
 import "../../styles/tabs.css";
 
@@ -11,7 +11,7 @@ const commands = [
   },
   {
     title: "/fish",
-    description: "Provides advising on where to fish or what to catch.",
+    description: "Find the best place to catch new fish.",
     color: "#4c7fe2",
   },
   {

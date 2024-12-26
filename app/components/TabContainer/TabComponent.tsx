@@ -1,18 +1,23 @@
-import InfoTab from "./tabs/InfoTab";
-import FishTab from "./tabs/FishTab";
-import SuitTab from "./tabs/SuitTab";
-import GagsTab from "./tabs/GagsTab";
-import TasksTab from "./tabs/TasksTab";
-import CommandTab from "./tabs/CommandTab";
-import ActivityTab from "./tabs/ActivityTab";
-import { useEffect, useState } from "react";
-import { useToonContext } from "../context/ToonContext";
-import AnimatedTabContent from "./animations/AnimatedTab";
-import "../styles/tabs.css";
+import InfoTab from "../tabs/InfoTab";
+import FishTab from "../tabs/FishTab";
+import SuitTab from "../tabs/SuitTab";
+import GagsTab from "../tabs/GagsTab";
+import TasksTab from "../tabs/TasksTab";
+import CommandTab from "../tabs/CommandTab";
+import ActivityTab from "../tabs/ActivityTab";
+import { useState } from "react";
+import { useToonContext } from "../../context/ToonContext";
+import AnimatedTabContent from "../animations/AnimatedTab";
+import "../../styles/tabs.css";
+import { ToonData } from "@/app/types";
+
+export interface TabProps {
+  toonData: ToonData;
+}
 
 export type TabComponent = {
   title: string;
-  component: React.FC<{}>;
+  component: React.FC<{ toonData: ToonData }>;
 };
 
 export const TabList: TabComponent[] = [
@@ -83,12 +88,12 @@ const TabContainer = () => {
             </div>
 
             <div className="right-info-container">
-              <selectedTab.component />
+              <selectedTab.component toonData={toonData} />
             </div>
           </div>
         </AnimatedTabContent>
       ) : (
-        <selectedTab.component />
+        <selectedTab.component toonData={toonData} />
       )}
     </>
   );

@@ -60,6 +60,12 @@ interface FishAlbumEntry {
   weight: number;
 }
 
+export interface FishRarity {
+  name: string;
+  probability: number;
+  location: string;
+}
+
 interface Fish {
   rod: {
     id: number;
