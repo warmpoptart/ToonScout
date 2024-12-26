@@ -26,17 +26,18 @@ body {
   }
 }
 
-html,
-body {
+html {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow-y: auto; /* Allow vertical scrolling */
+}
+
+body {
   overflow-x: hidden;
 }
 
 .page-container {
-  @apply flex flex-col h-screen bg-gags-pattern bg-repeat overflow-y-auto;
+  @apply flex flex-col h-screen bg-gags-pattern bg-repeat overflow-y-scroll;
 }
 
 .minnie-title {

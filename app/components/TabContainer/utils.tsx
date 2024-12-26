@@ -17,18 +17,11 @@ export const displaySuit = (toonData: ToonData, type: string) => {
     }
   };
 
-  const getName = () => {
-    if (dept.version == 2) {
-      return `${dept.suit.name} v2.0`;
-    }
-    return dept.suit.name;
-  };
-
   let dept = toonData.cogsuits[type];
   return (
     <div className="flex justify-center bg-violet-200 rounded-xl py-7 text-2xl w-full">
       <div className="text-2xl w-full">
-        <h1>{getName()}</h1>
+        <h1>{getSuitName(toonData, type)}</h1>
       </div>
       <div className="w-full">
         <h2>Level {dept.level}</h2>
@@ -38,6 +31,14 @@ export const displaySuit = (toonData: ToonData, type: string) => {
       </div>
     </div>
   );
+};
+
+export const getSuitName = (toonData: ToonData, type: string) => {
+  let dept = toonData.cogsuits[type];
+  if (dept.version == 2) {
+    return `${dept.suit.name} v2.0`;
+  }
+  return dept.suit.name;
 };
 
 export const sumFish = (toonData: ToonData) => {

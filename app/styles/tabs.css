@@ -96,3 +96,39 @@
 .fish-btn-enabled {
   @apply bg-violet-700 hover:bg-violet-500;
 }
+
+.tab-suit-container {
+  @apply flex space-x-2 py-2;
+}
+
+.dept-container {
+  @apply flex flex-col w-2/12;
+}
+
+.suit-container {
+  @apply flex w-full space-x-2;
+}
+
+.suit-overview {
+  @apply flex flex-col w-4/12;
+}
+
+.promo-rec {
+  @apply flex-1;
+}
+
+.dept-photo {
+  @apply flex justify-center w-24 h-fit max-w-full;
+}
+
+.promo-item {
+  @apply flex items-center space-x-2;
+}
+
+.promo-count {
+  @apply flex bg-violet-700 text-white px-2 rounded-full justify-center items-center;
+}
+
+.promo-activity {
+  @apply text-xl;
+}
