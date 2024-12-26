@@ -18,6 +18,7 @@ export interface TabProps {
 export type TabComponent = {
   title: string;
   component: React.FC<{ toonData: ToonData }>;
+  disabled?: boolean;
 };
 
 export const TabList: TabComponent[] = [
@@ -25,9 +26,9 @@ export const TabList: TabComponent[] = [
   { title: "Overview", component: InfoTab },
   { title: "Fishing", component: FishTab },
   { title: "Suits", component: SuitTab },
-  { title: "Gags", component: GagsTab },
-  { title: "Tasks", component: TasksTab },
-  { title: "Activities", component: ActivityTab },
+  { title: "Gags", component: GagsTab, disabled: true },
+  { title: "Tasks", component: TasksTab, disabled: true },
+  { title: "Activities", component: ActivityTab, disabled: true },
 ];
 
 const TabContainer = () => {
@@ -57,6 +58,7 @@ const TabContainer = () => {
             className="tab-btn"
             aria-selected={selectedTab == tab ? true : false}
             onClick={() => handleTabChange(tab)}
+            disabled={tab.disabled}
           >
             {tab.title}
           </button>
@@ -72,7 +74,7 @@ const TabContainer = () => {
                   {toonData.toon.name}
                 </p>
                 <p className="text-2xl pt-1">
-                  {toonData.laff.current}/{toonData.laff.max} laff
+                  {toonData.laff.current} / {toonData.laff.max} laff
                 </p>
                 <p className="text-xl">
                   {toonData.location.zone}, {toonData.location.district}

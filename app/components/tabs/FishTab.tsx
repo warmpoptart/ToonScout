@@ -7,6 +7,16 @@ import { FishRarity } from "@/app/types";
 const FishTab: React.FC<TabProps> = ({ toonData }) => {
   const [fish, setFish] = useState<FishRarity[] | null>(null);
 
+  const getBuckets = (fish: FishRarity) => {
+    const confidence = 1 - 0.9;
+    const bucketCapacity = 20;
+    const catchProb = fish.probability;
+    const missProb = 1 - catchProb;
+
+    const attempts = Math.log(confidence) / Math.log(missProb);
+    return Math.ceil(attempts / bucketCapacity);
+  };
+
   useEffect(() => {
     const getFish = async () => {
       const response = await fetch("http://localhost:3001/get-fish", {
@@ -30,31 +40,31 @@ const FishTab: React.FC<TabProps> = ({ toonData }) => {
     <AnimatedTabContent>
       <div className="fish-container">
         <div className="fish-header">
-          <div className="fishitem">
+          <div className="fish-item">
             <p>{sumFish(toonData)} / 70 caught</p>
           </div>
-          <div className="fishitem">
-            <p>prev page,next page</p>
+
+          <div className="fish-item text-base">
+            <p>Notice: Percentages are estimates and may be inaccurate.</p>
           </div>
         </div>
 
-        <div className="fishtank">
-          {fish ? (
+        <div className="fishtank fish-scrollbar">
+          {fish && fish.length > 0 ? (
             fish.map((item, index) => (
-              <p className="fish" key={index}>
-                <div className="w-full">
-                  {index + 1}. {item.name}
+              <div className="fish" key={index}>
+                <div className="fish-info w-2/3 text-left">{item.name}</div>
+
+                <div className="fish-info w-2/3 text-left">{item.location}</div>
+
+                <div className="fish-info w-2/3 text-right pr-2">
+                  {(item.probability * 100).toFixed(2)}% or {getBuckets(item)}{" "}
+                  buckets
                 </div>
-                <div className="w-full">{item.location}</div>
-                <div className="w-full">
-                  {(item.probability * 100).toFixed(2) != "0.00"
-                    ? `${(item.probability * 100).toFixed(2)}%`
-                    : "Nearly impossible to catch..."}
-                </div>
-              </p>
+              </div>
             ))
           ) : (
-            <p className="fish">Loading...</p>
+            <p className="fish">No new fish available to catch!</p>
           )}
         </div>
       </div>

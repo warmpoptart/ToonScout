@@ -13,7 +13,7 @@ export const displaySuit = (toonData: ToonData, type: string) => {
     } else if (dept.promotion.current >= dept.promotion.target) {
       return "Ready for promotion!";
     } else {
-      return `${dept.promotion.current}/${dept.promotion.target}`;
+      return `${dept.promotion.current} / ${dept.promotion.target}`;
     }
   };
 
