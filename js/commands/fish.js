@@ -5,7 +5,7 @@ import {
     ButtonBuilder 
 } from 'discord.js';
 import { InteractionResponseType } from 'discord-interactions';
-import FishCalculator from 'toonapi-calculator/js/fish.js';
+import { FishCalculator } from 'toonapi-calculator';
 import { getToonRendition } from '../utils.js';
 import { getScoutToken } from '../db/scoutData/scoutService.js';
 

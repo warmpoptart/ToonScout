@@ -6,7 +6,7 @@ import {
 } from 'discord.js';
 import { InteractionResponseType } from 'discord-interactions';
 import { getToonRendition } from '../utils.js';
-import SuitCalculator from 'toonapi-calculator/js/suits.js';
+import { SuitsCalculator } from 'toonapi-calculator';
 import { getScoutToken } from '../db/scoutData/scoutService.js';
 
 const levels = {
@@ -320,7 +320,7 @@ function getBossButton(target) {
 }
 
 function getSuitPath(toon, type) {
-    const calc = new SuitCalculator(JSON.stringify(toon));
+    const calc = new SuitsCalculator(JSON.stringify(toon));
     const { path, total } = calc.getBestPathWeighted(type);
 
     if (total == -2) {
@@ -349,12 +349,12 @@ function getBasicSuitInfo(toon, type) {
 }
 
 function simplifyPromo(toon, type) {
-    const calc = new SuitCalculator(JSON.stringify(toon));
+    const calc = new SuitsCalculator(JSON.stringify(toon));
     return `${calc.getCurrent(type)} / ${calc.getTarget(type)}`;
 }
 
 function simplifyNeeded(toon, type) {
-    const calc = new SuitCalculator(JSON.stringify(toon));
+    const calc = new SuitsCalculator(JSON.stringify(toon));
     return calc.getNeeded(type);
 }
 

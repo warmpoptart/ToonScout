@@ -8,9 +8,9 @@ import { InteractionType, InteractionResponseType, verifyKeyMiddleware } from 'd
 import { readdirSync } from 'fs';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { getUserId, validateUser } from './utils.js';
-import { getScoutToken, storeScoutToken } from './db/scoutData/scoutService.js';
+import { storeScoutToken } from './db/scoutData/scoutService.js';
 import { storeCookieToken, getCookieToken } from './db/tokenData/tokenService.js';
-import FishCalculator from 'toonapi-calculator/js/fish.js';
+import { FishCalculator } from 'toonapi-calculator';
 
 const app = express();
 const allowedOrigins = ['https://scouttoon.info', 'https://api.scouttoon.info'];
@@ -29,11 +29,17 @@ app.use(cors({
     credentials: true, // Include cookies or authorization headers
 }));
 
+app.use(cors({
+    origin: '*', // Allow all origins
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Add methods you expect to use
+    credentials: true, // Include cookies or authorization headers if needed
+}));
+
 // parse req as JSON
 app.use(express.json())
 
 // Get port, or default to 3000
-const PORT = 3000;
+const PORT = 3001;
 // Parse request body and verifies incoming requests using discord-interactions package
 app.commands = new Map();
 
@@ -166,13 +172,14 @@ app.get('/get-token', async (req, res) => {
  * ------- UTILITY -------
  */
 
-app.get('/get-fish', async (req, res) => {
-    const { toonData } = req.query;
-    
+app.post('/get-fish', async (req, res) => {
+    const { toonData } = req.body;
+
     if (!toonData) {
         return res.status(400).json({ message: 'Toon data is required' });
     }
-    const calc = new FishCalculator(JSON.stringify(toonData));
+
+    const calc = new FishCalculator(JSON.stringify(toonData.fish));
 
     try {
         const fishData = calc.sortBestRarity();
