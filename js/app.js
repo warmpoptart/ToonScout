@@ -10,7 +10,7 @@ import { fileURLToPath, pathToFileURL } from 'url';
 import { getUserId, validateUser } from './utils.js';
 import { storeScoutToken } from './db/scoutData/scoutService.js';
 import { storeCookieToken, getCookieToken } from './db/tokenData/tokenService.js';
-import { FishCalculator } from 'toonapi-calculator';
+import { FishCalculator, SuitsCalculator } from 'toonapi-calculator';
 
 const app = express();
 const allowedOrigins = ['https://scouttoon.info', 'https://api.scouttoon.info'];
@@ -29,17 +29,17 @@ app.use(cors({
     credentials: true, // Include cookies or authorization headers
 }));
 
-app.use(cors({
-    origin: '*', // Allow all origins
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Add methods you expect to use
-    credentials: true, // Include cookies or authorization headers if needed
-}));
+// app.use(cors({
+//     origin: '*', // Allow all origins
+//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Add methods you expect to use
+//     credentials: true, // Include cookies or authorization headers if needed
+// }));
 
 // parse req as JSON
 app.use(express.json())
 
 // Get port, or default to 3000
-const PORT = 3001;
+const PORT = 3000;
 // Parse request body and verifies incoming requests using discord-interactions package
 app.commands = new Map();
 
@@ -192,6 +192,29 @@ app.post('/get-fish', async (req, res) => {
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
+app.post('/get-promo', async (req, res) => {
+    const { toonData, dept } = req.body;
+
+    if (!toonData || !dept) {
+        return res.status(400).json({ message: 'Toon data and dept is required' });
+    }
+
+    const calc = new SuitsCalculator(JSON.stringify(toonData.cogsuits));
+    
+    try {
+        const promoData = calc.getBestPathWeighted(dept);
+
+        if (promoData) {
+            return res.status(200).json(promoData)
+        } else {
+            return res.status(404).json({ message: 'Suit data not found for this toon'});
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error', error: error.message })
     }
 });
 
