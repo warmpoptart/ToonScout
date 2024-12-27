@@ -40,19 +40,39 @@ const TabContainer = () => {
   ];
 
   const [selectedTab, setSelectedTab] = useState<TabComponent>(TabList[1]); // Default to "Overview"
+  const [pose, setPose] = useState<string>("waving");
 
   if (selectedTab.title == "Suits" && hasNoSuit(toonData)) {
     setSelectedTab(TabList[1]);
   }
 
+  const poses = [
+    "head",
+    "portrait-sleep",
+    "portrait-delighted",
+    "portrait-surprise",
+    "portrait-thinking",
+    "portrait-birthday",
+    "portrait-fall",
+    "portrait-grin",
+    "cake-topper",
+    "crying",
+    "waving",
+  ];
+
   const getImage = () => {
     const dna = toonData.toon.style;
-    const pose = "waving";
     return `https://rendition.toontownrewritten.com/render/${dna}/${pose}/1024x1024.png`;
   };
 
   const handleTabChange = (tab: TabComponent) => {
     setSelectedTab(tab);
+  };
+
+  const handleImageClick = () => {
+    const curr = poses.indexOf(pose);
+    const next = (curr + 1) % poses.length;
+    setPose(poses[next]);
   };
 
   return (
@@ -89,8 +109,9 @@ const TabContainer = () => {
               <div className="toon-photo">
                 <img
                   src={getImage()}
-                  alt={`${toonData.toon.name} waving`}
+                  alt={`${toonData.toon.name} in pose ${pose}`}
                   className="w-512 h-512"
+                  onClick={handleImageClick}
                 />
               </div>
             </div>
