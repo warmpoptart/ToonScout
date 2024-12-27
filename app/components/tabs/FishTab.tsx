@@ -48,24 +48,33 @@ const FishTab: React.FC<TabProps> = ({ toonData }) => {
             <p>Notice: Percentages are estimates and may be inaccurate.</p>
           </div>
         </div>
+        <div className="bg-violet-200 border-4 border-violet-300 rounded-lg p-2">
+          <div className="fish-header px-2">
+            <div className="fish-table-header">Uncaught Fish</div>
+            <div className="fish-table-header">Location</div>
+            <div className="fish-table-header">Probability</div>
+          </div>
 
-        <div className="fishtank fish-scrollbar">
-          {fish && fish.length > 0 ? (
-            fish.map((item, index) => (
-              <div className="fish" key={index}>
-                <div className="fish-info w-2/3 text-left">{item.name}</div>
+          <div className="fishtank fish-scrollbar">
+            {fish && fish.length > 0 ? (
+              fish.map((item, index) => (
+                <div className="fish" key={index}>
+                  <div className="fish-info w-2/3 text-left">{item.name}</div>
 
-                <div className="fish-info w-2/3 text-left">{item.location}</div>
+                  <div className="fish-info w-2/3 text-left">
+                    {item.location}
+                  </div>
 
-                <div className="fish-info w-2/3 text-right pr-2">
-                  {(item.probability * 100).toFixed(2)}% or {getBuckets(item)}{" "}
-                  buckets
+                  <div className="fish-info w-2/3 text-left">
+                    {(item.probability * 100).toFixed(2)}% or {getBuckets(item)}{" "}
+                    buckets
+                  </div>
                 </div>
-              </div>
-            ))
-          ) : (
-            <p className="fish">No new fish available to catch!</p>
-          )}
+              ))
+            ) : (
+              <p className="fish">No new fish available to catch!</p>
+            )}
+          </div>
         </div>
       </div>
     </AnimatedTabContent>

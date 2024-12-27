@@ -21,27 +21,26 @@ const SuitTab: React.FC<TabProps> = ({ toonData }) => {
   }
 
   const first = findSuit(toonData);
-  const [dept, setDept] = useState(first ? first : "s");
+  const [dept, setDept] = useState(first || "s");
   const [promo, setPromo] = useState<PromotionPath | null>(null);
   const [loading, setLoading] = useState(true);
   const [suit, setSuit] = useState(toonData.cogsuits[dept]);
 
   useEffect(() => {
-    const updateDept = () => {
-      const avail = Object.keys(toonData.cogsuits);
-      const currAvail = avail.includes(dept);
+    const avail = Object.keys(toonData.cogsuits);
+    const currAvail = avail.includes(dept);
 
-      if (!currAvail || !toonData.cogsuits[dept]?.hasDisguise) {
-        const firstAvail = avail.find(
-          (department) => toonData.cogsuits[department]?.hasDisguise
-        );
-        if (firstAvail) {
-          setDept(firstAvail);
-        }
+    if (!currAvail || !toonData.cogsuits[dept]?.hasDisguise) {
+      const firstAvail = avail.find(
+        (department) => toonData.cogsuits[department]?.hasDisguise
+      );
+      if (firstAvail) {
+        setDept(firstAvail);
       }
-    };
+    }
 
-    updateDept();
+    const currentSuit = toonData.cogsuits[dept];
+    setSuit(currentSuit);
 
     const getPromo = async () => {
       const response = await fetch("http://localhost:3001/get-promo", {
@@ -55,6 +54,7 @@ const SuitTab: React.FC<TabProps> = ({ toonData }) => {
       if (!response.ok) {
         return "Error loading promo data. Please try again later.";
       }
+
       const data = await response.json();
       setPromo(data);
       setLoading(false);
@@ -66,7 +66,7 @@ const SuitTab: React.FC<TabProps> = ({ toonData }) => {
   }, [toonData, dept]);
 
   const sortPath = () => {
-    if (!promo || !suit || suit.promotion.current >= suit.promotion.target)
+    if (!promo || !suit || suit.promotion?.current >= suit.promotion?.target)
       return [];
     const counts = promo.path.reduce((acc, activity) => {
       acc[activity] = (acc[activity] || 0) + 1;
@@ -88,6 +88,17 @@ const SuitTab: React.FC<TabProps> = ({ toonData }) => {
         <div className="promo-activity">{entry.activity}</div>
       </div>
     ));
+  };
+
+  const formatProgress = () => {
+    if (!suit) return "Loading...";
+    if (suit.level === 50) {
+      return "Maxed!";
+    } else if (suit.promotion?.current >= suit.promotion?.target) {
+      return "Ready!";
+    } else {
+      return `${suit.promotion?.current || 0} / ${suit.promotion?.target || 0}`;
+    }
   };
 
   if (loading) {
@@ -139,19 +150,15 @@ const SuitTab: React.FC<TabProps> = ({ toonData }) => {
             <div className="w-1/5 text-4xl text-left">
               {suit ? `Level ${suit.level}` : "No suit available"}
             </div>
-            <div className="w-1/3 text-4xl text-right">
-              {suit
-                ? `${suit.promotion.current} / ${suit.promotion.target}`
-                : "No suit available"}
-            </div>
+            <div className="w-1/3 text-4xl text-right">{formatProgress()}</div>
           </div>
           <div className="promo-rec">
             <div className="font-minnie text-4xl pb-5 pt-1">
               Recommended Activities
             </div>
             <div className="flex-1 flex-grow">
-              {suit?.promotion.current >= suit?.promotion.target ? (
-                <div>Ready for promotion!</div>
+              {suit?.promotion?.current >= suit?.promotion?.target ? (
+                <div className="promo-activity">Ready for promotion!</div>
               ) : promo ? (
                 getPromo()
               ) : (
@@ -159,21 +166,20 @@ const SuitTab: React.FC<TabProps> = ({ toonData }) => {
               )}
             </div>
             <div className="footer pb-2 text-2xl text-center">
-              <div className="inline">
-                {suit?.promotion.current < suit?.promotion.target &&
+              <div>
+                {suit?.promotion?.current < suit?.promotion?.target &&
                   `Estimated Total: ${promo?.total}`}
               </div>
-              <div className="inline">
+              <div>
                 {promo &&
-                suit?.promotion.target - suit?.promotion.current <
-                  promo.total ? (
-                  <div>
-                    Remaining Needed:{" "}
-                    {suit?.promotion.target - suit?.promotion.current}
-                  </div>
-                ) : (
-                  <></>
-                )}
+                  suit?.promotion?.target - suit?.promotion?.current <
+                    promo.total &&
+                  suit?.promotion?.target - suit?.promotion?.current > 0 && (
+                    <div>
+                      Remaining Needed:{" "}
+                      {suit?.promotion?.target - suit?.promotion?.current}
+                    </div>
+                  )}
               </div>
             </div>
           </div>

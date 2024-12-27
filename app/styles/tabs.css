@@ -59,13 +59,16 @@
 .fish-container {
   @apply flex flex-col h-full px-1;
 }
-
 .fish-header {
   @apply flex text-3xl pb-2 justify-between;
 }
 
 .fish-item {
-  @apply flex items-center justify-center h-full;
+  @apply flex items-center h-full;
+}
+
+.fish-table-header {
+  @apply fish-item w-2/3 text-2xl font-medium;
 }
 
 .fishtank {
@@ -82,7 +85,8 @@
 }
 
 .fish {
-  @apply bg-violet-200 rounded-full px-5 py-2 space-x-2 md:text-lg flex flex-row overflow-hidden;
+  @apply bg-violet-300 rounded-full px-5 py-2 space-x-2 md:text-lg 
+  flex flex-row overflow-hidden;
 }
 
 .fish-info {
