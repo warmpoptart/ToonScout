@@ -5,9 +5,12 @@
 .tab-btn {
   @apply aria-selected:bg-violet-500 aria-selected:text-white 
         transition ease-in 
-        hover:duration-200 hover:text-gray-700 hover:bg-gray-300
         disabled:bg-gray-100 disabled:text-gray-400
         rounded-full px-2 text-2xl bg-gray-200;
+}
+
+.tab-btn:not([aria-selected="true"]:hover):not([disabled]):hover {
+  @apply hover:duration-200 hover:text-gray-700 hover:bg-gray-300;
 }
 
 .tab-content {
@@ -20,7 +23,7 @@
 }
 
 .info-container {
-  @apply flex w-full overflow-hidden items-stretch justify-center space-x-2
+  @apply flex w-full h-full overflow-hidden justify-center space-x-2
   text-violet-800 bg-violet-100 rounded-xl border-4 border-violet-400  
   p-2 shadow-md shadow-violet-100;
 }
@@ -30,7 +33,7 @@
 }
 
 .right-info-container {
-  @apply flex flex-col flex-grow;
+  @apply flex flex-col flex-grow h-full;
 }
 
 .activity-info-container {
@@ -98,23 +101,25 @@
 }
 
 .tab-suit-container {
-  @apply flex space-x-2 py-2;
+  @apply flex flex-row flex-grow w-full space-x-2 py-2 h-full;
 }
 
 .dept-container {
-  @apply flex flex-col w-2/12;
+  @apply flex flex-col w-2/12 justify-center items-center space-y-2;
 }
 
 .suit-container {
-  @apply flex w-full space-x-2;
+  @apply flex flex-col w-full space-y-2;
 }
 
 .suit-overview {
-  @apply flex flex-col w-4/12;
+  @apply flex bg-violet-200 rounded-full p-4 border-4 border-violet-300 space-x-5
+  justify-between items-center shadow-md;
 }
 
 .promo-rec {
-  @apply flex-1;
+  @apply flex flex-col flex-grow h-full bg-violet-200 rounded-xl shadow-md 
+  border-4 border-violet-300 p-2 px-20 items-center relative;
 }
 
 .dept-photo {
@@ -122,13 +127,29 @@
 }
 
 .promo-item {
-  @apply flex items-center space-x-2;
+  @apply flex items-center space-x-3 justify-center;
 }
 
 .promo-count {
-  @apply flex bg-violet-700 text-white px-2 rounded-full justify-center items-center;
+  @apply flex bg-violet-700 text-white px-2 rounded-full justify-center items-center
+  text-2xl;
 }
 
 .promo-activity {
-  @apply text-xl;
+  @apply text-3xl;
+}
+
+.suit-btn {
+  @apply scale-up aria-selected:bg-violet-900 aria-selected:shadow-md 
+  aria-selected:shadow-violet-400 rounded-full;
+}
+
+.suit-btn:disabled .dept-photo,
+.dept-photo.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.scale-up {
+  @apply transition hover:delay-150 hover:scale-105 scale-100;
 }

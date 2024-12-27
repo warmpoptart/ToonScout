@@ -33,7 +33,31 @@ export const displaySuit = (toonData: ToonData, type: string) => {
   );
 };
 
+export const hasNoSuit = (toonData: ToonData) => {
+  const depts = ["s", "m", "l", "c"];
+  let count = 0;
+  for (const dept of depts) {
+    if (toonData.cogsuits[dept].hasDisguise) {
+      count += 1;
+    }
+  }
+  return count == 0 ? true : false;
+};
+
+export const findSuit = (toonData: ToonData) => {
+  const depts = ["s", "m", "l", "c"];
+  for (const dept of depts) {
+    if (toonData.cogsuits[dept].hasDisguise) {
+      return dept;
+    }
+  }
+  return null;
+};
+
 export const getSuitName = (toonData: ToonData, type: string) => {
+  if (!toonData.cogsuits[type].hasDisguise) {
+    return;
+  }
   let dept = toonData.cogsuits[type];
   if (dept.version == 2) {
     return `${dept.suit.name} v2.0`;

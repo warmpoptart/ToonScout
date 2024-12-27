@@ -10,6 +10,7 @@ import { useToonContext } from "../../context/ToonContext";
 import AnimatedTabContent from "../animations/AnimatedTab";
 import "../../styles/tabs.css";
 import { ToonData } from "@/app/types";
+import { hasNoSuit } from "./utils";
 
 export interface TabProps {
   toonData: ToonData;
@@ -21,22 +22,27 @@ export type TabComponent = {
   disabled?: boolean;
 };
 
-export const TabList: TabComponent[] = [
-  { title: "Commands", component: CommandTab },
-  { title: "Overview", component: InfoTab },
-  { title: "Fishing", component: FishTab },
-  { title: "Suits", component: SuitTab },
-  { title: "Gags", component: GagsTab, disabled: true },
-  { title: "Tasks", component: TasksTab, disabled: true },
-  { title: "Activities", component: ActivityTab, disabled: true },
-];
-
 const TabContainer = () => {
-  const [selectedTab, setSelectedTab] = useState<TabComponent>(TabList[1]); // Default to "Overview"
   const { toonData } = useToonContext();
 
   if (!toonData) {
     return "No toon data found. Please try refreshing the page.";
+  }
+
+  const TabList: TabComponent[] = [
+    { title: "Commands", component: CommandTab },
+    { title: "Overview", component: InfoTab },
+    { title: "Fishing", component: FishTab },
+    { title: "Suits", component: SuitTab, disabled: hasNoSuit(toonData) },
+    { title: "Gags", component: GagsTab, disabled: true },
+    { title: "Tasks", component: TasksTab, disabled: true },
+    { title: "Activities", component: ActivityTab, disabled: true },
+  ];
+
+  const [selectedTab, setSelectedTab] = useState<TabComponent>(TabList[1]); // Default to "Overview"
+
+  if (selectedTab.title == "Suits" && hasNoSuit(toonData)) {
+    setSelectedTab(TabList[1]);
   }
 
   const getImage = () => {
@@ -49,6 +55,8 @@ const TabContainer = () => {
     setSelectedTab(tab);
   };
 
+  console.log(selectedTab);
+
   return (
     <>
       <div className="tab-container">
@@ -56,7 +64,7 @@ const TabContainer = () => {
           <button
             key={tab.title}
             className="tab-btn"
-            aria-selected={selectedTab == tab ? true : false}
+            aria-selected={selectedTab.title == tab.title ? true : false}
             onClick={() => handleTabChange(tab)}
             disabled={tab.disabled}
           >
