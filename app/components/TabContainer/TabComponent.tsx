@@ -55,8 +55,6 @@ const TabContainer = () => {
     setSelectedTab(tab);
   };
 
-  console.log(selectedTab);
-
   return (
     <>
       <div className="tab-container">
