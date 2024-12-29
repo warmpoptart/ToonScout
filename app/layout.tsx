@@ -1,4 +1,3 @@
-"use client";
 import type { Metadata } from "next";
 import { ConnectionProvider } from "./context/ConnectionContext";
 import { ToonProvider } from "./context/ToonContext";
