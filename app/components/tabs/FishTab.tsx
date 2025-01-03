@@ -19,7 +19,7 @@ const FishTab: React.FC<TabProps> = ({ toonData }) => {
 
   useEffect(() => {
     const getFish = async () => {
-      const response = await fetch("http://localhost:3001/get-fish", {
+      const response = await fetch("https://api.scouttoon.info/get-fish", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,11 +44,11 @@ const FishTab: React.FC<TabProps> = ({ toonData }) => {
             <p>{sumFish(toonData)} / 70 caught</p>
           </div>
 
-          <div className="fish-item text-base">
+          <div className="fish-item text-[20px]">
             <p>Notice: Percentages are estimates and may be inaccurate.</p>
           </div>
         </div>
-        <div className="bg-violet-200 border-4 border-violet-300 rounded-lg p-2">
+        <div className="fish-table">
           <div className="fish-header px-2">
             <div className="fish-table-header">Uncaught Fish</div>
             <div className="fish-table-header">Location</div>
