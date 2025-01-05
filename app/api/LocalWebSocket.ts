@@ -1,5 +1,3 @@
-import { sendScoutData } from "./ScoutWebSocket";
-
 const DEFAULT_PORT = 1547;
 const RECONNECT_DELAY = 10000;
 const RECONNECT_INTERVAL = 5000;
@@ -9,7 +7,7 @@ let contReqInterval: NodeJS.Timeout | null = null;
 
 export const initWebSocket = (
   setIsConnected: (isConnected: boolean) => void,
-  setToonData: (data: any) => void,
+  setToonData: (data: any) => void
 ) => {
   const connectWebSocket = () => {
     if (socket && socket.readyState !== WebSocket.CLOSED) {
@@ -30,7 +28,7 @@ export const initWebSocket = (
     socket.addEventListener("message", (event) => {
       const toon = JSON.parse(event.data);
       if (toon.event === "all") {
-        setToonData(toon.data);
+        setToonData(toon);
         setIsConnected(true);
       }
     });

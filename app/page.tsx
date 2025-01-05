@@ -22,10 +22,10 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const sendData = () => {
       if (userId && toonData) {
-	sendScoutData(userId, toonData); // Await the async call
-      } 
-     };
-     sendData();
+        sendScoutData(userId, toonData);
+      }
+    };
+    sendData();
   }, [userId, toonData]);
 
   return (
