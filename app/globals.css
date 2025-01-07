@@ -37,6 +37,15 @@
   --gray-1200: #242424;
   --gray-1300: #1b1b1b;
   --gray-1400: #131313;
+
+  --toon-up: #d496fd;
+  --trap: #f8fe61;
+  --lure: #4dbd4e;
+  --sound: #5e6ced;
+  --throw: #ff9043;
+  --squirt: #ff42c5;
+  --drop: #4df3ff;
+  --gagblue: #148bdd;
 }
 
 :root.dark {
@@ -59,6 +68,15 @@
   --pink-700: #815ac0;
   --pink-800: #7251b5;
   --pink-900: #6247aa;
+
+  --toon-up: #a47bb2; /* Softer lavender */
+  --trap: #c8c98b; /* Muted yellow-green */
+  --lure: #7da97f; /* Desaturated green */
+  --sound: #737ab8; /* Duller periwinkle */
+  --throw: #d07a5c; /* Softer orange */
+  --squirt: #c564a3; /* Muted pink */
+  --drop: #7fb2ba; /* Soft cyan */
+  --gagblue: #43779a; /* Desaturated blue */
 }
 
 body {
