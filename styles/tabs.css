@@ -251,7 +251,7 @@
 }
 
 .activity-name {
-  @apply w-full text-left;
+  @apply flex flex-row text-left items-center space-x-2 w-full text-3xl;
 }
 
 .trophies {
@@ -262,8 +262,4 @@
 
 .dark .trophies {
   @apply bg-gray-700 text-gray-1200;
-}
-
-.scale-up {
-  @apply transition hover:delay-150 hover:scale-105 scale-100;
 }
