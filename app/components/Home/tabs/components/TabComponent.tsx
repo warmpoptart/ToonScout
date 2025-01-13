@@ -13,6 +13,7 @@ import { useState } from "react";
 import { useToonContext } from "@/app/context/ToonContext";
 import { ToonData } from "@/app/types";
 import { hasNoSuit } from "./utils";
+import ConnectionStatus from "./ConnectionStatus";
 
 export interface TabProps {
   toonData: ToonData;

@@ -22,12 +22,15 @@ export const initWebSocket = (
         JSON.stringify({ authorization: initAuthToken(), name: "ToonScout" })
       );
       socket?.send(JSON.stringify({ request: "all" }));
-      startContinuousRequests(setIsConnected);
+      startContinuousRequests();
     });
 
     socket.addEventListener("message", (event) => {
       const toon = JSON.parse(event.data);
       if (toon.event === "all") {
+        const timestamp = Date.now();
+        const localToon = { data: toon, timestamp };
+        localStorage.setItem("toonData", JSON.stringify(localToon));
         setToonData(toon);
         setIsConnected(true);
       }
@@ -58,15 +61,12 @@ export const initWebSocket = (
     }
   }
 
-  function startContinuousRequests(
-    setIsConnected: (isConnected: boolean) => void
-  ) {
+  function startContinuousRequests() {
     if (contReqInterval) clearInterval(contReqInterval);
 
     contReqInterval = setInterval(() => {
       if (socket && socket.readyState === WebSocket.OPEN) {
         socket.send(JSON.stringify({ request: "all" }));
-        setIsConnected(true);
       }
     }, RECONNECT_INTERVAL);
   }
