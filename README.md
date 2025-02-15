@@ -1,6 +1,6 @@
 # ToonScout: Website
 
-## [Suggestions or bug reports? Submit here!](https://github.com/erin-miller/ToonScout-bot/issues)
+## [Suggestions or bug reports? Submit here!](https://github.com/erin-miller/ToonScout-site/issues)
 
 ToonScout is a web application and Discord bot that provides advising and information for Toontown Rewritten players. ToonScout is not affiliated with Toontown Rewritten or The Walt Disney Company.
 
