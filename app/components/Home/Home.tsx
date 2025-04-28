@@ -8,11 +8,13 @@ import Header from "./Header";
 import { useToonContext } from "@/app/context/ToonContext";
 import GameSteps from "../GameSteps";
 import Chuckle from "../eggs/Chuckle";
+import SystemBanner from "./SystemBanner";
 
 const Home = () => {
   const { userId, setUserId } = useDiscordContext();
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const { toons } = useToonContext();
+  const [isBannerOpen, setIsBannerOpen] = useState(true);
 
   useEffect(() => {
     const checkAccessToken = async () => {
@@ -53,6 +55,10 @@ const Home = () => {
     }
   }, []);
 
+  const handleCloseBanner = () => {
+    setIsBannerOpen(false);
+  };
+
   return (
     <div className="card-container">
       <div className="home-card">
@@ -61,6 +67,10 @@ const Home = () => {
           activeModal={activeModal}
           setActiveModal={setActiveModal}
         />
+
+        {isBannerOpen && (
+          <SystemBanner isOpen={isBannerOpen} onClose={handleCloseBanner} />
+        )}
 
         {toons && toons.length > 0 ? (
           <>
