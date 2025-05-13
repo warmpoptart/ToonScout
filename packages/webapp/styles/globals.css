@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --blue-100: #d7eaff;
+  --blue-200: #c3dfff;
+  --blue-300: #abcefa;
+  --blue-400: #69a3e7;
+  --blue-500: #5a9ae5;
+  --blue-600: #4a90e2;
+  --blue-700: #4c7fe2;
+  --blue-800: #4d6de2;
+  --blue-900: #504ae2;
+
+  --pink-100: #e2d0ff;
+  --pink-200: #d3b9f3;
+  --pink-300: #b68de9;
+  --pink-400: #a677e7;
+  --pink-500: #9b69e5;
+  --pink-600: #8362e0;
+  --pink-700: #7e4ade;
+  --pink-800: #6c3fde;
+  --pink-900: #5e1bc2;
+
+  --gray-100: #fafafa;
+  --gray-200: #f4f4f4;
+  --gray-300: #ededed;
+  --gray-400: #e0e0e0;
+  --gray-500: #c6c6c6;
+  --gray-600: #a6a6a6;
+  --gray-700: #8b8b8b;
+  --gray-800: #686868;
+  --gray-900: #434343;
+  --gray-1000: #343434;
+  --gray-1100: #2d2d2d;
+  --gray-1200: #242424;
+  --gray-1300: #1b1b1b;
+  --gray-1400: #131313;
+
+  --toon-up: #d496fd;
+  --trap: #f8fe61;
+  --lure: #4dbd4e;
+  --sound: #5e6ced;
+  --throw: #ff9043;
+  --squirt: #ff42c5;
+  --drop: #4df3ff;
+  --gagblue: #148bdd;
+}
+
+:root.dark {
+  --blue-100: #d9efff;
+  --blue-200: #bbdefb;
+  --blue-300: #8dbade;
+  --blue-400: #70abdb;
+  --blue-500: #5eaae8;
+  --blue-600: #4299e6;
+  --blue-700: #408ad4;
+  --blue-800: #3575be;
+  --blue-900: #2457a3;
+
+  --pink-100: #e8d7f1;
+  --pink-200: #d2b7e5;
+  --pink-300: #c19ee0;
+  --pink-400: #b185db;
+  --pink-500: #a174d3;
+  --pink-600: #9163cb;
+  --pink-700: #9471cc;
+  --pink-800: #8468bb;
+  --pink-900: #5b4991;
+
+  --toon-up: #d2adeb;
+  --trap: #ecec8a;
+  --lure: #77b477;
+  --sound: #7f8bd3;
+  --throw: #f1a27b;
+  --squirt: #f07fc4;
+  --drop: #7bd5de;
+  --gagblue: #57aad1;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100%;
+  overflow-x: hidden;
+}
+@layer utilities {
+  .scale-up {
+    @apply transform duration-200 ease-in-out hover:scale-105 cursor-pointer;
+  }
+
+  .test-outline {
+    @apply outline outline-red-500;
+  }
+
+  .site-scrollbar {
+    @apply scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-500
+      scrollbar-thumb-rounded-full;
+  }
+
+  .dark .site-scrollbar {
+    @apply scrollbar-thumb-gray-800 scrollbar-track-gray-1000;
+  }
+
+  .shadow-text {
+    text-shadow: 2px 2px 4px rgba(42, 5, 84, 0.375);
+  }
+}
+
+.page-container {
+  @apply flex flex-col h-screen gags-pattern bg-repeat overflow-y-scroll site-scrollbar;
+}
+
+.gags-pattern {
+  background-image: url("https://cdn.toontownrewritten.com/static/images/base/gags_pattern.png");
+}
+
+.dark .gags-pattern {
+  background-image: url("/images/gags_pattern_dark.png");
+}
+
+.minnie-title {
+  @apply font-semibold font-minnie text-gray-1200 dark:text-gray-100;
+}
+
+.card-container {
+  @apply flex w-full items-center justify-center;
+}
