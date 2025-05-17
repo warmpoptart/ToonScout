@@ -14,10 +14,19 @@ If you have any questions or need help, please join the [ToonScout Discord serve
 
 If you would like to contribute, please ask for assignments to issues or submit a pull request.
 
-Dev environments are set up using [Docker](https://docs.docker.com/desktop/). To run locally, run the following command in the root directory:
+Dev environments are set up using [Docker](https://docs.docker.com/desktop/).
+
+Before building, you must create a `.env` file in each of `packages/api`, `packages/bot`, and `packages/webapp` by copying `example.env` to `.env` and editing as needed.
+
+```pwsh
+Copy-Item example.env .env
+```
+
+To run locally, run the following commands in the root directory:
 
 ```bash
 npm install # installs dev dependencies
+
 docker compose up --build # builds the containers for all packages
 ```
 

@@ -3,8 +3,6 @@ services:
     extends:
       file: ./packages/api/docker-compose.yml
       service: api
-    env_file:
-      - .env.base
 
   mongo:
     extends:
@@ -15,8 +13,6 @@ services:
     extends:
       file: ./packages/bot/docker-compose.dev.yml
       service: bot
-    env_file:
-      - .env.base
 
   webapp:
     extends:
