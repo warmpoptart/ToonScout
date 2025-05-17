@@ -39,3 +39,24 @@ Furthermore, two _optional_ network tunnels are established for the webapp and b
 The tunnels are especially helpful for testing Discord interactions between the webapp and the bot. Please be patient as you first enter the tunnel, as Next.js has to build the app.
 
 Finally, ensure that you update necessary environment variables in each package's `.env` file as well as the root `.env.base` file. Each directory has a `.env.example` file that can be used as a template.
+
+# Hot Reload with Docker Compose
+
+This repo supports hot reload for both the webapp and API using Docker Compose's `develop: watch:` feature.
+
+## Quick Start
+
+1. **Start dev environment with hot reload:**
+
+   ```sh
+   docker compose up --watch
+   ```
+
+   (Run from the repo root)
+
+2. **Edit code in `packages/webapp` or `packages/api`.**
+   - Changes sync automatically and trigger reloads in the containers.
+
+**Note:** Hot reload is for development only.
+
+---
