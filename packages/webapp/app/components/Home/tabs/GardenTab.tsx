@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 import AnimatedTabContent from "@/app/components/animations/AnimatedTab";
 import { TabProps } from "./components/TabComponent";
+import { flowerImages } from "@/assets/flowers";
+import { flowerKey } from "@/assets/flowers/flowerKey";
 const API_LINK = process.env.NEXT_PUBLIC_API_HTTP;
 
 interface FlowerResponse {
@@ -96,7 +98,7 @@ const GardenTab: React.FC<TabProps> = ({ toon }) => {
         >
           <div className="flex w-full h-full bg-violet-50 dark:bg-gray-1000 shadow-sm p-2">
             <Image
-              src={`/flowers/${name}.png`}
+              src={flowerImages[flowerKey(name)]}
               alt={name}
               width={64}
               height={64}
