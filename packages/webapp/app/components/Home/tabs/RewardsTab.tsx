@@ -9,6 +9,7 @@ import {
   renderPinkslips,
   renderRemotes,
 } from "@/app/utils/rewardsUtils";
+import { rewardImages } from "@/assets/rewards";
 
 const RewardsTab: React.FC<TabProps> = ({ toon }) => {
   const rewardTypes = ["SOS", "Unites", "Summons", "Pinkslips", "Remotes"];
@@ -68,7 +69,7 @@ const RewardsTab: React.FC<TabProps> = ({ toon }) => {
             const baseImageClick = `/images/ttr_t_gui_bat_rewardsMenu_tabButton_click.png`;
             const secondaryImage = isLocked
               ? "/images/ttr_t_gui_bat_rewardsMenu_tabButton_locked.png"
-              : `/rewards/${type.toLowerCase()}.png`;
+              : rewardImages[type.toLowerCase() as keyof typeof rewardImages];
 
             const getButtonImage = () => {
               if (clickedButton === type) return baseImageClick;

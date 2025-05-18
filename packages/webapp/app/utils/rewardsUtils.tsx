@@ -7,6 +7,7 @@ import SOS_TOONS from "@/data/sos_toons.json";
 import COGS from "@/data/cogs.json";
 import Image from "next/image";
 import { cogImages } from "@/assets/cog_images";
+import { rewardImages } from "@/assets/rewards";
 
 type SOSCard = {
   name: string;
@@ -288,7 +289,7 @@ export const renderRemotes = (toon: StoredToonData) => {
                 <div className="flex items-center justify-center mt-2">
                   {type.startsWith("Damage") ? (
                     <Image
-                      src="/rewards/remotes.png"
+                      src={rewardImages.remotes}
                       className="w-16 md:w-24"
                       alt="Damage Remote"
                       width={96}
@@ -296,7 +297,7 @@ export const renderRemotes = (toon: StoredToonData) => {
                     />
                   ) : (
                     <Image
-                      src="/rewards/remotesheal.png"
+                      src={rewardImages.remotesheal}
                       className="w-16 md:w-24"
                       alt="Heal Remote"
                       width={96}
