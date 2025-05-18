@@ -148,7 +148,7 @@ router.get("/get-rendition", async (req, res) => {
 
   if (rendition_cache.has(url)) {
     res.setHeader("Content-Type", "image/webp");
-    res.setHeader("Cache-Control", "public, max-age=86400"); // 24 hours
+    res.setHeader("Cache-Control", "public, max-age=31536000"); // 1 year
     return res.send(rendition_cache.get(url));
   }
 
@@ -166,7 +166,7 @@ router.get("/get-rendition", async (req, res) => {
     rendition_cache.set(url, imageBuffer);
 
     res.setHeader("Content-Type", "image/webp");
-    res.setHeader("Cache-Control", "public, max-age=86400"); // 24 hours
+    res.setHeader("Cache-Control", "public, max-age=31536000"); // 1 year
     return res.send(imageBuffer);
   } catch (error) {
     return res.status(500).json({ error: "Failed to fetch rendition" });
