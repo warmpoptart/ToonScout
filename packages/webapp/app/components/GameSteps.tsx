@@ -1,7 +1,8 @@
 import React from "react";
 import LoadingDots from "@/app/components/animations/LoadingDots";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import "/styles/gamesteps.css";
+import { imageAssets } from "@/assets/images";
 
 const GameSteps: React.FC = () => (
   <div className="p-6">
@@ -14,17 +15,20 @@ const GameSteps: React.FC = () => (
     <div className="step-container">
       <Step
         title="1. Enable Companion App Support"
-        image="/images/gameplay-menu.png"
+        image={imageAssets.gameplay_menu}
       />
       <Step
         title="2. Click 'OK' on in-game popup and select a toon"
-        image="/images/prompt.png"
+        image={imageAssets.prompt}
       />
     </div>
   </div>
 );
 
-const Step: React.FC<{ title: string; image: string }> = ({ title, image }) => (
+const Step: React.FC<{ title: string; image: StaticImageData }> = ({
+  title,
+  image,
+}) => (
   <div className="step-card">
     <h2 className="step-name">{title}</h2>
     <Image

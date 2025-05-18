@@ -3,6 +3,7 @@ import { TabProps } from "./components/TabComponent";
 import { findSuit, getSuitName, hasNoSuit } from "./components/utils";
 import AnimatedTabContent from "@/app/components/animations/AnimatedTab";
 import Image from "next/image";
+import { imageAssets } from "@/assets/images";
 const API_LINK = process.env.NEXT_PUBLIC_API_HTTP;
 
 interface PromotionPath {
@@ -138,7 +139,7 @@ const SuitTab: React.FC<TabProps> = ({ toon }) => {
             disabled={!toon.data.data.cogsuits[deptChars.sellbot]?.hasDisguise}
           >
             <Image
-              src="/images/emblem_sell.png"
+              src={imageAssets.emblem_sell}
               className="dept-photo"
               alt="Sellbot"
               width={96}
@@ -152,7 +153,7 @@ const SuitTab: React.FC<TabProps> = ({ toon }) => {
             disabled={!toon.data.data.cogsuits[deptChars.cashbot]?.hasDisguise}
           >
             <Image
-              src="/images/emblem_cash.png"
+              src={imageAssets.emblem_cash}
               className="dept-photo"
               alt="Cashbot"
               width={96}
@@ -166,7 +167,7 @@ const SuitTab: React.FC<TabProps> = ({ toon }) => {
             disabled={!toon.data.data.cogsuits[deptChars.lawbot]?.hasDisguise}
           >
             <Image
-              src="/images/emblem_law.png"
+              src={imageAssets.emblem_law}
               className="dept-photo"
               alt="Lawbot"
               width={96}
@@ -180,7 +181,7 @@ const SuitTab: React.FC<TabProps> = ({ toon }) => {
             disabled={!toon.data.data.cogsuits[deptChars.bossbot]?.hasDisguise}
           >
             <Image
-              src="/images/emblem_boss.png"
+              src={imageAssets.emblem_boss}
               className="dept-photo"
               alt="Bossbot"
               width={96}

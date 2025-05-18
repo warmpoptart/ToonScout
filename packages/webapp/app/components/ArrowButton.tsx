@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { imageAssets } from "@/assets/images";
 
 const ArrowButton = ({ onClick }: { onClick: () => void }) => {
-  const clickedImg = "/images/button-clicked.png";
-  const unclickedImg = "/images/button-unclicked.png";
+  const clickedImg = imageAssets.button_clicked.src;
+  const unclickedImg = imageAssets.button_unclicked.src;
   const [isPressed, setIsPressed] = useState(false);
 
   return (

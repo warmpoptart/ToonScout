@@ -1,6 +1,8 @@
 import React from "react";
 import Modal from "../../Modal";
 import Image from "next/image";
+import { imageAssets } from "@/assets/images";
+import { StaticImageData } from "next/image";
 
 interface GameStepsModalProps {
   isOpen: boolean;
@@ -18,18 +20,21 @@ const GameStepsModal: React.FC<GameStepsModalProps> = ({ isOpen, onClose }) => {
       <div className="grid grid-cols-2 gap-8">
         <Step
           title="1. Enable Companion App Support"
-          image="/images/gameplay-menu.png"
+          image={imageAssets.gameplay_menu}
         />
         <Step
           title="2. Click 'OK' on in-game popup and select a toon"
-          image="/images/prompt.png"
+          image={imageAssets.prompt}
         />
       </div>
     </Modal>
   );
 };
 
-const Step: React.FC<{ title: string; image: string }> = ({ title, image }) => (
+const Step: React.FC<{ title: string; image: StaticImageData }> = ({
+  title,
+  image,
+}) => (
   <div className="text-2xl">
     <h2 className="pb-2 ">{title}</h2>
     <Image

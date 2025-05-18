@@ -10,6 +10,7 @@ import {
   renderRemotes,
 } from "@/app/utils/rewardsUtils";
 import { rewardImages } from "@/assets/rewards";
+import { imageAssets } from "@/assets/images";
 
 const RewardsTab: React.FC<TabProps> = ({ toon }) => {
   const rewardTypes = ["SOS", "Unites", "Summons", "Pinkslips", "Remotes"];
@@ -64,11 +65,11 @@ const RewardsTab: React.FC<TabProps> = ({ toon }) => {
             const isLocked =
               !rewardData || Object.keys(rewardData).length === 0;
             const isPinkslip = type === "Pinkslips";
-            const baseImageNormal = `/images/ttr_t_gui_bat_rewardsMenu_tabButton_normal.png`;
-            const baseImageHover = `/images/ttr_t_gui_bat_rewardsMenu_tabButton_hover.png`;
-            const baseImageClick = `/images/ttr_t_gui_bat_rewardsMenu_tabButton_click.png`;
+            const baseImageNormal = imageAssets.ttr_tab_normal;
+            const baseImageHover = imageAssets.ttr_tab_hover;
+            const baseImageClick = imageAssets.ttr_tab_click;
             const secondaryImage = isLocked
-              ? "/images/ttr_t_gui_bat_rewardsMenu_tabButton_locked.png"
+              ? imageAssets.ttr_tab_locked
               : rewardImages[type.toLowerCase() as keyof typeof rewardImages];
 
             const getButtonImage = () => {
