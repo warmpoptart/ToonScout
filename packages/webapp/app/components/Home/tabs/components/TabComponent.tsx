@@ -10,7 +10,7 @@ import {
   RewardsTab,
 } from "./TabList";
 import "/styles/tabs.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToonContext } from "@/app/context/ToonContext";
 import { StoredToonData } from "@/app/types";
 import { hasNoSuit } from "./utils";
@@ -114,8 +114,22 @@ const TabContainer = () => {
     "waving",
   ];
 
+  // Preload all pose images using hidden <Image /> components for optimal Next.js caching
+  const dna = toon.data.data.toon.style;
+  const preloadImages = poses.map((poseName) => (
+    <Image
+      key={poseName}
+      src={`https://rendition.toontownrewritten.com/render/${dna}/${poseName}/1024x1024.png`}
+      alt={toon.data.data.toon.name + " preload " + poseName}
+      width={512}
+      height={512}
+      style={{ display: "none" }}
+      loading="eager"
+      priority={poseName === pose} // prioritize the current pose
+    />
+  ));
+
   const getImage = () => {
-    const dna = toon.data.data.toon.style;
     return `https://rendition.toontownrewritten.com/render/${dna}/${pose}/1024x1024.png`;
   };
 
@@ -139,6 +153,8 @@ const TabContainer = () => {
 
   return (
     <div>
+      {/* Preload all pose images using hidden <Image /> components */}
+      {preloadImages}
       {/* list of tabs */}
       <div>
         {/* full tab list for larger screens */}
