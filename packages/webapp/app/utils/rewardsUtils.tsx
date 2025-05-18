@@ -6,6 +6,7 @@ import { StoredToonData } from "../types";
 import SOS_TOONS from "@/data/sos_toons.json";
 import COGS from "@/data/cogs.json";
 import Image from "next/image";
+import { cogImages } from "@/assets/cog_images";
 
 type SOSCard = {
   name: string;
@@ -144,7 +145,7 @@ export const renderSummons = (toon: StoredToonData) => {
     return <div>No summons available.</div>;
   }
 
-  const placeHolderCog = "/cog_images/flunky.webp";
+  const placeHolderCog = cogImages.flunky;
 
   let missingTotal = 0;
 
