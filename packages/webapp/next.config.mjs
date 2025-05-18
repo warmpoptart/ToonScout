@@ -43,20 +43,9 @@ const nextConfig = {
   // Cache all static assets with 1 year TTL
   async headers() {
     return [
+      // Fonts, sounds, PDFs still need manual headers
       {
-        source:
-          "/(flowers|gags|fonts|images|rewards|sounds|fish|cog_images|sos)/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
-      // common static file extensions anywhere
-      {
-        source:
-          "/:path*\\.(svg|ico|jpg|jpeg|png|gif|webp|woff|woff2|ttf|mp3|wav|pdf)",
+        source: "/:path*\\.(woff|woff2|ttf|mp3|wav|ogg|pdf)",
         headers: [
           {
             key: "Cache-Control",

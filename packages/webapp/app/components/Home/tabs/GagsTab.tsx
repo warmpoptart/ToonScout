@@ -4,6 +4,7 @@ import AnimatedTabContent from "../../animations/AnimatedTab";
 import "/styles/tabs.css";
 import ExpContainer from "./components/ExpContainer";
 import Image from "next/image";
+import { gagImages, GagTrack } from "@/assets/gags/index";
 
 const GagsTab: React.FC<TabProps> = ({ toon }) => {
   const tracks = Object.keys(toon.data.data.gags);
@@ -14,11 +15,7 @@ const GagsTab: React.FC<TabProps> = ({ toon }) => {
         {tracks.map((track) => {
           const trackData = toon.data.data.gags[track];
 
-          let maxLevel = 0;
-
-          if (trackData) {
-            maxLevel = toon.data.data.gags[track]?.gag.level || 0;
-          }
+          const maxLevel = trackData?.gag.level || 0;
 
           return (
             <div
@@ -37,7 +34,9 @@ const GagsTab: React.FC<TabProps> = ({ toon }) => {
                 <ExpContainer track={track} toonData={toon} />
               </div>
               <div className="grid grid-cols-7 gap-2 pl-2 sm:pl-0 lg:pl-2 xl:pl-0">
-                {Array.from({ length: 7 }).map((_, gagIndex) => {
+                {[...Array(7)].map((_, gagIndex) => {
+                  const gagImage =
+                    gagImages[track.toLowerCase() as GagTrack]?.[gagIndex];
                   const isImageVisible = trackData && gagIndex + 1 <= maxLevel;
                   return (
                     <div
@@ -53,17 +52,15 @@ const GagsTab: React.FC<TabProps> = ({ toon }) => {
                         ></div>
                       )}
                       {/* gag slot */}
-                      {isImageVisible ? (
+                      {isImageVisible && gagImage && (
                         <Image
-                          src={`/gags/${track.toLowerCase()}-${
-                            gagIndex + 1
-                          }.png`}
+                          src={gagImage}
                           alt={`${track} gag ${gagIndex + 1}`}
                           width={48}
                           height={48}
                           className="w-8 xl:w-10 2xl:w-12 object-contain"
                         />
-                      ) : null}
+                      )}
 
                       {/* gag border styling */}
                       {isImageVisible && (
