@@ -6,7 +6,7 @@ interface InvasionToastProps {
   show: boolean;
   onClose: () => void;
   message: string;
-  cogIcon?: string; // URL to cog icon
+  cogIcon?: string | import("next/image").StaticImageData;
   persistent?: boolean;
   duration?: number;
 }

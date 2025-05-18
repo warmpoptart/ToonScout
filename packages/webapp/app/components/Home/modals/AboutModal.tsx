@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from "../../Modal";
 import Image from "next/image";
+import { imageAssets } from "@/assets/images";
 
 interface AboutModalProps {
   isOpen: boolean;
@@ -16,28 +17,28 @@ const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
       <div className="flex mt-4 items-center justify-center overflow-x-auto privacy-scrollbar">
         <div className="flex space-x-4">
           <Image
-            src="/images/sunny.png"
+            src={imageAssets.sunny}
             alt="Sunny"
             className="w-auto max-h-64 rounded-lg shadow-lg"
             width={256}
             height={256}
           />
           <Image
-            src="/images/rainy.png"
+            src={imageAssets.rainy}
             alt="Rainy"
             className="w-auto max-h-64 rounded-lg shadow-lg"
             width={256}
             height={256}
           />
           <Image
-            src="/images/meerkataclysm.png"
+            src={imageAssets.meerkataclysm}
             alt="Meerkataclysm"
             className="w-auto max-h-64 rounded-lg shadow-lg"
             width={256}
             height={256}
           />
           <Image
-            src="/images/cloudy.png"
+            src={imageAssets.cloudy}
             alt="Cloudy"
             className="w-auto max-h-64 rounded-lg shadow-lg"
             width={256}

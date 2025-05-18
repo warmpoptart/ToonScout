@@ -1,6 +1,8 @@
 import { StoredToonData } from "@/app/types";
 import { golf_trophies } from "@/data/golf_trophies";
 import { race_trophies } from "@/data/race_trophies";
+import { cogImages } from "@/assets/cog_images";
+import type { StaticImageData } from "next/image";
 const cogsData = require("@/data/cogs.json");
 
 export const displaySuit = (toon: StoredToonData, type: string) => {
@@ -155,12 +157,15 @@ for (const cog of cogsData) {
   }
 }
 
-// Helper: Get image path for a cog name
-export function getCogImage(cogName: string): string | undefined {
+// Helper: Get image for a cog name
+export function getCogImage(cogName: string): StaticImageData | undefined {
   const norm = normalize(cogName);
   const canonical = cogNameMap[norm] || norm;
-  const cog = cogsData.find((c: any) => c.name === canonical);
-  return cog ? `/${cog.image}` : undefined;
+  // Convert canonical to camelCase to match keys in cogImages
+  const camelCase = canonical
+    .replace(/[^a-zA-Z0-9]+(.)/g, (_, chr) => chr.toUpperCase())
+    .replace(/^./, (str) => str.toLowerCase());
+  return cogImages[camelCase as keyof typeof cogImages];
 }
 
 // Advanced: Find relevant invasions for user's tasks using cog dictionary

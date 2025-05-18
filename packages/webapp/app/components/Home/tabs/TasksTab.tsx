@@ -8,6 +8,7 @@ import {
   setNotificationSettings,
 } from "@/app/utils/invasionUtils";
 import Image from "next/image";
+import { imageAssets } from "@/assets/images";
 
 const TasksTab: React.FC<TabProps> = ({ toon: toons }) => {
   // Notification bell state
@@ -145,7 +146,7 @@ const TasksTab: React.FC<TabProps> = ({ toon: toons }) => {
         {tasks.map((task, index) => (
           <div key={index} className="task-container">
             <Image
-              src="/images/task.png"
+              src={imageAssets.task}
               className="task-size"
               alt="Task"
               width={320}

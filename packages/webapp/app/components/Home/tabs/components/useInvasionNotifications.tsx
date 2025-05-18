@@ -9,6 +9,8 @@ import {
   getCogImage,
 } from "@/app/utils/invasionUtils";
 import InvasionToast from "@/app/components/InvasionToast";
+import { cogImages } from "@/assets/cog_images";
+import type { StaticImageData } from "next/image";
 
 function playNotificationSound(repeat: number, interval: number) {
   let played = 0;
@@ -54,7 +56,9 @@ export function useInvasionNotifications({
   const { toons, activeIndex } = useToonContext();
   const [showToast, setShowToast] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
-  const [cogIcon, setCogIcon] = useState<string | undefined>(undefined);
+  const [cogIcon, setCogIcon] = useState<StaticImageData | undefined>(
+    undefined
+  );
   const prevRelevantKeys = useRef<string[]>([]);
   const [dismissedCogs, setDismissedCogs] = useState<string[]>([]);
   const [activeCogs, setActiveCogs] = useState<string[]>([]);

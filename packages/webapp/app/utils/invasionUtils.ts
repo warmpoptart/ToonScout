@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { cogImages } from "@/assets/cog_images";
+import type { StaticImageData } from "next/image";
 
 const cogsData = require("@/data/cogs.json");
 
@@ -75,11 +77,16 @@ for (const cog of cogsData) {
 }
 
 // Helper: Get image path for a cog name
-export function getCogImage(cogName: string): string | undefined {
+export function getCogImage(cogName: string): StaticImageData | undefined {
   const norm = normalize(cogName);
   const canonical = cogNameMap[norm] || norm;
-  const cog = cogsData.find((c: any) => c.name === canonical);
-  return cog ? `/${cog.image}` : undefined;
+  const cog = cogsData.find(
+    (c: any) => c.name === canonical || c.fullname === canonical
+  );
+  if (!cog || !cog.image) return undefined;
+  const match = cog.image.match(/cog_images\/(.*)\.webp$/);
+  const key = match ? match[1] : undefined;
+  return key ? cogImages[key as keyof typeof cogImages] : undefined;
 }
 
 // Invasion Notification Helpers

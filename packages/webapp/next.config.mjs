@@ -40,15 +40,26 @@ const nextConfig = {
       },
     ],
   },
-  // doesn't auto cache SVGs
+  // Cache all static assets with 1 year TTL
   async headers() {
     return [
+      // Fonts, sounds, PDFs still need manual headers
       {
-        source: "/flowers/jellybeans/:svg*",
+        source: "/:path*\\.(woff|woff2|ttf|mp3|wav|ogg|pdf)",
         headers: [
           {
             key: "Cache-Control",
             value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      // SEO files with shorter cache (1 day)
+      {
+        source: "/(robots.txt|sitemap.xml)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400",
           },
         ],
       },

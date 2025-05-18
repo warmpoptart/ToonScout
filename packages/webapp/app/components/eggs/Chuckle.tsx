@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { imageAssets } from "@/assets/images";
 
 const COOLDOWN = 3000;
 const AMT = 20;
@@ -18,7 +19,7 @@ const Chuckle: React.FC = () => {
 
   const createChuckle = () => {
     const elem = document.createElement("img");
-    elem.src = "/images/chuckle.webp";
+    elem.src = imageAssets.chuckle.src;
     elem.style.position = "absolute";
     elem.style.opacity = "0";
     elem.style.transition = "opacity 1s ease-in-out";
