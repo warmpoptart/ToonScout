@@ -15,11 +15,44 @@ const nextConfig = {
     // Add more as needed
   },
   images: {
-    domains: [
-      "rendition.toontownrewritten.com",
-      "cdn.toontownrewritten.com",
-      "localhost",
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "rendition.toontownrewritten.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.toontownrewritten.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "5000",
+        pathname: "/**",
+      },
     ],
+    localPatterns: [
+      {
+        pathname: "/**",
+        search: "",
+      },
+    ],
+  },
+  // doesn't auto cache SVGs
+  async headers() {
+    return [
+      {
+        source: "/flowers/jellybeans/:svg*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+    ];
   },
 };
 
