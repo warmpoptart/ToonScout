@@ -13,6 +13,8 @@ const server = createServer(app);
 
 const PORT = process.env.PORT || 3000;
 
+app.set("trust proxy", 1); // Trust first proxy (for rate limiting)
+
 //Basic rate limiting middleware (e.g., 1000 requests per 15 minutes per IP)
 const apiLimiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes
