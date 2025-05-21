@@ -138,18 +138,42 @@ router.get("/get-invasions", async (req, res) => {
   }
 });
 
+/**
+ * Validates that a URL is a valid rendition/cdn TTR URL.
+ * @param {string} url
+ * @returns {boolean}
+ */
+function validateURL(url) {
+  if (!url) return false;
+  try {
+    const parsed = new URL(url);
+    return (
+      (parsed.hostname === "rendition.toontownrewritten.com" ||
+        parsed.hostname === "cdn.toontownrewritten.com") &&
+      parsed.protocol === "https:"
+    );
+  } catch {
+    return false;
+  }
+}
+
 const rendition_cache = new Map();
 
 router.get("/get-rendition", async (req, res) => {
   const url = req.query.url;
+  if (!validateURL(url)) {
+    return res.status(400).json({ error: "Invalid URL" });
+  }
+
   if (!url) {
     return res.status(400).json({ error: "URL is required" });
   }
 
   if (rendition_cache.has(url)) {
+    const cachedImage = rendition_cache.get(url);
     res.setHeader("Content-Type", "image/webp");
     res.setHeader("Cache-Control", "public, max-age=31536000"); // 1 year
-    return res.send(rendition_cache.get(url));
+    return res.send(cachedImage);
   }
 
   try {
