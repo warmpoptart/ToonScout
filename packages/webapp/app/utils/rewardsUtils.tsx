@@ -8,14 +8,7 @@ import COGS from "@/data/cogs.json";
 import Image from "next/image";
 import { cogImages } from "@/assets/cog_images";
 import { rewardImages } from "@/assets/rewards";
-
-type SOSCard = {
-  name: string;
-  dna: string;
-  track: string | null;
-  ability: string | null;
-  stars: number;
-};
+import CardFlip from "@/app/components/animations/CardFlip";
 
 // Helper: Get the track name for SOS cards
 export const formatTrack = (entry: any) => {
@@ -44,48 +37,136 @@ export const getRendition = (url: string) => {
   );
 };
 
-export const renderSOS = (toon: StoredToonData) => {
+export const renderSOS = (
+  toon: StoredToonData,
+  selectedSort: string,
+  flipStates: Record<string, boolean>,
+  toggleFlip: (card: string) => void
+) => {
   const sosCards = toon.data.data.rewards.sos;
   if (!sosCards || Object.keys(sosCards).length === 0) {
     return <div>No SOS cards available!</div>;
   }
 
+  // filter sos cards based on selected sort
+  const filtered = Object.fromEntries(
+    Object.entries(sosCards).filter(([card]) => {
+      if (selectedSort === "All") return true;
+      const entry = SOS_TOONS.find((sosToon) => sosToon.name === card);
+      if (selectedSort === "Restock") {
+        return entry?.ability === "Restock";
+      }
+      if (selectedSort === "Other") {
+        return entry?.ability == "Cogs Miss" || entry?.ability == "Toons Hit";
+      }
+      return entry?.track === selectedSort && entry?.ability !== "Restock";
+    })
+  );
+
+  const trackColors = {
+    "Toon-Up": "text-toon-up",
+    Trap: "text-[#edc900] dark:text-trap",
+    Lure: "text-lure",
+    Sound: "text-sound",
+    Throw: "text-throw",
+    Squirt: "text-squirt",
+    Drop: "text-drop",
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-3">
-      {Object.entries(sosCards).map(([card, count], index) => {
-        const entry = SOS_TOONS.find((sosToon) => sosToon.name === card);
-        const title =
-          entry && (entry.track !== null || entry.ability !== null)
-            ? formatTrack(entry)
-            : "ERR";
-        return (
-          <div
-            key={index}
-            className="grid grid-rows-4 text-xl dark:text-blue-950 bg-gray-100 dark:bg-blue-400 border-2 border-gray-600 dark:border-blue-900 shadow-md p-2 rounded-lg"
-            style={{ gridTemplateRows: "30px 30px 70px auto" }}
-          >
-            <div
-              className={`font-minnie text-${entry?.track} ${
-                title.length > 10 ? "text-sm" : "text-lg"
-              }`}
+    <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-3 auto-rows-fr">
+      {Object.entries(filtered)
+        .sort(([a], [b]) => {
+          const entryA = SOS_TOONS.find((sosToon) => sosToon.name === a);
+          const entryB = SOS_TOONS.find((sosToon) => sosToon.name === b);
+          return (entryB?.stars || 0) - (entryA?.stars || 0);
+        })
+        .map(([card, count], index) => {
+          const entry = SOS_TOONS.find((sosToon) => sosToon.name === card);
+          const title =
+            entry && (entry.track !== null || entry.ability !== null)
+              ? formatTrack(entry)
+              : "ERR";
+          const cardTitleColor = trackColors[title as keyof typeof trackColors];
+
+          const cardFront = (
+            <button
+              key={index}
+              className="grid grid-rows-4 text-xl w-full h-full
+              dark:text-gray-200 bg-gray-100 dark:bg-gray-900 
+              border-2 border-gray-600 dark:border-pink-200
+              shadow-md p-2 rounded-lg"
+              style={{ gridTemplateRows: "30px 30px 70px auto" }}
+              onClick={() => toggleFlip(card)}
             >
-              {title}
-            </div>
-            <div className="">{card}</div>
-            <div className="flex justify-center">
-              {getRendition(
-                `https://rendition.toontownrewritten.com/render/${entry?.dna}/portrait/128x128.webp`
-              )}
-            </div>
-            <div className="card-count">{count} Remaining</div>
-            <div className="flex flex-row justify-end mt-1">
-              {Array.from({ length: entry?.stars || 0 }, (_, i) => (
-                <FaStar key={i} className="text-amber-900 w-4 h-4" />
-              ))}
-            </div>
-          </div>
-        );
-      })}
+              <div
+                className={`font-minnie ${cardTitleColor} ${
+                  title.length > 10 ? "text-sm" : "text-lg"
+                }`}
+              >
+                {title}
+              </div>
+              <div className="">{card}</div>
+              <div className="flex justify-center">
+                {getRendition(
+                  `https://rendition.toontownrewritten.com/render/${entry?.dna}/portrait/128x128.webp`
+                )}
+              </div>
+              <div className="card-count">{count} Remaining</div>
+              <div className="flex flex-row justify-end mt-1">
+                {Array.from({ length: entry?.stars || 0 }, (_, i) => (
+                  <FaStar
+                    key={i}
+                    className="text-amber-900 dark:text-amber-300 w-4 h-4"
+                  />
+                ))}
+              </div>
+            </button>
+          );
+
+          const cardBack = (
+            <button
+              className="flex flex-col text-xl w-full h-full
+              dark:text-gray-200 bg-gray-100 dark:bg-gray-900 
+              border-2 border-gray-600 dark:border-pink-200
+              shadow-md p-2 rounded-lg"
+              onClick={() => toggleFlip(card)}
+            >
+              <div className="flex justify-start rounded-lg border-2 border-pink-500">
+                {/* photo */}
+                {getRendition(
+                  `https://rendition.toontownrewritten.com/render/${entry?.dna}/portrait/128x128.webp`
+                )}
+                {/* name */}
+                <div className="flex font-minnie text-xl justify-center text-center items-center">
+                  {card}
+                </div>
+              </div>
+              {/* description */}
+              <div className="mt-1">
+                {entry?.description
+                  ? entry.description.split("\n").map((line, idx) => (
+                      <p
+                        key={idx}
+                        className={idx === 0 ? "text-lg" : "text-base"}
+                      >
+                        {line}
+                      </p>
+                    ))
+                  : "No additional details available."}
+              </div>
+            </button>
+          );
+
+          return (
+            <CardFlip
+              key={index}
+              cardFront={cardFront}
+              cardBack={cardBack}
+              isFlipped={flipStates[card]}
+            />
+          );
+        })}
     </div>
   );
 };
@@ -247,6 +328,18 @@ export const renderRemotes = (toon: StoredToonData) => {
     return <div>No remotes available.</div>;
   }
 
+  const healingByStar = {
+    1: rewardImages.remotesheal1,
+    2: rewardImages.remotesheal2,
+    3: rewardImages.remotesheal3,
+  };
+
+  const damageByStar = {
+    1: rewardImages.remotes1,
+    2: rewardImages.remotes2,
+    3: rewardImages.remotes3,
+  };
+
   return (
     <div>
       {Object.entries(remotes).map(([type, remoteData], outerIndex) => (
@@ -289,17 +382,25 @@ export const renderRemotes = (toon: StoredToonData) => {
                 <div className="flex items-center justify-center mt-2">
                   {type.startsWith("Damage") ? (
                     <Image
-                      src={rewardImages.remotes}
+                      src={
+                        damageByStar[
+                          parseInt(rating) as keyof typeof damageByStar
+                        ] || rewardImages.remotes
+                      }
                       className="w-16 md:w-24"
-                      alt="Damage Remote"
+                      alt={`Damage Remote ${rating}`}
                       width={96}
                       height={96}
                     />
                   ) : (
                     <Image
-                      src={rewardImages.remotesheal}
+                      src={
+                        healingByStar[
+                          parseInt(rating) as keyof typeof healingByStar
+                        ] || rewardImages.remotesheal
+                      }
                       className="w-16 md:w-24"
-                      alt="Heal Remote"
+                      alt={`Healing Remote ${rating}`}
                       width={96}
                       height={96}
                     />

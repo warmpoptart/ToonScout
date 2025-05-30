@@ -94,7 +94,7 @@ const GardenTab: React.FC<TabProps> = ({ toon }) => {
       return (
         <div
           key={index}
-          className={`flex items-center justify-start w-full overflow-hidden rounded-lg shadow-lg border-4 border-${borderColor}`}
+          className={`flex items-center justify-start w-full overflow-hidden rounded-lg shadow-lg border-4 ${borderColor}`}
         >
           <div className="flex w-full h-full bg-violet-50 dark:bg-gray-1000 shadow-sm p-2">
             <Image
@@ -102,22 +102,23 @@ const GardenTab: React.FC<TabProps> = ({ toon }) => {
               alt={name}
               width={64}
               height={64}
-              className={`object-contain rounded-full border-4 border-${borderColor}`}
+              className={`object-contain rounded-full border-4 ${borderColor}`}
             />
             {/* right side of image */}
             <div className="flex flex-col items-start justify-start w-full h-full ml-2">
               <div className="text-lg dark:text-white">{name}</div>
-              <div className="flex flex-row w-full gap-0.5">
+              <div className="flex flex-row w-full gap-1">
                 {flowerCombo.map((combo: string, index: number) => {
                   return (
-                    <Image
-                      src={`/flowers/jellybeans/${combo}.svg`}
-                      alt={combo.slice(0, 1).toUpperCase()}
-                      width={24}
-                      height={24}
-                      className="object-contain"
-                      key={index}
-                    />
+                    <div key={index} className="flex flex-row gap-0.5">
+                      <Image
+                        src={`/flowers/jellybeans/${combo}.svg`}
+                        alt={combo.slice(0, 1).toUpperCase()}
+                        width={24}
+                        height={24}
+                        className="object-contain"
+                      />
+                    </div>
                   );
                 })}
               </div>
@@ -167,10 +168,10 @@ const GardenTab: React.FC<TabProps> = ({ toon }) => {
           </div>
           {/* flowers */}
           <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-2">
-            {renderFlowers(progress, "amber-500")}
+            {renderFlowers(progress, "border-amber-500")}
             {flowerType >= 2 &&
-              renderFlowers(removeDupes(plantable), "pink-500")}
-            {flowerType === 3 && renderFlowers(missing, "gray-600")}
+              renderFlowers(removeDupes(plantable), "border-pink-500")}
+            {flowerType === 3 && renderFlowers(missing, "border-gray-600")}
           </div>
         </>
       )}

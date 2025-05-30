@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { JSX, useState } from "react";
 import Image from "next/image";
 import { TabProps } from "./components/TabComponent";
 import AnimatedTabContent from "@/app/components/animations/AnimatedTab";
@@ -11,23 +11,53 @@ import {
 } from "@/app/utils/rewardsUtils";
 import { rewardImages } from "@/assets/rewards";
 import { imageAssets } from "@/assets/images";
+import { motion } from "framer-motion";
+import { FaCaretDown } from "react-icons/fa6";
 
 const RewardsTab: React.FC<TabProps> = ({ toon }) => {
+  if (!toon.data.data.rewards) {
+    return <div>No rewards available.</div>;
+  }
+
   const rewardTypes = ["SOS", "Unites", "Summons", "Pinkslips", "Remotes"];
   const [selectedReward, setSelectedReward] = useState(rewardTypes[0]);
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
   const [clickedButton, setClickedButton] = useState<string | null>(null);
 
-  if (!toon.data.data.rewards) {
-    return <div>No rewards available.</div>;
-  }
+  // sos card sorting
+  const [selectedSort, setSelectedSort] = useState("All");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  // flip states for SOS cards
+  const sosCards = toon.data.data.rewards.sos || {};
+  const [flipStates, setFlipStates] = useState<Record<string, boolean>>(
+    Object.keys(sosCards).reduce((acc, card) => {
+      acc[card] = false;
+      return acc;
+    }, {} as Record<string, boolean>)
+  );
+
+  const toggleFlip = (card: string) => {
+    setFlipStates((prev) => ({
+      ...prev,
+      [card]: !prev[card],
+    }));
+  };
 
   const renders: Record<string, () => JSX.Element> = {
-    SOS: () => renderSOS(toon),
+    SOS: () => renderSOS(toon, selectedSort, flipStates, toggleFlip),
     Unites: () => renderUnites(toon),
     Summons: () => renderSummons(toon),
     Pinkslips: renderPinkslips,
     Remotes: () => renderRemotes(toon),
+  };
+
+  const extraRenders: Record<string, () => JSX.Element> = {
+    SOS: () => renderSOSSort(),
+    Unites: () => <div></div>,
+    Summons: () => <div></div>,
+    Pinkslips: () => <div></div>,
+    Remotes: () => <div></div>,
   };
 
   const getRewardData = () => {
@@ -43,7 +73,7 @@ const RewardsTab: React.FC<TabProps> = ({ toon }) => {
       case "Remotes":
         return [toon.data.data.rewards.remotes];
       default:
-        return null;
+        return <div>No rewards available.</div>;
     }
   };
 
@@ -53,6 +83,54 @@ const RewardsTab: React.FC<TabProps> = ({ toon }) => {
       return "No rewards available.";
     }
     return selectedReward === "SOS" ? "SOS Cards" : selectedReward;
+  };
+
+  const renderSOSSort = () => {
+    const sortOptions = [
+      "All",
+      "Restock",
+      "Toon-Up",
+      "Trap",
+      "Lure",
+      "Sound",
+      "Throw",
+      "Squirt",
+      "Drop",
+      "Other",
+    ];
+
+    return (
+      <div className="relative text-2xl text-pink-900 dark:text-gray-100 text-left">
+        <button
+          className="flex items-center justify-between rounded-md px-4 py-1.5 min-w-[10rem] 
+          border-2 border-blue-600
+          bg-blue-50 dark:bg-gray-900"
+          onClick={() => setDropdownOpen((prev) => !prev)}
+        >
+          <span>{selectedSort}</span>
+          <FaCaretDown className="ml-2 text-3xl" />
+        </button>
+        {dropdownOpen && (
+          <motion.ul
+            className="absolute z-10 min-w-[10rem] w-full top-0 left-0
+            bg-blue-50 dark:bg-gray-900 border-2 border-blue-600 rounded-md shadow-lg right-0"
+          >
+            {sortOptions.map((option) => (
+              <li
+                key={option}
+                className="cursor-pointer px-4 py-2 hover:text-pink-400"
+                onClick={() => {
+                  setSelectedSort(option);
+                  setDropdownOpen(false);
+                }}
+              >
+                {option}
+              </li>
+            ))}
+          </motion.ul>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -135,9 +213,14 @@ const RewardsTab: React.FC<TabProps> = ({ toon }) => {
         {/* reward display */}
         <div className="w-full">
           <div className="reward-display">
-            <div className="text-left text-4xl font-minnie w-full">
-              {renderRewardText()}
+            {/* header */}
+            <div className="flex flex-row w-full justify-between">
+              {/* reward name */}
+              <div className="font-minnie text-left">{renderRewardText()}</div>
+              {/* optional component for reward display */}
+              <div>{extraRenders[selectedReward]()}</div>
             </div>
+            {/* display */}
             <div>{renders[selectedReward]()}</div>
           </div>
         </div>
